@@ -3,16 +3,17 @@
 
 Vagrant.configure("2") do |config|
     config.vm.box = "centos/7"
+    config.vm.synced_folder ".", "/vagrant_data"
 
-    config.vm.define "centos7" do |web|
-        web.vm.hostname = "centos7"
+    config.vm.define "centos7" do |srv|
+        srv.vm.hostname = "centos7"
 
-        config.vm.provider "virtualbox" do |web|
-            web.name = "centos7"
-            web.cpus = 2
-            web.memory = "1024"
+        config.vm.provider "virtualbox" do |srv|
+            srv.name = "centos7"
+            srv.cpus = 2
+            srv.memory = "1024"
         end
 
-        web.vm.provision "shell", path: "script.sh"
+        srv.vm.provision "shell", path: "script.sh"
     end
-end
+en 
