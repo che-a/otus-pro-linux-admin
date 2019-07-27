@@ -3,16 +3,18 @@
 
 Задания находятся в отдельных подкаталогах типа `lesson_xx`, в каждом из которых есть файл `README.md` с детальным описанием условия задачи и хода ее выполнения.
 
+Кроме того, у данного репозитория есть своя [Wiki](https://github.com/che-a/OTUS_LinuxAdministration/wiki).
+
 ### Содержание <hr>
-1. Занятие 1. С  чего начинается Linux
-+ [Домашнее задание](#lesson_01)
-+ [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/README.md)
-2. Занятие 2. Дисковая подсистема
-+ [Домашнее задание](#lesson_02)
-+ [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_02/README.md)
-3. Занятие 3. Файловые системы и LVM
-+ [Домашнее задание](#lesson_03)
-+ [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_03/README.md)
+1. Занятие 1. С  чего начинается Linux  
+[Домашнее задание](#lesson_01)  
+[Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/README.md)
+2. Занятие 2. Дисковая подсистема  
+[Домашнее задание](#lesson_02)  
+[Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_02/README.md)  
+3. Занятие 3. Файловые системы и LVM  
+[Домашнее задание](#lesson_03)  
+[Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_03/README.md)  
 
 
 ### Занятие 1. С  чего начинается Linux <a name="lesson_01"></a> <hr>
