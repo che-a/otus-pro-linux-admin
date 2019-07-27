@@ -1,4 +1,4 @@
-# OTUS_LinuxAdministration
+# OTUS_LinuxAdministrator
 В этом репозитории находятся выполненные мною задания по курсу ["Администратор Linux"](https://otus.ru/lessons/linux/?int_source=courses_catalog&int_term=operations) на платформе [OTUS](https://otus.ru/).
 
 Задания находятся в отдельных подкаталогах вида `lesson_xx`, в каждом из которых есть файл `README.md` с детальным описанием условия задачи и хода ее выполнения.
