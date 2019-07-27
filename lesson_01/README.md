@@ -29,6 +29,9 @@
 
 
 ## Ход выполнения задания
+Развертывание виртуального окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/Vagrantfile) с запуском bash-скрипта [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/script.sh) для обновления CentOS и установки необходимых для компиляции ядра пакетов.
+
+
 Версия ядра для CentOS 7:
 ```console
 $ uname -r
