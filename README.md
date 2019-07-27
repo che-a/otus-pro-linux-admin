@@ -9,11 +9,11 @@
 
 ## Список заданий
 **1. Занятие 1. С  чего начинается Linux**  
-Задание: [сборка ядра](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/)  
+*Задание:* [Сборка ядра](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/)  
 [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/README.md)  
 **2. Занятие 2. Дисковая подсистема**  
-Задание: [работа с mdadm](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_02/)  
+*Задание:* [Работа с mdadm](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_02/)  
 [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_02/README.md)  
 **3. Занятие 3. Файловые системы и LVM**  
-Задание: [работа с LVM](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_03/)  
+*Задание:* [Работа с LVM](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_03/)  
 [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_03/README.md)  
