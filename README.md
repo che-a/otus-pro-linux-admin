@@ -5,7 +5,7 @@
 
 Кроме того, у данного репозитория имеется своя [Wiki](https://github.com/che-a/OTUS_LinuxAdministration/wiki).
 
-### Список заданий <hr>
+## Список заданий
 **1. Занятие 1. С  чего начинается Linux**  
 Задание: [сборка ядра](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/)  
 [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/README.md)  
