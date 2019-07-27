@@ -10,10 +10,10 @@ Vagrant.configure("2") do |config|
 
         config.vm.provider "virtualbox" do |srv|
             srv.name = "centos7"
-            srv.cpus = 2
-            srv.memory = "1024"
+            srv.cpus = 4
+            srv.memory = "2048"
         end
 
         srv.vm.provision "shell", path: "script.sh"
     end
-en 
+end
