@@ -3,17 +3,17 @@
 
 Задания находятся в отдельных подкаталогах типа `lesson_xx`, в каждом из которых есть файл `README.md` с детальным описанием условия задачи и хода ее выполнения.
 
-Кроме того, у данного репозитория есть своя [Wiki](https://github.com/che-a/OTUS_LinuxAdministration/wiki).
+Кроме того, у данного репозитория имеется своя [Wiki](https://github.com/che-a/OTUS_LinuxAdministration/wiki).
 
 ### Содержание <hr>
 1. Занятие 1. С  чего начинается Linux  
-[Домашнее задание](#lesson_01)  
+[Домашнее задание. Сборка ядра](#lesson_01)  
 [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/README.md)
 2. Занятие 2. Дисковая подсистема  
-[Домашнее задание](#lesson_02)  
+[Домашнее задание. Работа с mdadm](#lesson_02)  
 [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_02/README.md)  
 3. Занятие 3. Файловые системы и LVM  
-[Домашнее задание](#lesson_03)  
+[Домашнее задание. Работа с LVM](#lesson_03)  
 [Выполнение](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_03/README.md)  
 
 
@@ -22,8 +22,6 @@
 - Взять любую версию ядра с kernel.org.
 - Подложить файл конфигурации ядра.
 - Собрать ядро (попутно доставляя необходимые пакеты).
-- Прислать результирующий файл конфигурации.
-- Прислать список доустановленных пакетов (взять его можно из /var/log/yum.log).
 
 ### Занятие 2. Дисковая подсистема <a name="lesson_02"></a> <hr>
 **Домашнее задание**. Работа с mdadm.
