@@ -29,6 +29,11 @@
 
 
 ## Ход выполнения задания
+Версия ядра для CentOS 7:
+```console
+$ uname -r
+3.10.0-957.12.2.el7.x86_64
+```
 
 ```console
 cp /boot/config* .config &&
