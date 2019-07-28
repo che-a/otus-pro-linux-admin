@@ -9,8 +9,6 @@ cat <<- '_EOF_'
 
     KERN="linux-4.19.61"
     # KERN="linux-5.2.4"
-    LOG_FILE="new_kern_compile.log"
-    echo "Исходное ядро:     "`uname -r` > $LOG_FILE
 
     # Подготовка исходных кодов для сборки ядра
     cd /usr/src/kernels
@@ -21,6 +19,7 @@ cat <<- '_EOF_'
     # Переносим конфигурацию старого ядра для сборки нового
     cd ./$KERN
     cp /boot/config-`uname -r` .config
+    LOG_FILE="new_kern_compile.log"
 
     # Сборка нового ядра
     echo "Начало сборки    : "`date +"%x %R %Z"` >> $LOG_FILE
