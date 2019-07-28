@@ -29,14 +29,36 @@
 
 
 ## Ход выполнения задания
-Развертывание виртуального окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/Vagrantfile) с запуском bash-скрипта [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/script.sh) для обновления CentOS и установки необходимых для компиляции ядра пакетов.
-
-
-Версия ядра для CentOS 7:
+Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/script.sh), который подготавливает систему (инициирует обновление и установку необходимых пакетов), а также генерирует внутри виртуальной машины bash-скрипт, который и будет собирать новое ядро.
 ```console
-$ uname -r
+# Обновление системы и установка утилит
+yum update -y
+yum install -y mc nano wget
+
+# Установка необходимых пакетов для сборки нового ядра
+yum install -y bc elfutils-libelf-devel openssl-devel
+yum groupinstall -y "Development Tools"
+
+```
+Текущая версия ядра:
+```console
+uname -r
 3.10.0-957.12.2.el7.x86_64
 ```
+Далее необходимо выбрать версию нового ядра на официальном сайте [kernel.org](https://www.kernel.org/). В данном случае было использовано ядро версии [4.19.61](https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.61.tar.xz).
+```bash
+KERN="linux-4.19.61"
+# KERN="linux-5.2.4"
+
+# Подготовка исходных кодов для сборки ядра
+cd /usr/src/kernels
+wget https://cdn.kernel.org/pub/linux/kernel/v4.x/$KERN.tar.xz
+tar -xvf $KERN.tar.xz -C .
+rm ./$KERN.tar.xz
+```
+
+Выполнение сборки нового ядра представляет из себя достаточно длительный процесс.
+
 
 ```console
 cp /boot/config* .config &&
