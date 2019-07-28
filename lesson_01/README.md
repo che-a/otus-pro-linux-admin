@@ -56,14 +56,26 @@ wget https://cdn.kernel.org/pub/linux/kernel/v4.x/$KERN.tar.xz
 tar -xvf $KERN.tar.xz -C .
 rm ./$KERN.tar.xz
 ```
+Сборка нового ядра:
+```bash
+# Переносим конфигурацию старого ядра для сборки нового
+cd ./$KERN
+cp /boot/config-`uname -r` .config
 
-Выполнение сборки нового ядра представляет из себя достаточно длительный процесс.
-
-
-```console
-cp /boot/config* .config &&
+# Сборка нового ядра
 make oldconfig &&
 make &&
-make install &&
-make modules_install
+make modules_install &&
+make install
 ```
+Конфигурирование загрузчика GRUB для возможности загрузки системы с новым ядром:
+```bash
+    sed -i 's/GRUB_DEFAULT=.*/GRUB_DEFAULT=0/' /etc/default/grub
+    grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+В итоге получаем новое собранное и установленное ядро:
+```console
+uname -r
+
+```
+Выполнение сборки нового ядра представляет из себя достаточно длительный процесс.
