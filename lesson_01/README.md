@@ -28,8 +28,12 @@
 - Прислан список доустановленных пакетов
 
 
-## Ход выполнения задания
-Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/script.sh), который подготавливает систему (инициирует обновление и установку необходимых пакетов), а также генерирует внутри виртуальной машины bash-скрипт, который и будет собирать новое ядро.
+## Выполнение задания
+#### Файлы для преподавателя  
+[Результирующий файл конфигурации]()  
+[Список доустановленных пакетов]()
+#### Ход выполнения
+Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/script.sh), который подготавливает систему (инициирует обновление и установку необходимых пакетов), а также генерирует внутри виртуальной машины bash-скрипт, который собирает и устанавливает новое ядро.
 ```console
 # Обновление системы и установка утилит
 yum update -y
@@ -38,14 +42,13 @@ yum install -y mc nano wget
 # Установка необходимых пакетов для сборки нового ядра
 yum install -y bc elfutils-libelf-devel openssl-devel
 yum groupinstall -y "Development Tools"
-
 ```
 Текущая версия ядра:
 ```console
 uname -r
 3.10.0-957.12.2.el7.x86_64
 ```
-Далее необходимо выбрать версию нового ядра на официальном сайте [kernel.org](https://www.kernel.org/). В данном случае было использовано ядро версии [4.19.61](https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.61.tar.xz).
+Далее на официальном сайте [kernel.org](https://www.kernel.org/) берётся любая версия нового ядра, в данном случае -- это ядро версии [4.19.61](https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.61.tar.xz).
 ```bash
 KERN="linux-4.19.61"
 # KERN="linux-5.2.4"
@@ -56,7 +59,7 @@ wget https://cdn.kernel.org/pub/linux/kernel/v4.x/$KERN.tar.xz
 tar -xvf $KERN.tar.xz -C .
 rm ./$KERN.tar.xz
 ```
-Сборка нового ядра:
+Собственно, сборка нового ядра:
 ```bash
 # Переносим конфигурацию старого ядра для сборки нового
 cd ./$KERN
@@ -70,12 +73,15 @@ make install
 ```
 Конфигурирование загрузчика GRUB для возможности загрузки системы с новым ядром:
 ```bash
-    sed -i 's/GRUB_DEFAULT=.*/GRUB_DEFAULT=0/' /etc/default/grub
-    grub2-mkconfig -o /boot/grub2/grub.cfg
+sed -i 's/GRUB_DEFAULT=.*/GRUB_DEFAULT=0/' /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
-В итоге получаем новое собранное и установленное ядро:
+В итоге новое ядро собрано и установлено:
 ```console
 uname -r
 
 ```
-Выполнение сборки нового ядра представляет из себя достаточно длительный процесс.
+Выполнение сборки нового ядра представляет из себя достаточно длительный процесс. При выполнении этого домашнего задания на сборку нового ядра согласно лог-файла было затрачено -- ч -- мин.
+```console
+
+```
