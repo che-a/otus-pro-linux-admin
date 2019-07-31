@@ -1,30 +1,24 @@
 #!/usr/bin/env bash
 
 function menu {
-    local ITEM_[1]="RAID 0"
-    local ITEM_[2]="RAID 1"
-    local ITEM_[3]="RAID 5"
-    local ITEM_[4]="RAID 6"
-    local ITEM_[5]="RAID 10"
-    local ITEM_[0]="Выход из программы"
+    local ITEM_1="RAID 0"
+    local ITEM_2="RAID 1"
+    local ITEM_3="RAID 5"
+    local ITEM_4="RAID 6"
+    local ITEM_5="RAID 10"
+    local ITEM_0="Выход из программы"
 
-    clear
-    for i in {0..5}; do
-        echo ${ITEM_[$i]}
-    done
-
-
-    #echo "
-    #Эта программа генерирует Vagrantfile и запускает тестовое окружение
-    #с подключенным RAID выбранного типа:
-#        1. RAID 0
-#        2. RAID 1
-#        3. RAID 5
-#        4. RAID 6
-#        5. RAID 10
-#        0. Выход
-#    "
-    #read -p "Введите номер [0-5] > "
+    echo "
+    Эта программа генерирует Vagrantfile и запускает тестовое окружение
+    с подключенным RAID выбранного типа:
+        1. RAID 0
+        2. RAID 1
+        3. RAID 5
+        4. RAID 6
+        5. RAID 10
+        0. Выход
+    "
+    read -p "Введите номер [0-5] > "
 
     case $REPLY in
         1)  echo "1. $ITEM_1"
@@ -59,15 +53,6 @@ function prnt_info {
 }
 
 menu
-
-#echo "Position parameters:"
-#echo "Count parameters: $#"
-#echo "\$0 = $0"
-#echo "\$1 = $1"
-#echo "\$2 = $2"
-#echo "\$3 = $3"
-#echo "\$4 = $4"
-#echo "\$5 = $5"
 
 #clear
 #prnt_info
