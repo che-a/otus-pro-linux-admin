@@ -39,7 +39,7 @@
 - &laquo;5&raquo; - сделаны доп. задания.
 
 ## 3. Выполнение <a name="exec"></a>  
-Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который подготавливает систему (инициирует обновление и установку необходимых пакетов).
+Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который инициирует обновление системы, установку необходимых пакетов и собирает RAID разных уровней согласно схемы.
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
 
