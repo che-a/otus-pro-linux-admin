@@ -4,7 +4,6 @@
 MACHINES = {
     :machine01 => {
         :box_name => "centos/7",
-        :ip_addr => '192.168.11.101',
         :disks => {
             :sata1 => {
                 :dfile => './sata1.vdi',
@@ -29,12 +28,12 @@ MACHINES = {
             :sata5 => {
                 :dfile => './sata5.vdi',
                 :size => 250,
-                :port => 3
+                :port => 5
             },
             :sata6 => {
                 :dfile => './sata6.vdi',
                 :size => 250,
-                :port => 4
+                :port => 6
             }
         }
     },
