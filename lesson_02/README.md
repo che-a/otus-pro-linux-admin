@@ -39,9 +39,15 @@
 - &laquo;5&raquo; - сделаны доп. задания.
 
 ## 3. Выполнение <a name="exec"></a>  
-Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который инициирует обновление системы, установку необходимых пакетов и собирает RAID разных уровней согласно схемы.
-
-![schema.png](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/.images/schema.png)
+Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который инициирует обновление системы, установку необходимых пакетов и подключает RAID разных уровней согласно схемы.  
+![schema.png](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/.images/schema.png)  
+К развернутому тестовому окружению Linux подключены следующие диски:  
+- `/dev/sda`, тестовое окружение Linux;  
+- `/dev/sdb`, диск для RAID;  
+- `/dev/sdc`, диск для RAID;  
+- `/dev/sdd`, диск для RAID;  
+- `/dev/sde`, диск для RAID;  
+- `/dev/sdf`, резервный диск для отработки восстановления RAID.  
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
 
