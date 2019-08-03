@@ -26,10 +26,11 @@
 
 ## 2. Домашнее задание  <a name="homework"></a>
 #### Постановка задачи  
+Системный администратор обязан уметь работать с дисковой подсистемой, делать это без ошибок, не допускать потерю данных. В этом задании необходимо продемонстрировать умение работать с software raid и инструментами для работы с работы с разделами(`parted`, `fdisk`, `lsblk`).
 - работа с `mdadm`;  
 - добавить в `Vagrantfile` еще дисков;  
-- сломать/починить raid;  
 - собрать R0/R5/R10 - на выбор;  
+- сломать/починить raid;  
 - создать на рейде GPT раздел и 5 партиций.
 В качестве проверки принимаются - измененный `Vagrantfile`, скрипт для создания рейда  
 #### Дополнительные задания  
@@ -40,8 +41,12 @@
 - &laquo;5&raquo; - сделаны доп. задания.
 
 ## 3. Выполнение <a name="exec"></a>  
-Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который инициирует обновление системы, установку необходимых пакетов и подключает RAID разных уровней согласно схемы.  
-![schema.png](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/.images/schema.png)  
+Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который инициирует обновление системы, установку необходимых пакетов и последовательно создает RAID следующих уровней на дисках `/dev/sdb`, `/dev/sdc`, `/dev/sdd` и `/dev/sde`:  
+- RAID 0 и 1,
+- RAID 5,  
+- RAID 6,  
+- RAID 10
+  
 Диск `/dev/sdf` является резервным диском и предназначен для отработки восстановления работоспособности RAID.  
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
