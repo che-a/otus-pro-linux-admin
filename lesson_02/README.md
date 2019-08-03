@@ -41,7 +41,7 @@
 ## 3. Выполнение <a name="exec"></a>  
 Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который инициирует обновление системы, установку необходимых пакетов и подключает RAID разных уровней согласно схемы.  
 ![schema.png](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/.images/schema.png)  
-Диск `/dev/sdf` резервным диском и предназначен для отработки восстановления работоспособности RAID.  
+Диск `/dev/sdf` является резервным диском и предназначен для отработки восстановления работоспособности RAID.  
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
 
