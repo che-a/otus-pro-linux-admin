@@ -29,6 +29,11 @@ MACHINES = {
                 :dfile => './sata5.vdi',
                 :size => 250,
                 :port => 5
+            },
+            :sata6 => {
+                :dfile => './sata6.vdi',
+                :size => 250,
+                :port => 6
             }
         }
     },
@@ -58,12 +63,12 @@ Vagrant.configure("2") do |config|
                 end
             end
             box.vm.provision "shell", inline: <<-SHELL
-                mkdir -p ~root/.ssh
-                cp ~vagrant/.ssh/auth* ~root/.ssh
-                # yum update -y
+                # mkdir -p ~root/.ssh
+                # cp ~vagrant/.ssh/auth* ~root/.ssh
+                yum update -y
                 yum install -y mdadm smartmontools hdparm gdisk
-                yum install -y epel-release
-                yum install -y htop
+                # yum install -y epel-release
+                # yum install -y htop
                 # shutdown -r now
                 SHELL
             end
