@@ -42,10 +42,11 @@
 
 ## 3. Выполнение <a name="exec"></a>  
 Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который запускает обновление системы, установку необходимых пакетов, а также:  
-- создает RAID 0 и RAID 1 на разделах дисках `/dev/sdb` и `/dev/sdc`;  
-- последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg`.  
+- создает RAID 0 и RAID 1 на разделах дисков `/dev/sdb` и `/dev/sdc`;  
+- последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg` для демонстрации использования возможностей `mdadm`.  
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
+После загрузки системы необходимо список блочных устройств:
 ```console
 $ sudo -s
 # lsblk
@@ -69,6 +70,66 @@ sdg      8:96   0  250M  0 disk
 /0/100/d/3          /dev/sde   disk        262MB VBOX HARDDISK
 /0/100/d/4          /dev/sdf   disk        262MB VBOX HARDDISK
 /0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK
+```
+```console
+mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdb1 /dev/sdc1
+mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/sdb2 /dev/sdc2
+```
+```console
+# cat /proc/mdstat
+Personalities : [raid0]
+md0 : active raid0 sdc1[1] sdb1[0]
+      1044480 blocks super 1.2 512k chunks
+
+unused devices: <none>
+```
+```console
+# lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+sda       8:0    0   40G  0 disk
+└─sda1    8:1    0   40G  0 part  /
+sdb       8:16   0    6G  0 disk
+└─sdb1    8:17   0  512M  0 part
+  └─md0   9:0    0 1020M  0 raid0
+sdc       8:32   0    6G  0 disk
+└─sdc1    8:33   0  512M  0 part
+  └─md0   9:0    0 1020M  0 raid0
+sdd       8:48   0  250M  0 disk
+sde       8:64   0  250M  0 disk
+sdf       8:80   0  250M  0 disk
+sdg       8:96   0  250M  0 disk
+```
+```console
+# mdadm -D /dev/md0
+/dev/md0:
+           Version : 1.2
+     Creation Time : Sun Aug  4 17:01:47 2019
+        Raid Level : raid0
+        Array Size : 1044480 (1020.00 MiB 1069.55 MB)
+      Raid Devices : 2
+     Total Devices : 2
+       Persistence : Superblock is persistent
+
+       Update Time : Sun Aug  4 17:01:47 2019
+             State : clean
+    Active Devices : 2
+   Working Devices : 2
+    Failed Devices : 0
+     Spare Devices : 0
+     
+        Chunk Size : 512K
+
+Consistency Policy : none
+
+              Name : machine01:0  (local to host machine01)
+              UUID : 31e74539:cb076ad3:d4a2c89a:3a07b503
+            Events : 0
+
+    Number   Major   Minor   RaidDevice State
+       0       8       17        0      active sync   /dev/sdb1
+       1       8       33        1      active sync   /dev/sdc1
+```
+```console
 ```
 
 
