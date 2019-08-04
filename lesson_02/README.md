@@ -35,7 +35,7 @@
 В качестве проверки принимаются - измененный `Vagrantfile`, скрипт для создания рейда  
 #### Дополнительные задания  
 - Vagrantfile, который сразу собирает систему с подключенным рейдом.  
-- Перенесите работающую систему с одним диском на RAID 1. Даунтайм на загрузку с нового диска предполагается. В качестве проверики принимается вывод команды `lsblk` до и после и описание хода решения (можно воспользовать утилитой `script`).  
+- Перенесите работающую систему с одним диском на RAID 1. Даунтайм на загрузку с нового диска предполагается. В качестве проверки принимается вывод команды `lsblk` до и после и описание хода решения (можно воспользовать утилитой `script`).  
 #### Критерии оценки  
 - &laquo;4&raquo; - сдан `Vagrantfile` и скрипт для сборки, который можно запустить на поднятом образе;  
 - &laquo;5&raquo; - сделаны доп. задания.
@@ -46,6 +46,31 @@
 - последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg`.  
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
+```console
+$ sudo -s
+# lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda      8:0    0   40G  0 disk
+└─sda1   8:1    0   40G  0 part /
+sdb      8:16   0    6G  0 disk
+sdc      8:32   0    6G  0 disk
+sdd      8:48   0  250M  0 disk
+sde      8:64   0  250M  0 disk
+sdf      8:80   0  250M  0 disk
+sdg      8:96   0  250M  0 disk
+```
+
+```console
+# lshw -short | grep disk
+/0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK
+/0/100/d/0          /dev/sdb   disk        6442MB VBOX HARDDISK
+/0/100/d/1          /dev/sdc   disk        6442MB VBOX HARDDISK
+/0/100/d/2          /dev/sdd   disk        262MB VBOX HARDDISK
+/0/100/d/3          /dev/sde   disk        262MB VBOX HARDDISK
+/0/100/d/4          /dev/sdf   disk        262MB VBOX HARDDISK
+/0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK
+```
+
 
 #### Сброс существующих RAID-устройств  <a name="reset"></a>  
 
