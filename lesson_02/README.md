@@ -73,30 +73,38 @@ sdg      8:96   0  250M  0 disk
 ```
 ```console
 mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdb1 /dev/sdc1
-mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/sdb2 /dev/sdc2
+mdadm --create --verbose /dev/md1 --level=1 --raid-devices=2 /dev/sdb2 /dev/sdc2
 ```
 ```console
-# cat /proc/mdstat
-Personalities : [raid0]
+cat /proc/mdstat
+Personalities : [raid0] [raid1]
+md1 : active raid1 sdc2[1] sdb2[0]
+      5760960 blocks super 1.2 [2/2] [UU]
+      [==========>..........]  resync = 53.3% (3074432/5760960) finish=0.8min speed=53969K/sec
+
 md0 : active raid0 sdc1[1] sdb1[0]
       1044480 blocks super 1.2 512k chunks
 
 unused devices: <none>
 ```
 ```console
-# lsblk
-NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-sda       8:0    0   40G  0 disk
-└─sda1    8:1    0   40G  0 part  /
-sdb       8:16   0    6G  0 disk
-└─sdb1    8:17   0  512M  0 part
-  └─md0   9:0    0 1020M  0 raid0
-sdc       8:32   0    6G  0 disk
-└─sdc1    8:33   0  512M  0 part
-  └─md0   9:0    0 1020M  0 raid0
-sdd       8:48   0  250M  0 disk
-sde       8:64   0  250M  0 disk
-sdf       8:80   0  250M  0 disk
+lsblk                                                                          │
+NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT                                                             │
+sda       8:0    0   40G  0 disk                                                                         │
+└─sda1    8:1    0   40G  0 part  /                                                                      │
+sdb       8:16   0    6G  0 disk                                                                         │
+├─sdb1    8:17   0  512M  0 part                                                                         │
+│ └─md0   9:0    0 1020M  0 raid0                                                                        │
+└─sdb2    8:18   0  5,5G  0 part                                                                         │
+  └─md1   9:1    0  5,5G  0 raid1                                                                        │
+sdc       8:32   0    6G  0 disk                                                                         │
+├─sdc1    8:33   0  512M  0 part                                                                         │
+│ └─md0   9:0    0 1020M  0 raid0                                                                        │
+└─sdc2    8:34   0  5,5G  0 part                                                                         │
+  └─md1   9:1    0  5,5G  0 raid1                                                                        │
+sdd       8:48   0  250M  0 disk                                                                         │
+sde       8:64   0  250M  0 disk                                                                         │
+sdf       8:80   0  250M  0 disk                                                                         │
 sdg       8:96   0  250M  0 disk
 ```
 ```console
