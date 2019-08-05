@@ -43,13 +43,15 @@
 ## 3. Выполнение <a name="exec"></a>  
 Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который запускает обновление системы, установку необходимых пакетов, а также:  
 - создает RAID 0 и RAID 1 на разделах дисков `/dev/sdb` и `/dev/sdc`;  
-- последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg` для демонстрации использования возможностей `mdadm`.  
+- последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg`.  
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
 После загрузки системы необходимо список блочных устройств:
+```bash
+sudo -s
+lsblk
+```
 ```console
-$ sudo -s
-# lsblk
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sda      8:0    0   40G  0 disk
 └─sda1   8:1    0   40G  0 part /
@@ -60,9 +62,10 @@ sde      8:64   0  250M  0 disk
 sdf      8:80   0  250M  0 disk
 sdg      8:96   0  250M  0 disk
 ```
-
+```bash
+lshw -short | grep disk
+```
 ```console
-# lshw -short | grep disk
 /0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK
 /0/100/d/0          /dev/sdb   disk        6442MB VBOX HARDDISK
 /0/100/d/1          /dev/sdc   disk        6442MB VBOX HARDDISK
