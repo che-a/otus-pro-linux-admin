@@ -67,14 +67,14 @@ lshw -short | grep disk
 ```
 ```console
 /0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK
-/0/100/d/0          /dev/sdb   disk        6442MB VBOX HARDDISK
-/0/100/d/1          /dev/sdc   disk        6442MB VBOX HARDDISK
-/0/100/d/2          /dev/sdd   disk        262MB VBOX HARDDISK
-/0/100/d/3          /dev/sde   disk        262MB VBOX HARDDISK
-/0/100/d/4          /dev/sdf   disk        262MB VBOX HARDDISK
-/0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK
+/0/100/d/0          /dev/sdb   disk        10GB VBOX HARDDISK
+/0/100/d/1          /dev/sdc   disk        10GB VBOX HARDDISK
+/0/100/d/2          /dev/sdd   disk        268MB VBOX HARDDISK
+/0/100/d/3          /dev/sde   disk        268MB VBOX HARDDISK
+/0/100/d/4          /dev/sdf   disk        268MB VBOX HARDDISK
+/0/100/d/5          /dev/sdg   disk        268MB VBOX HARDDISK
 ```
-Далее необходимо произвести разметку на дисках `/dev/sdb` и `/dev/sdc`, чтобы орагнизовать RAID на их разделах.
+Далее на дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
 ```bash
 
 ```
