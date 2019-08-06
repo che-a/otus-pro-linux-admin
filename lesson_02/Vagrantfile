@@ -2,7 +2,7 @@
 # vim: set ft=ruby :
 
 MACHINES = {
-    :machine01 => {
+    :cheLesson2RAID => {
         :box_name => "centos/7",
         :disks => {
             :sata1 => {
