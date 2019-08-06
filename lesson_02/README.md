@@ -76,28 +76,31 @@ lshw -short | grep disk
 ```
 Далее на дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
 ```bash
-# zap (destroy) GPT and MBR data structures
+# уничтожить структуры данных GPT и MBR
 sgdisk --zap-all /dev/sdb
-sgdisk --zap-all /dev/sdс
 
-# clear partition table
+# очистить таблицу разделов
 sgdisk -o /dev/sdb
-sgdisk -o /dev/sdс
 
 sgdisk -n 1:0:+1M --typecode=1:EF02 /dev/sdb
 sgdisk -n 2:0:+512M --typecode=2:8300 /dev/sdb
 sgdisk --largest-new=3 /dev/sdb
 
-sgdisk -n 1:0:+1M --typecode=1:EF02 /dev/sdс
-sgdisk -n 2:0:+512M --typecode=2:8300 /dev/sdс
-sgdisk --largest-new=3 /dev/sdс
+# копия таблицы разделов
+sgdisk -R /dev/sdc /dev/sdb
+
+# рандомизировать GUID дисков и разделов
+sgdisk -G /dev/sdc
+
+# переместить второй заголовок в конец диска
+sgdisk --randomize-guids --move-second-header /dev/sdc
 ```
 ```console
 
 ```
 
 ```console
-mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdb1 /dev/sdc1
+mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdb3 /dev/sdc3
 mdadm --create --verbose /dev/md1 --level=1 --raid-devices=2 /dev/sdb2 /dev/sdc2
 ```
 ```console
