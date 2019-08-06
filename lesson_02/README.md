@@ -45,29 +45,61 @@
 - последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg`.  
 
 #### Сбор информации и подготовка дисков  <a name="intro"></a>  
+Тестовое окружение имеет следующий набор дисков:
 ```console
-$ lsblk
+lsblk
+
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda      8:0    0   40G  0 disk
+sda      8:0    0   40G  0 disk 
 └─sda1   8:1    0   40G  0 part /
-sdb      8:16   0   10G  0 disk
-sdc      8:32   0   10G  0 disk
-sdd      8:48   0  256M  0 disk
-sde      8:64   0  256M  0 disk
-sdf      8:80   0  256M  0 disk
-sdg      8:96   0  256M  0 disk
+sdb      8:16   0   15G  0 disk 
+sdc      8:32   0   15G  0 disk 
+sdd      8:48   0  256M  0 disk 
+sde      8:64   0  256M  0 disk 
+sdf      8:80   0  256M  0 disk 
+sdg      8:96   0  256M  0 disk 
 ```
 ```console
-$ sudo -s
-# lshw -short | grep disk
+sudo lshw -short | grep disk
+
 /0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK
-/0/100/d/0          /dev/sdb   disk        10GB VBOX HARDDISK
-/0/100/d/1          /dev/sdc   disk        10GB VBOX HARDDISK
+/0/100/d/0          /dev/sdb   disk        16GB VBOX HARDDISK
+/0/100/d/1          /dev/sdc   disk        16GB VBOX HARDDISK
 /0/100/d/2          /dev/sdd   disk        268MB VBOX HARDDISK
 /0/100/d/3          /dev/sde   disk        268MB VBOX HARDDISK
 /0/100/d/4          /dev/sdf   disk        268MB VBOX HARDDISK
 /0/100/d/5          /dev/sdg   disk        268MB VBOX HARDDISK
 ```
+```console
+
+```
+Прежде чем собирать диски в программный RAID желательно произвести предварительную проверку их состояния с помощью технологии S.M.A.R.T., но т.к. в данном случае диск `/dev/sdb` не является физическим устройством, то эта информация недоступна.
+```console
+sudo smartctl --all --health /dev/sdb
+
+smartctl 6.5 2016-05-07 r4318 [x86_64-linux-3.10.0-957.12.2.el7.x86_64] (local build)
+Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
+
+=== START OF INFORMATION SECTION ===
+Device Model:     VBOX HARDDISK
+Serial Number:    VB58808702-c85b843c
+Firmware Version: 1.0
+User Capacity:    16 106 127 360 bytes [16,1 GB]
+Sector Size:      512 bytes logical/physical
+Device is:        Not in smartctl database [for details use: -P showall]
+ATA Version is:   ATA/ATAPI-6 published, ANSI INCITS 361-2002
+Local Time is:    Tue Aug  6 21:10:15 2019 UTC
+SMART support is: Unavailable - device lacks SMART capability.
+
+A mandatory SMART command failed: exiting. To continue, add one or more '-T permissive' options.
+```
+<details>
+   <summary>Пример вывода информации S.M.A.R.T. реального устройства:</summary>
+   
+```console
+df -h
+```
+</details>
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
 Работа с дисками начинается со сбора информации:
