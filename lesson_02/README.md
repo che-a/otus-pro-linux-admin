@@ -46,7 +46,7 @@
 - последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg`.  
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
-После загрузки системы необходимо список блочных устройств:
+Итак, в системе имеются следующие блочные устройства:
 ```bash
 sudo -s
 lsblk
@@ -55,12 +55,12 @@ lsblk
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sda      8:0    0   40G  0 disk
 └─sda1   8:1    0   40G  0 part /
-sdb      8:16   0    6G  0 disk
-sdc      8:32   0    6G  0 disk
-sdd      8:48   0  250M  0 disk
-sde      8:64   0  250M  0 disk
-sdf      8:80   0  250M  0 disk
-sdg      8:96   0  250M  0 disk
+sdb      8:16   0   10G  0 disk
+sdc      8:32   0   10G  0 disk
+sdd      8:48   0  256M  0 disk
+sde      8:64   0  256M  0 disk
+sdf      8:80   0  256M  0 disk
+sdg      8:96   0  256M  0 disk
 ```
 ```bash
 lshw -short | grep disk
@@ -74,6 +74,14 @@ lshw -short | grep disk
 /0/100/d/4          /dev/sdf   disk        262MB VBOX HARDDISK
 /0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK
 ```
+Далее необходимо произвести разметку на дисках `/dev/sdb` и `/dev/sdc`, чтобы орагнизовать RAID на их разделах.
+```bash
+
+```
+```console
+
+```
+
 ```console
 mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdb1 /dev/sdc1
 mdadm --create --verbose /dev/md1 --level=1 --raid-devices=2 /dev/sdb2 /dev/sdc2
