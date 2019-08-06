@@ -47,11 +47,8 @@
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
 Работа с дисками начинается со сбора информации:
-```bash
-sudo -s
-lsblk
-```
 ```console
+$ lsblk
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sda      8:0    0   40G  0 disk
 └─sda1   8:1    0   40G  0 part /
@@ -62,10 +59,9 @@ sde      8:64   0  256M  0 disk
 sdf      8:80   0  256M  0 disk
 sdg      8:96   0  256M  0 disk
 ```
-```bash
-lshw -short | grep disk
-```
 ```console
+$ sudo -s
+# lshw -short | grep disk
 /0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK
 /0/100/d/0          /dev/sdb   disk        10GB VBOX HARDDISK
 /0/100/d/1          /dev/sdc   disk        10GB VBOX HARDDISK
