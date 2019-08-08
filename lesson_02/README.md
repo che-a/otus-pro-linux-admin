@@ -50,14 +50,14 @@
 lsblk
 
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda      8:0    0   40G  0 disk 
+sda      8:0    0   40G  0 disk
 └─sda1   8:1    0   40G  0 part /
-sdb      8:16   0   15G  0 disk 
-sdc      8:32   0   15G  0 disk 
-sdd      8:48   0  256M  0 disk 
-sde      8:64   0  256M  0 disk 
-sdf      8:80   0  256M  0 disk 
-sdg      8:96   0  256M  0 disk 
+sdb      8:16   0   15G  0 disk
+sdc      8:32   0   15G  0 disk
+sdd      8:48   0  256M  0 disk
+sde      8:64   0  256M  0 disk
+sdf      8:80   0  256M  0 disk
+sdg      8:96   0  256M  0 disk
 ```
 ```console
 sudo lshw -short | grep disk
@@ -95,7 +95,7 @@ A mandatory SMART command failed: exiting. To continue, add one or more '-T perm
 ```
 <details>
    <summary>Пример вывода информации S.M.A.R.T. реального устройства:</summary>
-   
+
 ```console
 smartctl 6.6 2017-11-05 r4594 [x86_64-linux-4.19.0-5-amd64] (local build)
 Copyright (C) 2002-17, Bruce Allen, Christian Franke, www.smartmontools.org
@@ -124,9 +124,9 @@ Offline data collection status:  (0x00)	Offline data collection activity
 					was never started.
 					Auto Offline Data Collection: Disabled.
 Self-test execution status:      (   0)	The previous self-test routine completed
-					without error or no self-test has ever 
+					without error or no self-test has ever
 					been run.
-Total time to complete Offline 
+Total time to complete Offline
 data collection: 		(13800) seconds.
 Offline data collection
 capabilities: 			 (0x7b) SMART execute Offline immediate.
@@ -142,7 +142,7 @@ SMART capabilities:            (0x0003)	Saves SMART data before entering
 					Supports SMART auto save timer.
 Error logging capability:        (0x01)	Error logging supported.
 					General Purpose Logging supported.
-Short self-test routine 
+Short self-test routine
 recommended polling time: 	 (   2) minutes.
 Extended self-test routine
 recommended polling time: 	 ( 157) minutes.
@@ -199,7 +199,7 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 Работа с дисками начинается со сбора информации:
 
 Далее на дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
-Сперва необходимо уничтожить структуры данных GPT и MBR если такоые имеются:
+Сперва необходимо уничтожить структуры данных GPT и MBR если таковые имеются:
 ```console
 # sgdisk --zap-all /dev/sdb
 ```
@@ -278,7 +278,7 @@ sdg       8:96   0  250M  0 disk
    Working Devices : 2
     Failed Devices : 0
      Spare Devices : 0
-     
+
         Chunk Size : 512K
 
 Consistency Policy : none
