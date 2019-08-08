@@ -209,12 +209,13 @@ sudo sgdisk -o /dev/sdb
 Creating new GPT entries.
 The operation has completed successfully.
 ```
-Следующие команды создают 3 раздела.
+Следующие команды создают 3 раздела на диске `/dev/sdb`.
 ```console
-sgdisk -n 1:0:+1M --typecode=1:EF02 /dev/sdb
-sgdisk -n 2:0:+512M --typecode=2:8300 /dev/sdb
-sgdisk --largest-new=3 /dev/sdb
+sudo sgdisk -n 1:0:+1M --typecode=1:EF02 /dev/sdb
+sudo sgdisk -n 2:0:+512M --typecode=2:8300 /dev/sdb
+sudo sgdisk --largest-new=3 /dev/sdb
 ```
+Диск `/dev/sdc`
 ```console
 # копия таблицы разделов
 sgdisk -R /dev/sdc /dev/sdb
