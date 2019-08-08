@@ -198,11 +198,16 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 На дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
 Сперва необходимо уничтожить структуры данных GPT и MBR, если таковые имеются:
 ```console
-# sgdisk --zap-all /dev/sdb
+sudo sgdisk --zap-all /dev/sdb
+Creating new GPT entries.
+GPT data structures destroyed! You may now partition the disk using fdisk or
+other utilities.
 ```
 Далее следует очистить таблицу разделов:
 ```console
-# sgdisk -o /dev/sdb
+sudo sgdisk -o /dev/sdb
+Creating new GPT entries.
+The operation has completed successfully.
 ```
 Следующие команды создают 3 раздела.
 ```console
@@ -223,7 +228,7 @@ sgdisk --randomize-guids --move-second-header /dev/sdc
 ```console
 
 ```
-
+Сборка RAID 0 и RAID 1:
 ```console
 mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdb3 /dev/sdc3
 mdadm --create --verbose /dev/md1 --level=1 --raid-devices=2 /dev/sdb2 /dev/sdc2
