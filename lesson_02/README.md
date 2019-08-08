@@ -45,35 +45,34 @@
 - последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg`.  
 
 #### Сбор информации и подготовка дисков  <a name="intro"></a>  
-Тестовое окружение имеет следующий набор дисков:
+Работа с дисками начинается со сбора информации:
 ```console
 lsblk
-
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda      8:0    0   40G  0 disk
+sda      8:0    0   40G  0 disk 
 └─sda1   8:1    0   40G  0 part /
-sdb      8:16   0   15G  0 disk
-sdc      8:32   0   15G  0 disk
-sdd      8:48   0  256M  0 disk
-sde      8:64   0  256M  0 disk
-sdf      8:80   0  256M  0 disk
-sdg      8:96   0  256M  0 disk
+sdb      8:16   0    4G  0 disk 
+sdc      8:32   0    4G  0 disk 
+sdd      8:48   0  256M  0 disk 
+sde      8:64   0  256M  0 disk 
+sdf      8:80   0  256M  0 disk 
+sdg      8:96   0  256M  0 disk 
 ```
 ```console
 sudo lshw -short | grep disk
-
 /0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK
-/0/100/d/0          /dev/sdb   disk        16GB VBOX HARDDISK
-/0/100/d/1          /dev/sdc   disk        16GB VBOX HARDDISK
+/0/100/d/0          /dev/sdb   disk        4294MB VBOX HARDDISK
+/0/100/d/1          /dev/sdc   disk        4294MB VBOX HARDDISK
 /0/100/d/2          /dev/sdd   disk        268MB VBOX HARDDISK
 /0/100/d/3          /dev/sde   disk        268MB VBOX HARDDISK
 /0/100/d/4          /dev/sdf   disk        268MB VBOX HARDDISK
 /0/100/d/5          /dev/sdg   disk        268MB VBOX HARDDISK
 ```
 ```console
-
+blkid 
+/dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
 ```
-Прежде чем собирать диски в программный RAID желательно произвести предварительную проверку их состояния с помощью технологии S.M.A.R.T., но т.к. в данном случае диск `/dev/sdb` не является физическим устройством, то эта информация недоступна.
+Прежде чем собирать диски в программный RAID желательно произвести предварительную проверку их состояния с помощью технологии S.M.A.R.T., но, т.к. в данном случае диск `/dev/sdb` не является физическим устройством, то эта информация недоступна.
 ```console
 sudo smartctl --all --health /dev/sdb
 
@@ -196,8 +195,6 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 </details>
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
-Работа с дисками начинается со сбора информации:
-
 Далее на дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
 Сперва необходимо уничтожить структуры данных GPT и MBR если таковые имеются:
 ```console
