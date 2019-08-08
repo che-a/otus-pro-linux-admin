@@ -93,7 +93,7 @@ SMART support is: Unavailable - device lacks SMART capability.
 A mandatory SMART command failed: exiting. To continue, add one or more '-T permissive' options.
 ```
 <details>
-   <summary>Пример вывода информации S.M.A.R.T. реального устройства:</summary>
+   <summary>Пример вывода информации S.M.A.R.T. реального диска:</summary>
 
 ```console
 smartctl 6.6 2017-11-05 r4594 [x86_64-linux-4.19.0-5-amd64] (local build)
@@ -195,8 +195,8 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 </details>
 
 #### Сборка системы с подключенным RAID-массивом <a name="exec1"></a>
-Далее на дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
-Сперва необходимо уничтожить структуры данных GPT и MBR если таковые имеются:
+На дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
+Сперва необходимо уничтожить структуры данных GPT и MBR, если таковые имеются:
 ```console
 # sgdisk --zap-all /dev/sdb
 ```
@@ -204,11 +204,13 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 ```console
 # sgdisk -o /dev/sdb
 ```
+Следующие команды создают 3 раздела.
 ```console
 sgdisk -n 1:0:+1M --typecode=1:EF02 /dev/sdb
 sgdisk -n 2:0:+512M --typecode=2:8300 /dev/sdb
 sgdisk --largest-new=3 /dev/sdb
-
+```
+```console
 # копия таблицы разделов
 sgdisk -R /dev/sdc /dev/sdb
 
