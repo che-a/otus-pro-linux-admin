@@ -552,6 +552,28 @@ sudo mdadm --zero-superblock /dev/sdg
 
 ```
 
+Создание RAID 10
+```bash
+mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
+$ mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
+# mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
+```
+```console
+mdadm: layout defaults to n2
+mdadm: layout defaults to n2
+mdadm: chunk size defaults to 512K
+mdadm: size set to 260096K
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md10 started.
+``````
+```bash
+cat /proc/mdstat |grep -A2 md10
+```
+```console
+md10 : active raid10 sdg[3] sdf[2] sde[1] sdd[0]
+      520192 blocks super 1.2 512K chunks 2 near-copies [4/4] [UUUU]
+      [==========>..........]  resync = 52.2% (272000/520192) finish=0.0min speed=136000K/sec
+```
 ### Создание файла конфигурации mdadm <a name="conf"></a>
 Для автоматического запуска RAID после перезагрузки системы необходимо сгенерировать конфигурационный файл `/etc/mdadm.conf` из текущей запущенной конфигурации mdadm:  
 ```console
