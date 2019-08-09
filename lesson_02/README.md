@@ -69,6 +69,24 @@ sudo lshw -short | grep disk
 /0/100/d/5          /dev/sdg   disk        268MB VBOX HARDDISK
 ```
 ```console
+sudo fdisk -l /dev/sda
+
+Disk /dev/sda: 42.9 GB, 42949672960 bytes, 83886080 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x0009ef88
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048    83886079    41942016   83  Linux
+```
+```console
+df -h -x devtmpfs -x tmpfs
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        40G   13G   28G  31% /
+```
+```console
 blkid 
 /dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
 ```
@@ -209,13 +227,16 @@ sudo sgdisk -o /dev/sdb
 Creating new GPT entries.
 The operation has completed successfully.
 ```
-Следующие команды создают 3 раздела на диске `/dev/sdb`.
+Следующие команды создают GPT-раздел и 5 партиций на диске `/dev/sdb`.
 ```console
-sudo sgdisk -n 1:0:+1M --typecode=1:EF02 /dev/sdb
-sudo sgdisk -n 2:0:+512M --typecode=2:8300 /dev/sdb
-sudo sgdisk --largest-new=3 /dev/sdb
+sgdisk -n 1:0:+1M --typecode=1:EF02 /dev/sdb
+sgdisk -n 2:0:+512M --typecode=2:8300 /dev/sdb
+sgdisk -n 3:0:+256M --typecode=3:8300 /dev/sdb
+sgdisk -n 4:0:+512M --typecode=4:8300 /dev/sdb
+sgdisk -n 5:0:+128M --typecode=5:8300 /dev/sdb
+sgdisk --largest-new=6 /dev/sdb
 ```
-Диск `/dev/sdc`
+Разметка на диске `/dev/sdc` производится путем копирования разметки диска `/dev/sdb`:
 ```console
 # копия таблицы разделов
 sgdisk -R /dev/sdc /dev/sdb
