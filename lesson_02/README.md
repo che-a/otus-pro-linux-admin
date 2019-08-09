@@ -514,4 +514,10 @@ blkid
 ```
 </details>
 
+Для того, чтобы созданные RAID автоматически запускались после перезагрузки системы необходимо сгенерировать конфигурационный файл `/etc/mdadm.conf` из текущей запущенной конфигурации mdadm:  
+```console
+echo "DEVICE partitions" > /etc/mdadm.conf
+mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
+```
+
 #### Перенос работающей системы с одним диском на RAID 1 <a name="exec2"></a>
