@@ -6,6 +6,7 @@
 3. [Выполнение](#exec)
    - [Сбор информации и подготовка дисков](#intro)
    - [Сборка системы с подключенным RAID-массивом](#exec1)  
+   - [Имитация сбоя диска в RAID](#fail)
    - [Перенос работающей системы с одним диском на RAID 1](#exec2)  
 
 ## 1. Описание занятия <a name="description"></a>
@@ -519,5 +520,6 @@ blkid
 echo "DEVICE partitions" > /etc/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
 ```
+#### Имитация сбоя диска в RAID <a name="fail"></a>
 
 #### Перенос работающей системы с одним диском на RAID 1 <a name="exec2"></a>
