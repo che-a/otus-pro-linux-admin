@@ -521,5 +521,28 @@ echo "DEVICE partitions" > /etc/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
 ```
 #### Имитация сбоя диска в RAID <a name="fail"></a>
+```console
+sudo mdadm /dev/md3 --fail /dev/sdb5
+mdadm: set /dev/sdb5 faulty in /dev/md3
+```
+```console
+cat /proc/mdstat
+Personalities : [raid0] [raid1]
+md4 : active raid1 sdc6[1] sdb6[0]
+      2747328 blocks super 1.2 [2/2] [UU]
 
+md3 : active raid1 sdc5[1] sdb5[0](F)
+      130048 blocks super 1.2 [2/1] [_U]
+
+md2 : active raid1 sdc3[1] sdb3[0]
+      261120 blocks super 1.2 [2/2] [UU]
+
+md1 : active raid0 sdc4[1] sdb4[0]
+      1044480 blocks super 1.2 512k chunks
+
+md0 : active raid0 sdc2[1] sdb2[0]
+      1044480 blocks super 1.2 512k chunks
+
+unused devices: <none>
+```
 #### Перенос работающей системы с одним диском на RAID 1 <a name="exec2"></a>
