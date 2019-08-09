@@ -583,15 +583,10 @@ sudo mdadm --zero-superblock /dev/sde
 sudo mdadm --zero-superblock /dev/sdf
 sudo mdadm --zero-superblock /dev/sdg
 ```
-```console
-
-```
 
 Создание RAID 10
 ```bash
-mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
-$ mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
-# mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
+sudo mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
 ```
 ```console
 mdadm: layout defaults to n2
