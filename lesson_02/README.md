@@ -338,8 +338,23 @@ Number  Start (sector)    End (sector)  Size       Code  Name
    5         2625536         2887679   128.0 MiB   8300
    6         2887680         8388574   2.6 GiB     8300
 ```
+```console
+blkid
+/dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
+/dev/sdb1: PARTUUID="29807bc6-9b60-4562-8696-8fcfe02b23ad"
+/dev/sdb2: PARTUUID="f5dfbeef-7803-4b40-b6c3-3712fae8d99e"
+/dev/sdb3: PARTUUID="1b09c5e6-4a17-4b28-9262-60e09f15fd4f"
+/dev/sdb4: PARTUUID="1ddc0fc8-136a-4244-963d-260a29a51efa"
+/dev/sdb5: PARTUUID="424208c1-e5a3-4824-9c05-94d64c02ede8"
+/dev/sdb6: PARTUUID="d3cd72e3-6688-46e5-8f51-b129b51e0b83"
+/dev/sdc1: PARTUUID="e02b7e30-0b59-4196-af23-d87ad1a16bb5"
+/dev/sdc2: PARTUUID="4ef1124c-1e6d-4a93-aee2-99faf6122f5d"
+/dev/sdc3: PARTUUID="f91757cf-24e3-4ac9-882a-21740307de08"
+/dev/sdc4: PARTUUID="45abe469-597c-4a20-a09a-4ec4713ac176"
+/dev/sdc5: PARTUUID="b0515451-a5f7-49ce-aac9-de9d85cd5d41"
+/dev/sdc6: PARTUUID="a371f31c-cc38-45dd-bd07-44578081c5fc"
+```
 </details>
-
 
 Сборка RAID 0 и RAID 1:
 ```console
