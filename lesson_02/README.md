@@ -521,6 +521,32 @@ blkid
 </details>
 
 ### Создание RAID 5/6/10 на дисках <a name="raid-5-6-10"></a>  
+```bash
+sudo mdadm --create --verbose /dev/md5 --level=5 --raid-devices=4 /dev/sd{d,e,f,g}
+```
+```console
+mdadm: layout defaults to left-symmetric
+mdadm: layout defaults to left-symmetric
+mdadm: chunk size defaults to 512K
+mdadm: size set to 260096K
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md5 started.
+```
+```bash
+cat /proc/mdstat | grep -A1 md5
+```
+```console
+md5 : active raid5 sdg[4] sdf[2] sde[1] sdd[0]
+      780288 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU]
+```
+Удаление RAID 5:
+```bash
+sudo mdadm --stop /dev/md5
+sudo mdadm --zero-superblock /dev/sdd
+sudo mdadm --zero-superblock /dev/sde
+sudo mdadm --zero-superblock /dev/sdf
+sudo mdadm --zero-superblock /dev/sdg
+```
 ```console
 
 ```
