@@ -356,18 +356,16 @@ blkid
 ```
 </details>
 
-Сборка нескольких экземпляров RAID 0 и RAID 1:
+Сборка двух экземпляров RAID 0:
 ```console
-# RAID 0
 mdadm --create --verbose /dev/md0 --force --level=0 --raid-devices=2 /dev/sdb2 /dev/sdc2
 mdadm --create --verbose /dev/md1 --force --level=0 --raid-devices=2 /dev/sdb4 /dev/sdc4
-
-# RAID 1
+```
+Сборка трех экземпляров RAID 1:
+```console
 mdadm --create --metadata=1.2 --verbose /dev/md2 --force --level=1 --raid-devices=2 /dev/sdb3 /dev/sdc3
 mdadm --create --metadata=1.2 --verbose /dev/md3 --force --level=1 --raid-devices=2 /dev/sdb5 /dev/sdc5
 mdadm --create --metadata=1.2 --verbose /dev/md4 --force --level=1 --raid-devices=2 /dev/sdb6 /dev/sdc6
-
-mdadm --detail --scan --verbose
 ```
 ```console
 cat /proc/mdstat
@@ -391,6 +389,9 @@ md0 : active raid0 sdc2[1] sdb2[0]
 
 unused devices: <none>
 ```
+<details>
+   <summary>Подробная информация о созданных RAID</summary>
+
 ```console
 lsblk
 NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
@@ -426,7 +427,7 @@ sdf       8:80   0  256M  0 disk
 sdg       8:96   0  256M  0 disk
 ```
 ```console
-# mdadm -D /dev/md0
+mdadm -D /dev/md0
 /dev/md0:
            Version : 1.2
      Creation Time : Sun Aug  4 17:01:47 2019
@@ -468,5 +469,20 @@ ARRAY /dev/md3 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:3 UUID
 ARRAY /dev/md4 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:4 UUID=81437f7d:b4e2bc0e:5a672738:dbf87ae5
    devices=/dev/sdb6,/dev/sdc6
 ```
+```console
+blkid
+/dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
+/dev/sdc2: UUID="651ca33d-f89b-fa30-29f7-28efacd6aa83" UUID_SUB="a3a8be2e-d727-ee94-f9ca-51d30cf5120a" LABEL="cheLesson2RAID:0" TYPE="linux_raid_member" PARTUUID="7174af66-b838-49ce-a537-433448162b74"
+/dev/sdc3: UUID="8237d8b4-91dc-07a7-3795-a22976b309e0" UUID_SUB="b00887f3-6b50-ad1d-8875-98b5bdd31b0c" LABEL="cheLesson2RAID:2" TYPE="linux_raid_member" PARTUUID="83c6a80c-95b4-41ad-8093-677975954e98"
+/dev/sdc4: UUID="10987d58-405b-1c16-0795-e8412648e8d5" UUID_SUB="99cfdefb-d92f-f37d-3631-15a6776c3219" LABEL="cheLesson2RAID:1" TYPE="linux_raid_member" PARTUUID="b12b4e86-9c9d-43b7-8898-cbf87901ccfd"
+/dev/sdc5: UUID="6fea294f-f427-3284-6e37-1580598eab6c" UUID_SUB="461ba3c3-4023-30ad-b1fc-6eae3d20ec43" LABEL="cheLesson2RAID:3" TYPE="linux_raid_member" PARTUUID="bb97cc6f-49fa-44b3-9a5c-152570c12006"
+/dev/sdc6: UUID="a8131daa-fa8c-c24c-8d9d-49084b4fdb46" UUID_SUB="3aee3801-bfe1-99a4-6060-b49cd10f7eea" LABEL="cheLesson2RAID:4" TYPE="linux_raid_member" PARTUUID="43a8ae85-8a4f-4237-a97f-00c35dc1d830"
+/dev/sdb2: UUID="651ca33d-f89b-fa30-29f7-28efacd6aa83" UUID_SUB="d331a80c-fbcf-0123-6664-9fb97a58efbe" LABEL="cheLesson2RAID:0" TYPE="linux_raid_member" PARTUUID="9c61b841-a205-4217-9a14-d5c920afc5a0"
+/dev/sdb3: UUID="8237d8b4-91dc-07a7-3795-a22976b309e0" UUID_SUB="d68490ea-742a-f11a-337e-f14b77259f49" LABEL="cheLesson2RAID:2" TYPE="linux_raid_member" PARTUUID="271fa1d5-9b7e-4611-a646-de66122ee645"
+/dev/sdb4: UUID="10987d58-405b-1c16-0795-e8412648e8d5" UUID_SUB="ee24e2fb-f42d-3b86-0fad-4906ea88950c" LABEL="cheLesson2RAID:1" TYPE="linux_raid_member" PARTUUID="23a837bb-8346-46ed-9f9b-ddef29800a99"
+/dev/sdb5: UUID="6fea294f-f427-3284-6e37-1580598eab6c" UUID_SUB="0d6c6fb1-d904-760e-1023-9786678d26b8" LABEL="cheLesson2RAID:3" TYPE="linux_raid_member" PARTUUID="2a737331-1592-4b74-b8b9-fab9b07354e0"
+/dev/sdb6: UUID="a8131daa-fa8c-c24c-8d9d-49084b4fdb46" UUID_SUB="fb9f993a-b120-a687-0065-2fa986be91e8" LABEL="cheLesson2RAID:4" TYPE="linux_raid_member" PARTUUID="2d09e818-a1ad-4699-be53-52a7ee137c84"
+```
+</details>
 
 #### Перенос работающей системы с одним диском на RAID 1 <a name="exec2"></a>
