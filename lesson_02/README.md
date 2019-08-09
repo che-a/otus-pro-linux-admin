@@ -45,7 +45,17 @@
 - последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg`.  
 
 #### Сбор информации и подготовка дисков  <a name="intro"></a>  
-Работа с дисками начинается со сбора информации:
+Работа с дисками начинается со сбора информации с использованием следующих команд:
+```console
+lsblk
+sudo lshw -short | grep disk
+sudo fdisk -l /dev/sda
+df -h -x devtmpfs -x tmpfs
+blkid
+```
+<details>
+   <summary>Вывод вышеперечисленных команд для сбора информации о дисках</summary>
+	
 ```console
 lsblk
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
@@ -90,6 +100,8 @@ Filesystem      Size  Used Avail Use% Mounted on
 blkid 
 /dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
 ```
+</details>
+
 Прежде чем собирать диски в программный RAID желательно произвести предварительную проверку их состояния с помощью технологии S.M.A.R.T., но, т.к. в данном случае диск `/dev/sdb` не является физическим устройством, то эта информация недоступна.
 ```console
 sudo smartctl --all --health /dev/sdb
