@@ -533,11 +533,12 @@ mdadm: Defaulting to version 1.2 metadata
 mdadm: array /dev/md5 started.
 ```
 ```bash
-cat /proc/mdstat | grep -A1 md5
+cat /proc/mdstat |grep -A2 md5
 ```
 ```console
 md5 : active raid5 sdg[4] sdf[2] sde[1] sdd[0]
-      780288 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU]
+      780288 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/3] [UUU_]
+      [===>.................]  recovery = 17.4% (45952/260096) finish=0.0min speed=45952K/sec
 ```
 Удаление RAID 5:
 ```bash
