@@ -50,7 +50,7 @@
 
 ### Сбор информации о дисках  <a name="intro"></a>  
 Работа с дисками начинается со сбора информации с использованием следующих команд:
-```console
+```bash
 lsblk
 sudo lshw -short | grep disk
 sudo fdisk -l /dev/sda
@@ -58,10 +58,12 @@ df -h -x devtmpfs -x tmpfs
 blkid
 ```
 <details>
-   <summary>Вывод вышеперечисленных команд для сбора информации о дисках</summary>
+   <summary>Вывод вышеперечисленных команд:</summary>
 	
-```console
+```bash
 lsblk
+```
+```console
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sda      8:0    0   40G  0 disk 
 └─sda1   8:1    0   40G  0 part /
@@ -72,8 +74,10 @@ sde      8:64   0  256M  0 disk
 sdf      8:80   0  256M  0 disk 
 sdg      8:96   0  256M  0 disk 
 ```
-```console
+```bash
 sudo lshw -short | grep disk
+```
+```console
 /0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK
 /0/100/d/0          /dev/sdb   disk        4294MB VBOX HARDDISK
 /0/100/d/1          /dev/sdc   disk        4294MB VBOX HARDDISK
@@ -82,8 +86,10 @@ sudo lshw -short | grep disk
 /0/100/d/4          /dev/sdf   disk        268MB VBOX HARDDISK
 /0/100/d/5          /dev/sdg   disk        268MB VBOX HARDDISK
 ```
-```console
+```bash
 sudo fdisk -l /dev/sda
+```
+```console
 
 Disk /dev/sda: 42.9 GB, 42949672960 bytes, 83886080 sectors
 Units = sectors of 1 * 512 = 512 bytes
@@ -95,21 +101,26 @@ Disk identifier: 0x0009ef88
    Device Boot      Start         End      Blocks   Id  System
 /dev/sda1   *        2048    83886079    41942016   83  Linux
 ```
-```console
+```bash
 df -h -x devtmpfs -x tmpfs
+```
+```console
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/sda1        40G   13G   28G  31% /
 ```
-```console
+```bash
 blkid 
+```
+```console
 /dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
 ```
 </details>
 
 Прежде чем собирать диски в программный RAID желательно произвести предварительную проверку их состояния с помощью технологии S.M.A.R.T., но, т.к. в данном случае диск `/dev/sdb` не является физическим устройством, то эта информация недоступна.
-```console
+```bash
 sudo smartctl --all --health /dev/sdb
-
+```
+```console
 smartctl 6.5 2016-05-07 r4318 [x86_64-linux-3.10.0-957.12.2.el7.x86_64] (local build)
 Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
 
@@ -231,20 +242,24 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 ### Разметка дисков <a name="partitioning"></a>  
 На дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
 Сперва необходимо уничтожить структуры данных GPT и MBR, если таковые имеются:
-```console
+```bash
 sudo sgdisk --zap-all /dev/sdb
+```
+```console
 Creating new GPT entries.
 GPT data structures destroyed! You may now partition the disk using fdisk or
 other utilities.
 ```
 Далее следует очистить таблицу разделов:
-```console
+```bash
 sudo sgdisk -o /dev/sdb
+```
+```console
 Creating new GPT entries.
 The operation has completed successfully.
 ```
 Следующие команды создают GPT-раздел и 5 партиций на диске `/dev/sdb`.
-```console
+```bash
 sgdisk -n 1:0:+1M --typecode=1:EF02 /dev/sdb
 sgdisk -n 2:0:+512M --typecode=2:8300 /dev/sdb
 sgdisk -n 3:0:+256M --typecode=3:8300 /dev/sdb
@@ -253,7 +268,7 @@ sgdisk -n 5:0:+128M --typecode=5:8300 /dev/sdb
 sgdisk --largest-new=6 /dev/sdb
 ```
 Разметка на диске `/dev/sdc` производится путем копирования разметки диска `/dev/sdb`:
-```console
+```bash
 # копия таблицы разделов
 sgdisk -R /dev/sdc /dev/sdb
 # рандомизировать GUID дисков и разделов
@@ -264,8 +279,10 @@ sgdisk --randomize-guids --move-second-header /dev/sdc
 <details>
    <summary>Вывод команд с информацией о разметке дисков</summary>
 
-```console
+```bash
 lsblk
+```
+```console
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sda      8:0    0   40G  0 disk
 └─sda1   8:1    0   40G  0 part /
@@ -288,8 +305,10 @@ sde      8:64   0  256M  0 disk
 sdf      8:80   0  256M  0 disk
 sdg      8:96   0  256M  0 disk
 ```
-```console
+```bash
 sudo gdisk -l /dev/sdb
+```
+```console
 GPT fdisk (gdisk) version 0.8.10
 
 Partition table scan:
@@ -315,8 +334,10 @@ Number  Start (sector)    End (sector)  Size       Code  Name
    5         2625536         2887679   128.0 MiB   8300
    6         2887680         8388574   2.6 GiB     8300
 ```
-```console
+```bash
 sudo gdisk -l /dev/sdc
+```
+```console
 GPT fdisk (gdisk) version 0.8.10
 
 Partition table scan:
@@ -342,8 +363,10 @@ Number  Start (sector)    End (sector)  Size       Code  Name
    5         2625536         2887679   128.0 MiB   8300
    6         2887680         8388574   2.6 GiB     8300
 ```
-```console
+```bash
 blkid
+```
+```console
 /dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
 /dev/sdb1: PARTUUID="29807bc6-9b60-4562-8696-8fcfe02b23ad"
 /dev/sdb2: PARTUUID="f5dfbeef-7803-4b40-b6c3-3712fae8d99e"
@@ -363,18 +386,20 @@ blkid
 ### Создание RAID 0/1 на разделах дисков <a name="raid-0-1"></a>
 
 Сборка двух экземпляров RAID 0:
-```console
+```bash
 mdadm --create --verbose /dev/md0 --force --level=0 --raid-devices=2 /dev/sdb2 /dev/sdc2
 mdadm --create --verbose /dev/md1 --force --level=0 --raid-devices=2 /dev/sdb4 /dev/sdc4
 ```
 Сборка трех экземпляров RAID 1:
-```console
+```bash
 mdadm --create --metadata=1.2 --verbose /dev/md2 --force --level=1 --raid-devices=2 /dev/sdb3 /dev/sdc3
 mdadm --create --metadata=1.2 --verbose /dev/md3 --force --level=1 --raid-devices=2 /dev/sdb5 /dev/sdc5
 mdadm --create --metadata=1.2 --verbose /dev/md4 --force --level=1 --raid-devices=2 /dev/sdb6 /dev/sdc6
 ```
-```console
+```bash
 cat /proc/mdstat
+```
+```console
 Personalities : [raid0] [raid1]
 md4 : active raid1 sdc6[1] sdb6[0]
       2747328 blocks super 1.2 [2/2] [UU]
@@ -398,8 +423,10 @@ unused devices: <none>
 <details>
    <summary>Подробная информация о созданных RAID</summary>
 
-```console
+```bash
 lsblk
+```
+```console
 NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
 sda       8:0    0   40G  0 disk
 └─sda1    8:1    0   40G  0 part  /
@@ -432,8 +459,10 @@ sde       8:64   0  256M  0 disk
 sdf       8:80   0  256M  0 disk
 sdg       8:96   0  256M  0 disk
 ```
-```console
+```bash
 sudo mdadm -D /dev/md0
+```
+```console
 /dev/md0:
            Version : 1.2
      Creation Time : Fri Aug  9 09:16:19 2019
@@ -462,8 +491,10 @@ Consistency Policy : none
        0       8       18        0      active sync   /dev/sdb2
        1       8       34        1      active sync   /dev/sdc2
 ```
-```console
+```bash
 sudo mdadm -D /dev/md4
+```
+```console
 /dev/md4:
            Version : 1.2
      Creation Time : Fri Aug  9 09:16:19 2019
@@ -491,8 +522,10 @@ Consistency Policy : resync
        0       8       22        0      active sync   /dev/sdb6
        1       8       38        1      active sync   /dev/sdc6
 ```
-```console
+```bash
 sudo mdadm --detail --scan --verbose
+```
+```console
 ARRAY /dev/md0 level=raid0 num-devices=2 metadata=1.2 name=cheLesson2RAID:0 UUID=825cb19e:5bd8415f:fd98e4bb:7144b27f
    devices=/dev/sdb2,/dev/sdc2
 ARRAY /dev/md1 level=raid0 num-devices=2 metadata=1.2 name=cheLesson2RAID:1 UUID=c40450c3:eab96268:94c2d342:bcf3b2c0
@@ -504,8 +537,10 @@ ARRAY /dev/md3 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:3 UUID
 ARRAY /dev/md4 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:4 UUID=81437f7d:b4e2bc0e:5a672738:dbf87ae5
    devices=/dev/sdb6,/dev/sdc6
 ```
-```console
+```bash
 blkid
+```
+```console
 /dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
 /dev/sdc2: UUID="651ca33d-f89b-fa30-29f7-28efacd6aa83" UUID_SUB="a3a8be2e-d727-ee94-f9ca-51d30cf5120a" LABEL="cheLesson2RAID:0" TYPE="linux_raid_member" PARTUUID="7174af66-b838-49ce-a537-433448162b74"
 /dev/sdc3: UUID="8237d8b4-91dc-07a7-3795-a22976b309e0" UUID_SUB="b00887f3-6b50-ad1d-8875-98b5bdd31b0c" LABEL="cheLesson2RAID:2" TYPE="linux_raid_member" PARTUUID="83c6a80c-95b4-41ad-8093-677975954e98"
@@ -576,7 +611,7 @@ md10 : active raid10 sdg[3] sdf[2] sde[1] sdd[0]
 ```
 ### Создание файла конфигурации mdadm <a name="conf"></a>
 Для автоматического запуска RAID после перезагрузки системы необходимо сгенерировать конфигурационный файл `/etc/mdadm.conf` из текущей запущенной конфигурации mdadm:  
-```console
+```bash
 echo "DEVICE partitions" > /etc/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
 ```
@@ -584,33 +619,45 @@ mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
 ### Восстановление RAID после сбоя диска <a name="fail"></a>
 Рассмотрим восстановление работоспособности RAID 1 на примере `/dev/md3`.
 Сначала имитируем сбой одного из дисков массива, например, `/dev/sdb5`:
-```console
+```bash
 sudo mdadm /dev/md3 --fail /dev/sdb5
-mdadm: set /dev/sdb5 faulty in /dev/md3
 ```
 ```console
+mdadm: set /dev/sdb5 faulty in /dev/md3
+```
+```bash
 cat /proc/mdstat | grep -A1  md3
+```
+```console
 md3 : active raid1 sdc5[1] sdb5[0](F)
       130048 blocks super 1.2 [2/1] [_U]
 ```
 Далее необходимо удалить &laquo;сбойный&raquo; диск из массива:
-```console
+```bash
 sudo mdadm /dev/md3 --remove /dev/sdb5
-mdadm: hot removed /dev/sdb5 from /dev/md3
 ```
 ```console
+mdadm: hot removed /dev/sdb5 from /dev/md3
+```
+```bash
 cat /proc/mdstat |grep -A1 md3
+```
+```console
 md3 : active raid1 sdc5[1]
       130048 blocks super 1.2 [2/1] [_U]
 ```
 Представим, что мы вставили новый диск `/dev/sdb5` в сервер и теперь нам нужно 
 добавить его в RAID. Делается это следующей командой:
-```console
+```bash
 sudo mdadm /dev/md3 --add /dev/sdb5
-mdadm: added /dev/sdb5
 ```
 ```console
+mdadm: added /dev/sdb5
+```
+```bash
 cat /proc/mdstat |grep -A1 md3
+```
+```console
 md3 : active raid1 sdb5[2] sdc5[1]
       130048 blocks super 1.2 [2/2] [UU]
 ```
