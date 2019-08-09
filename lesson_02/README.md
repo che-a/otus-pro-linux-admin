@@ -356,19 +356,35 @@ blkid
 ```
 </details>
 
-Сборка RAID 0 и RAID 1:
+Сборка нескольких экземпляров RAID 0 и RAID 1:
 ```console
-mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdb3 /dev/sdc3
-mdadm --create --verbose /dev/md1 --level=1 --raid-devices=2 /dev/sdb2 /dev/sdc2
+mdadm --create --verbose /dev/md0 --force --level=0 --raid-devices=2 /dev/sdb2 /dev/sdc2
+mdadm --create --verbose /dev/md1 --force --level=0 --raid-devices=2 /dev/sdb4 /dev/sdc4
+
+mdadm --create --verbose /dev/md2 --force --level=1 --raid-devices=2 /dev/sdb3 /dev/sdc3
+mdadm --create --verbose /dev/md3 --force --level=1 --raid-devices=2 /dev/sdb5 /dev/sdc5
+mdadm --create --verbose /dev/md4 --force --level=1 --raid-devices=2 /dev/sdb6 /dev/sdc6
+
+mdadm --detail --scan --verbose
 ```
 ```console
 cat /proc/mdstat
 Personalities : [raid0] [raid1]
-md1 : active raid1 sdc2[1] sdb2[0]
-      5760960 blocks super 1.2 [2/2] [UU]
-      [==========>..........]  resync = 53.3% (3074432/5760960) finish=0.8min speed=53969K/sec
+md4 : active raid1 sdc6[1] sdb6[0]
+      2747328 blocks super 1.2 [2/2] [UU]
+      [===========>.........]  resync = 57.2% (1573760/2747328) finish=0.1min speed=174862K/sec
 
-md0 : active raid0 sdc1[1] sdb1[0]
+md3 : active raid1 sdc5[1] sdb5[0]
+      130048 blocks super 1.2 [2/2] [UU]
+        resync=DELAYED
+
+md2 : active raid1 sdc3[1] sdb3[0]
+      261120 blocks super 1.2 [2/2] [UU]
+
+md1 : active raid0 sdc4[1] sdb4[0]
+      1044480 blocks super 1.2 512k chunks
+
+md0 : active raid0 sdc2[1] sdb2[0]
       1044480 blocks super 1.2 512k chunks
 
 unused devices: <none>
@@ -378,20 +394,34 @@ lsblk
 NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
 sda       8:0    0   40G  0 disk
 └─sda1    8:1    0   40G  0 part  /
-sdb       8:16   0    6G  0 disk
-├─sdb1    8:17   0  512M  0 part
+sdb       8:16   0    4G  0 disk
+├─sdb1    8:17   0    1M  0 part
+├─sdb2    8:18   0  512M  0 part
 │ └─md0   9:0    0 1020M  0 raid0
-└─sdb2    8:18   0  5,5G  0 part
-  └─md1   9:1    0  5,5G  0 raid1
-sdc       8:32   0    6G  0 disk
-├─sdc1    8:33   0  512M  0 part
+├─sdb3    8:19   0  256M  0 part
+│ └─md2   9:2    0  255M  0 raid1
+├─sdb4    8:20   0  512M  0 part
+│ └─md1   9:1    0 1020M  0 raid0
+├─sdb5    8:21   0  128M  0 part
+│ └─md3   9:3    0  127M  0 raid1
+└─sdb6    8:22   0  2,6G  0 part
+  └─md4   9:4    0  2,6G  0 raid1
+sdc       8:32   0    4G  0 disk
+├─sdc1    8:33   0    1M  0 part
+├─sdc2    8:34   0  512M  0 part
 │ └─md0   9:0    0 1020M  0 raid0
-└─sdc2    8:34   0  5,5G  0 part
-  └─md1   9:1    0  5,5G  0 raid1
-sdd       8:48   0  250M  0 disk
-sde       8:64   0  250M  0 disk
-sdf       8:80   0  250M  0 disk
-sdg       8:96   0  250M  0 disk
+├─sdc3    8:35   0  256M  0 part
+│ └─md2   9:2    0  255M  0 raid1
+├─sdc4    8:36   0  512M  0 part
+│ └─md1   9:1    0 1020M  0 raid0
+├─sdc5    8:37   0  128M  0 part
+│ └─md3   9:3    0  127M  0 raid1
+└─sdc6    8:38   0  2,6G  0 part
+  └─md4   9:4    0  2,6G  0 raid1
+sdd       8:48   0  256M  0 disk
+sde       8:64   0  256M  0 disk
+sdf       8:80   0  256M  0 disk
+sdg       8:96   0  256M  0 disk
 ```
 ```console
 # mdadm -D /dev/md0
