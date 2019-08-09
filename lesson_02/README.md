@@ -6,7 +6,7 @@
 3. [Выполнение](#exec)
    - [Сбор информации и подготовка дисков](#intro)
    - [Сборка системы с подключенным RAID-массивом](#exec1)  
-   - [Имитация сбоя диска в RAID](#fail)
+   - [Восстановление RAID после сбоя диска](#fail)
    - [Перенос работающей системы с одним диском на RAID 1](#exec2)  
 
 ## 1. Описание занятия <a name="description"></a>
@@ -520,29 +520,38 @@ blkid
 echo "DEVICE partitions" > /etc/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
 ```
-#### Имитация сбоя диска в RAID <a name="fail"></a>
+#### Восстановление RAID после сбоя диска<a name="fail"></a>
+Рассмотрим восстановление работоспособности RAID 1 на примере `/dev/md3`.
+Сначала имитируем сбой одного из дисков массива, например, `/dev/sdb5`:
 ```console
 sudo mdadm /dev/md3 --fail /dev/sdb5
 mdadm: set /dev/sdb5 faulty in /dev/md3
 ```
 ```console
-cat /proc/mdstat
-Personalities : [raid0] [raid1]
-md4 : active raid1 sdc6[1] sdb6[0]
-      2747328 blocks super 1.2 [2/2] [UU]
-
+cat /proc/mdstat | grep -A1  md3
 md3 : active raid1 sdc5[1] sdb5[0](F)
       130048 blocks super 1.2 [2/1] [_U]
-
-md2 : active raid1 sdc3[1] sdb3[0]
-      261120 blocks super 1.2 [2/2] [UU]
-
-md1 : active raid0 sdc4[1] sdb4[0]
-      1044480 blocks super 1.2 512k chunks
-
-md0 : active raid0 sdc2[1] sdb2[0]
-      1044480 blocks super 1.2 512k chunks
-
-unused devices: <none>
 ```
+Далее необходимо удалить &laquo;сбойный&raquo; диск из массива:
+```console
+sudo mdadm /dev/md3 --remove /dev/sdb5
+mdadm: hot removed /dev/sdb5 from /dev/md3
+```
+```console
+cat /proc/mdstat |grep -A1 md3
+md3 : active raid1 sdc5[1]
+      130048 blocks super 1.2 [2/1] [_U]
+```
+Представим, что мы вставили новый диск `/dev/sdb5` в сервер и теперь нам нужно 
+добавить его в RAID. Делается это следующей командой:
+```console
+sudo mdadm /dev/md3 --add /dev/sdb5
+mdadm: added /dev/sdb5
+```
+```console
+cat /proc/mdstat |grep -A1 md3
+md3 : active raid1 sdb5[2] sdc5[1]
+      130048 blocks super 1.2 [2/2] [UU]
+```
+
 #### Перенос работающей системы с одним диском на RAID 1 <a name="exec2"></a>
