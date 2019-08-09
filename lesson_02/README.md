@@ -252,16 +252,95 @@ sgdisk --largest-new=6 /dev/sdb
 ```console
 # копия таблицы разделов
 sgdisk -R /dev/sdc /dev/sdb
-
 # рандомизировать GUID дисков и разделов
 sgdisk -G /dev/sdc
-
 # переместить второй заголовок в конец диска
 sgdisk --randomize-guids --move-second-header /dev/sdc
 ```
-```console
+<details>
+   <summary>Вывод команд с информацией о разметке дисков</summary>
 
+```console
+lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda      8:0    0   40G  0 disk
+└─sda1   8:1    0   40G  0 part /
+sdb      8:16   0    4G  0 disk
+├─sdb1   8:17   0    1M  0 part
+├─sdb2   8:18   0  512M  0 part
+├─sdb3   8:19   0  256M  0 part
+├─sdb4   8:20   0  512M  0 part
+├─sdb5   8:21   0  128M  0 part
+└─sdb6   8:22   0  2,6G  0 part
+sdc      8:32   0    4G  0 disk
+├─sdc1   8:33   0    1M  0 part
+├─sdc2   8:34   0  512M  0 part
+├─sdc3   8:35   0  256M  0 part
+├─sdc4   8:36   0  512M  0 part
+├─sdc5   8:37   0  128M  0 part
+└─sdc6   8:38   0  2,6G  0 part
+sdd      8:48   0  256M  0 disk
+sde      8:64   0  256M  0 disk
+sdf      8:80   0  256M  0 disk
+sdg      8:96   0  256M  0 disk
 ```
+```console
+sudo gdisk -l /dev/sdb
+GPT fdisk (gdisk) version 0.8.10
+
+Partition table scan:
+  MBR: protective
+  BSD: not present
+  APM: not present
+  GPT: present
+
+Found valid GPT with protective MBR; using GPT.
+Disk /dev/sdb: 8388608 sectors, 4.0 GiB
+Logical sector size: 512 bytes
+Disk identifier (GUID): D0AD104C-BE55-4FA7-B391-CD4AF69F06FA
+Partition table holds up to 128 entries
+First usable sector is 34, last usable sector is 8388574
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 2014 sectors (1007.0 KiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048            4095   1024.0 KiB  EF02
+   2            4096         1052671   512.0 MiB   8300
+   3         1052672         1576959   256.0 MiB   8300
+   4         1576960         2625535   512.0 MiB   8300
+   5         2625536         2887679   128.0 MiB   8300
+   6         2887680         8388574   2.6 GiB     8300
+```
+```console
+sudo gdisk -l /dev/sdc
+GPT fdisk (gdisk) version 0.8.10
+
+Partition table scan:
+  MBR: protective
+  BSD: not present
+  APM: not present
+  GPT: present
+
+Found valid GPT with protective MBR; using GPT.
+Disk /dev/sdc: 8388608 sectors, 4.0 GiB
+Logical sector size: 512 bytes
+Disk identifier (GUID): 7824BD64-C2EE-4D16-AF75-11A0270618B8
+Partition table holds up to 128 entries
+First usable sector is 34, last usable sector is 8388574
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 2014 sectors (1007.0 KiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048            4095   1024.0 KiB  EF02
+   2            4096         1052671   512.0 MiB   8300
+   3         1052672         1576959   256.0 MiB   8300
+   4         1576960         2625535   512.0 MiB   8300
+   5         2625536         2887679   128.0 MiB   8300
+   6         2887680         8388574   2.6 GiB     8300
+```
+</details>
+
+
 Сборка RAID 0 и RAID 1:
 ```console
 mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2 /dev/sdb3 /dev/sdc3
