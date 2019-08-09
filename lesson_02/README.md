@@ -427,17 +427,17 @@ sdf       8:80   0  256M  0 disk
 sdg       8:96   0  256M  0 disk
 ```
 ```console
-mdadm -D /dev/md0
+sudo mdadm -D /dev/md0
 /dev/md0:
            Version : 1.2
-     Creation Time : Sun Aug  4 17:01:47 2019
+     Creation Time : Fri Aug  9 09:16:19 2019
         Raid Level : raid0
         Array Size : 1044480 (1020.00 MiB 1069.55 MB)
       Raid Devices : 2
      Total Devices : 2
        Persistence : Superblock is persistent
 
-       Update Time : Sun Aug  4 17:01:47 2019
+       Update Time : Fri Aug  9 09:16:19 2019
              State : clean
     Active Devices : 2
    Working Devices : 2
@@ -448,13 +448,42 @@ mdadm -D /dev/md0
 
 Consistency Policy : none
 
-              Name : machine01:0  (local to host machine01)
-              UUID : 31e74539:cb076ad3:d4a2c89a:3a07b503
+              Name : cheLesson2RAID:0  (local to host cheLesson2RAID)
+              UUID : 651ca33d:f89bfa30:29f728ef:acd6aa83
             Events : 0
 
     Number   Major   Minor   RaidDevice State
-       0       8       17        0      active sync   /dev/sdb1
-       1       8       33        1      active sync   /dev/sdc1
+       0       8       18        0      active sync   /dev/sdb2
+       1       8       34        1      active sync   /dev/sdc2
+```
+```console
+sudo mdadm -D /dev/md4
+/dev/md4:
+           Version : 1.2
+     Creation Time : Fri Aug  9 09:16:19 2019
+        Raid Level : raid1
+        Array Size : 2747328 (2.62 GiB 2.81 GB)
+     Used Dev Size : 2747328 (2.62 GiB 2.81 GB)
+      Raid Devices : 2
+     Total Devices : 2
+       Persistence : Superblock is persistent
+
+       Update Time : Fri Aug  9 09:16:36 2019
+             State : clean
+    Active Devices : 2
+   Working Devices : 2
+    Failed Devices : 0
+     Spare Devices : 0
+
+Consistency Policy : resync
+
+              Name : cheLesson2RAID:4  (local to host cheLesson2RAID)
+              UUID : a8131daa:fa8cc24c:8d9d4908:4b4fdb46
+            Events : 17
+
+    Number   Major   Minor   RaidDevice State
+       0       8       22        0      active sync   /dev/sdb6
+       1       8       38        1      active sync   /dev/sdc6
 ```
 ```console
 sudo mdadm --detail --scan --verbose
