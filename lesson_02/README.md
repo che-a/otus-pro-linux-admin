@@ -456,6 +456,17 @@ Consistency Policy : none
        1       8       33        1      active sync   /dev/sdc1
 ```
 ```console
+sudo mdadm --detail --scan --verbose
+ARRAY /dev/md0 level=raid0 num-devices=2 metadata=1.2 name=cheLesson2RAID:0 UUID=825cb19e:5bd8415f:fd98e4bb:7144b27f
+   devices=/dev/sdb2,/dev/sdc2
+ARRAY /dev/md1 level=raid0 num-devices=2 metadata=1.2 name=cheLesson2RAID:1 UUID=c40450c3:eab96268:94c2d342:bcf3b2c0
+   devices=/dev/sdb4,/dev/sdc4
+ARRAY /dev/md2 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:2 UUID=118c3c22:a34ae45d:c79bc37e:5d86de00
+   devices=/dev/sdb3,/dev/sdc3
+ARRAY /dev/md3 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:3 UUID=56ab36e7:89e24f90:d939f575:22e3915e
+   devices=/dev/sdb5,/dev/sdc5
+ARRAY /dev/md4 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:4 UUID=81437f7d:b4e2bc0e:5a672738:dbf87ae5
+   devices=/dev/sdb6,/dev/sdc6
 ```
 
 #### Перенос работающей системы с одним диском на RAID 1 <a name="exec2"></a>
