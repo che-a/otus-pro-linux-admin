@@ -612,6 +612,7 @@ mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
 ```
 
 ### Восстановление RAID после сбоя диска <a name="fail"></a>
+#### Восстановление RAID 1
 Рассмотрим восстановление работоспособности RAID 1 на примере `/dev/md3`.
 Сначала имитируем сбой одного из дисков массива, например, `/dev/sdb5`:
 ```bash
@@ -656,5 +657,62 @@ cat /proc/mdstat |grep -A1 md3
 md3 : active raid1 sdb5[2] sdc5[1]
       130048 blocks super 1.2 [2/2] [UU]
 ```
+#### Восстановление RAID 10
+```bash
+sudo mdadm -D /dev/md10
+```
+```console
+/dev/md10:
+           Version : 1.2
+     Creation Time : Fri Aug  9 19:16:24 2019
+        Raid Level : raid10
+        Array Size : 520192 (508.00 MiB 532.68 MB)
+     Used Dev Size : 260096 (254.00 MiB 266.34 MB)
+      Raid Devices : 4
+     Total Devices : 4
+       Persistence : Superblock is persistent
 
+       Update Time : Fri Aug  9 19:16:53 2019
+             State : clean 
+    Active Devices : 4
+   Working Devices : 4
+    Failed Devices : 0
+     Spare Devices : 0
+
+            Layout : near=2
+        Chunk Size : 512K
+
+Consistency Policy : resync
+
+              Name : cheLesson2RAID:10  (local to host cheLesson2RAID)
+              UUID : e7670989:1a35547c:e19051ca:5135c5a7
+            Events : 17
+
+    Number   Major   Minor   RaidDevice State
+       0       8       48        0      active sync set-A   /dev/sdd
+       1       8       64        1      active sync set-B   /dev/sde
+       2       8       80        2      active sync set-A   /dev/sdf
+       3       8       96        3      active sync set-B   /dev/sdg
+```
+```bash
+cat /proc/mdstat |grep -A1 md10
+```
+```console
+md10 : active raid10 sdg[3] sdf[2] sde[1] sdd[0]
+      520192 blocks super 1.2 512K chunks 2 near-copies [4/4] [UUUU]
+```
+Имитируем отказ диска:
+```bash
+sudo mdadm /dev/md10 --fail /dev/sdd
+```
+```console
+mdadm: set /dev/sdd faulty in /dev/md10
+```
+```bash
+cat /proc/mdstat | grep -A2 md10
+```
+```console
+md10 : active raid10 sdg[3] sdf[2] sde[1] sdd[0](F)
+      520192 blocks super 1.2 512K chunks 2 near-copies [4/3] [_UUU]
+```
 ### Перенос работающей системы с одним диском на RAID 1 <a name="exec2"></a>
