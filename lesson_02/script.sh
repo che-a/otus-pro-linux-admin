@@ -61,14 +61,6 @@ mdadm --zero-superblock /dev/sdg
 # Создание RAID 10
 mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
 
-# Удаление RAID 10
-sleep 10
-mdadm --stop /dev/md10
-mdadm --zero-superblock /dev/sdd
-mdadm --zero-superblock /dev/sde
-mdadm --zero-superblock /dev/sdf
-mdadm --zero-superblock /dev/sdg
-
 
 # Создание файла конфигурации mdadm.conf
 echo "DEVICE partitions" > /etc/mdadm.conf
