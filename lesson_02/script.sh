@@ -45,34 +45,35 @@ function prepare_raid_0_1 {
     return
 }
 
-# Создание RAID 0
 function create_raid0 {
+    echo "START CREATING RAID 0 $1 ON DEVICES $2 AND $3"
     mdadm --create --verbose $1 --force --level=0 --raid-devices=2 $2 $3
 }
 
-# Создание RAID 1
 function create_raid1 {
+    echo "START CREATING RAID 1 $1 ON DEVICES $2 AND $3"
     mdadm --create --metadata=1.2 --verbose $1 --force --level=1 --raid-devices=2 $2 $3
 }
 
-# Создание RAID 5
 function create_raid5 {
+    echo "START CREATING RAID 5 $1"
     mdadm --create --verbose $1 --level=5 --raid-devices=4 /dev/sd{d,e,f,g}
 }
 
-# Создание RAID 6
 function create_raid6 {
+    echo "CREATING RAID 6 $1"
     mdadm --create --verbose $1 --level=6 --raid-devices=4 /dev/sd{d,e,f,g}
 }
 
-# Создание RAID10
 function create_raid10 {
+    echo "START CREATING RAID 10 $1"
     mdadm --create --verbose $1 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
 }
 
 # Удаление RAID 5,6,10
 function destroy_raid {
-    sleep 10
+    echo "START DESTROY RAID $1"
+
     mdadm --stop $1
     mdadm --zero-superblock /dev/sdd
     mdadm --zero-superblock /dev/sde
@@ -82,24 +83,12 @@ function destroy_raid {
 
 # Создание GPT-раздела и 5 партиций на RAID 5,6,10
 function part_raid {
-
-    # Уничтожаем структуры данных GPT и MBR
-    sgdisk --zap-all /dev/sdd
-    sgdisk --zap-all /dev/sde
-    sgdisk --zap-all /dev/sdf
-    sgdisk --zap-all /dev/sdg
-
-    # Очищаем таблицу разделов
-    sgdisk -o /dev/sdd
-    sgdisk -o /dev/sde
-    sgdisk -o /dev/sdf
-    sgdisk -o /dev/sdg
-
+    echo "START PARTITIONING RAID $1"
     sgdisk -n 1:0:+1M --typecode=1:EF02 $1
-    sgdisk -n 2:0:+16M --typecode=2:8300 $1
-    sgdisk -n 3:0:+24M --typecode=3:8300 $1
-    sgdisk -n 4:0:+32M --typecode=4:8300 $1
-    sgdisk -n 5:0:+48M --typecode=5:8300 $1
+    sgdisk -n 2:0:+64M --typecode=2:8300 $1
+    sgdisk -n 3:0:+64M --typecode=3:8300 $1
+    sgdisk -n 4:0:+64M --typecode=4:8300 $1
+    sgdisk -n 5:0:+64M --typecode=5:8300 $1
     sgdisk --largest-new=6 $1
 }
 
@@ -126,6 +115,7 @@ function mkfs_mount {
 
 function build_mdadm_conf {
     # Создание файла конфигурации mdadm.conf
+    echo "START BUILD /etc/mdadm.conf"
     echo "DEVICE partitions" > /etc/mdadm.conf
     mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
 }
@@ -142,13 +132,13 @@ create_raid1 "/dev/md4" "/dev/sdb6" "/dev/sdc6"
 
 create_raid5 "/dev/md5"
 part_raid "/dev/md5"
-destroy_raid "/dev/md5"
+# destroy_raid "/dev/md5"
 
-create_raid6 "/dev/md6"
-part_raid "/dev/md6"
-destroy_raid "/dev/md6"
+# create_raid6 "/dev/md6"
+# part_raid "/dev/md6"
+# destroy_raid "/dev/md6"
 
-create_raid10 "/dev/md10"
-part_raid "/dev/md10"
+# create_raid10 "/dev/md10"
+# part_raid "/dev/md10"
 
 build_mdadm_conf
