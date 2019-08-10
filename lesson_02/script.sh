@@ -44,9 +44,12 @@ function create_raid1 {
     mdadm --create --metadata=1.2 --verbose $1 --force --level=1 --raid-devices=2 $2 $3
 }
 
-# Создание RAID 1/5/6/10
-function create_raid {
+# Создание RAID уровней 0/1/5/6/10 для тестирования
+function test_raid {
     case $1 in
+        0)  echo "Creating RAID 0"
+            mdadm --create --verbose /dev/md$1 --force --level=0 --raid-devices=2 /dev/sd{d,e}
+            ;;
         1)  echo "Creating RAID 1"
             mdadm --create --verbose --metadata=1.2 /dev/md$1 --force --level=1 --raid-devices=2 /dev/sd{d,e}
             mdadm /dev/md$1 --add /dev/sdf
@@ -79,6 +82,10 @@ function create_raid {
         mkfs.ext4 /dev/md$1p$i;
         mount /dev/md$1p$i /mnt/raid/md$1p$i;
     done
+}
+
+# Подготовка к переносу "живой" системы на RAID
+function transfer_to_raid {
 
 }
 
@@ -86,14 +93,8 @@ function create_raid {
 yum install -y mdadm smartmontools hdparm gdisk
 yum install -y nano wget tree
 
-#prepare_raid_0_1
-#create_raid0 "/dev/md20" "/dev/sdb2" "/dev/sdc2"
-#create_raid0 "/dev/md21" "/dev/sdb4" "/dev/sdc4"
-#create_raid1 "/dev/md22" "/dev/sdb3" "/dev/sdc3"
-#create_raid1 "/dev/md23" "/dev/sdb5" "/dev/sdc5"
-#create_raid1 "/dev/md24" "/dev/sdb6" "/dev/sdc6"
 
-create_raid 1
+create_raid 0
 
 # Создание файла конфигурации mdadm.conf
 echo "DEVICE partitions" > /etc/mdadm.conf
