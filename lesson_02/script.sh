@@ -1,5 +1,27 @@
 #!/usr/bin/env bash
 
+LOG_FILE=report.log
+
+function log {
+    lsblk > $LOG_FILE
+    echo "---" >> $LOG_FILE
+    lshw -short | grep disk >> $LOG_FILE
+    echo "---" >> $LOG_FILE
+    df -h -x tmpfs -x devtmpfs >> $LOG_FILE
+    blkid >> $LOG_FILE
+    echo "---" >> $LOG_FILE
+    cat /proc/mdstat >> $LOG_FILE
+    echo "---" >> $LOG_FILE
+}
+
+function init {
+    yum update -y
+    yum install -y mdadm smartmontools hdparm gdisk
+    yum install -y nano wget tree
+
+    log
+}
+
 # Создание RAID уровней 0/1/5/6/10 для тестирования
 function test_raid {
     case $1 in
@@ -38,6 +60,8 @@ function test_raid {
         mkfs.ext4 /dev/md$1p$i;
         mount /dev/md$1p$i /mnt/raid/md$1p$i;
     done
+
+    log
 }
 
 # Подготовка "живой" системы к переносу на RAID
@@ -45,11 +69,9 @@ function transfer_to_raid {
     return
 }
 
-yum update -y
-yum install -y mdadm smartmontools hdparm gdisk
-yum install -y nano wget tree
 
-test_raid 10
+init
+test_raid 6
 
 # Создание файла конфигурации mdadm.conf
 echo "DEVICE partitions" > /etc/mdadm.conf
