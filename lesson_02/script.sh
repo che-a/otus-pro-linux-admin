@@ -46,28 +46,17 @@ function create_raid1 {
 
 # Создание RAID 5/6/10
 function create_raid {
-    local MD=
-    local MD_DISKS="/dev/sd{d,e,f,g}"
     case $1 in
-        5)  echo "Создание RAID 5"
-            MD="/dev/md5"
-            mdadm --create --verbose $MD --level=5 --raid-devices=4 $MD_DISKS
-
-            mkdir /mnt/md5p{1..6}
+        5)  echo "Creating RAID 5"
+            mdadm --create --verbose /dev/md$1 --level=5 --raid-devices=4 /dev/sd{d,e,f,g}
             ;;
 
-        6)  echo "RAID 6"
-            MD="/dev/md6"
-            mdadm --create --verbose /dev/md6 --level=6 --raid-devices=4 /dev/sd{d,e,f,g}
-
-            mkdir /mnt/md6p{1..6}
+        6)  echo "Creating RAID 6"
+            mdadm --create --verbose /dev/md$1 --level=6 --raid-devices=4 /dev/sd{d,e,f,g}
             ;;
 
-        10) echo "RAID 10"
-            MD="/dev/md10"
-            mdadm --create --verbose /dev/md10 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
-
-            mkdir /mnt/md10p{1..6}
+        10) echo "Creating RAID 10"
+            mdadm --create --verbose /dev/md$1 --level=10 --raid-devices=4 /dev/sd{d,e,f,g}
             ;;
 
         *)  echo "Invalid RAID level" >&2
@@ -75,27 +64,33 @@ function create_raid {
             ;;
     esac
 
-    parted -s $MD mklabel gpt
+    parted -s /dev/md$1 mklabel gpt
 
-    parted $MD mkpart primary ext4 0% 20%
-    parted $MD mkpart primary ext4 20% 40%
-    parted $MD mkpart primary ext4 40% 60%
-    parted $MD mkpart primary ext4 60% 80%
-    parted $MD mkpart primary ext4 80% 100%
+    parted /dev/md$1 mkpart primary ext4 0% 20%
+    parted /dev/md$1 mkpart primary ext4 20% 40%
+    parted /dev/md$1 mkpart primary ext4 40% 60%
+    parted /dev/md$1 mkpart primary ext4 60% 80%
+    parted /dev/md$1 mkpart primary ext4 80% 100%
+
+    for i in $(seq 1 5); do
+        mkdir -p /mnt/raid/md$1p$i
+        mkfs.ext4 /dev/md$1p$i;
+        mount /dev/md$1p$i /mnt/raid/md$1p$i;
+    done
 
 }
 
 # Подготовка системы: обновление и установка необходимых пакетов
-yum update -y
+# yum update -y
 yum install -y mdadm smartmontools hdparm gdisk
 yum install -y nano wget tree
 
-prepare_raid_0_1
-create_raid0 "/dev/md0" "/dev/sdb2" "/dev/sdc2"
-create_raid0 "/dev/md1" "/dev/sdb4" "/dev/sdc4"
-create_raid1 "/dev/md2" "/dev/sdb3" "/dev/sdc3"
-create_raid1 "/dev/md3" "/dev/sdb5" "/dev/sdc5"
-create_raid1 "/dev/md4" "/dev/sdb6" "/dev/sdc6"
+# prepare_raid_0_1
+# create_raid0 "/dev/md0" "/dev/sdb2" "/dev/sdc2"
+# create_raid0 "/dev/md1" "/dev/sdb4" "/dev/sdc4"
+# create_raid1 "/dev/md2" "/dev/sdb3" "/dev/sdc3"
+# create_raid1 "/dev/md3" "/dev/sdb5" "/dev/sdc5"
+# create_raid1 "/dev/md4" "/dev/sdb6" "/dev/sdc6"
 
 create_raid 5
 
