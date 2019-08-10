@@ -2,14 +2,24 @@
 
 LOG_FILE=report.log
 
-function log {
-    lsblk > $LOG_FILE
+function output_log {
+    echo "== CMD ==: lsblk" >> $LOG_FILE
+    lsblk >> $LOG_FILE
     echo "---" >> $LOG_FILE
+
+    echo '== CMD ==: lshw -short | grep disk' >> $LOG_FILE
     lshw -short | grep disk >> $LOG_FILE
     echo "---" >> $LOG_FILE
+
+    echo '== CMD ==: df -h -x tmpfs -x devtmpfs' >> $LOG_FILE
     df -h -x tmpfs -x devtmpfs >> $LOG_FILE
+    echo "---" >> $LOG_FILE
+
+    echo '== CMD ==: blkid' >> $LOG_FILE
     blkid >> $LOG_FILE
     echo "---" >> $LOG_FILE
+
+    echo '== CMD ==: cat /proc/mdstat' >> $LOG_FILE
     cat /proc/mdstat >> $LOG_FILE
     echo "---" >> $LOG_FILE
 }
@@ -19,7 +29,8 @@ function init {
     yum install -y mdadm smartmontools hdparm gdisk
     yum install -y nano wget tree
 
-    log
+    touch $LOG_FILE
+    output_log
 }
 
 # Создание RAID уровней 0/1/5/6/10 для тестирования
@@ -61,7 +72,11 @@ function test_raid {
         mount /dev/md$1p$i /mnt/raid/md$1p$i;
     done
 
-    log
+    # Создание файла конфигурации mdadm.conf
+    echo "DEVICE partitions" > /etc/mdadm.conf
+    mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
+
+    output_log
 }
 
 # Подготовка "живой" системы к переносу на RAID
@@ -71,8 +86,4 @@ function transfer_to_raid {
 
 
 init
-test_raid 6
-
-# Создание файла конфигурации mdadm.conf
-echo "DEVICE partitions" > /etc/mdadm.conf
-mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
+test_raid 5
