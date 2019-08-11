@@ -58,16 +58,16 @@ function raid {
             ;;
     esac
 
-    parted -s /dev/md$1 mklabel gpt
+    parted -s /dev/md$1 mktable gpt
+    parted -s /dev/md$1 mkpart primary 2048s 4096s      #GPT-раздел
+    parted -s /dev/md$1 set 1 bios_grub on
+    parted -s /dev/md$1 mkpart primary ext4 4M 5%       #раздел №2
+    parted -s /dev/md$1 mkpart primary ext4 5% 10%      #раздел №3
+    parted -s /dev/md$1 mkpart primary ext4 10% 25%     #раздел №4
+    parted -s /dev/md$1 mkpart primary ext4 25% 50%     #раздел №5
+    parted -s /dev/md$1 mkpart primary ext4 50% 100%    #раздел №6
 
-    parted /dev/md$1 mkpart primary non-fs 0M 1M
-    parted /dev/md$1 mkpart primary ext4 1M 5%
-    parted /dev/md$1 mkpart primary ext4 5% 10%
-    parted /dev/md$1 mkpart primary ext4 10% 25%
-    parted /dev/md$1 mkpart primary ext4 25% 50%
-    parted /dev/md$1 mkpart primary ext4 50% 100%
-
-    for i in $(seq 2 6); do
+   for i in $(seq 2 6); do
         mkdir -p /mnt/raid/md$1p$i
         mkfs.ext4 /dev/md$1p$i
         mount /dev/md$1p$i /mnt/raid/md$1p$i
@@ -96,7 +96,7 @@ function transfer_to_raid {
     mkfs.ext4   /dev/md$1p5
     mkfs.ext4   /dev/md$1p6
 
-    mkdir -p /mnt/{boot,home,var,root_dir}
+    mkdir -p /mnt/{boot,home,var}
     mount /dev/md$1p2 /mnt/boot
     mount /dev/md$1p3 /mnt/home
     mount /dev/md$1p5 /mnt/var
@@ -113,54 +113,44 @@ function transfer_to_raid {
             --exclude /var \
             --exclude swapfile / /mnt/
 
+    #
+    # Формирование скрипта, который необходимо запустить вручную после
+    # развертывания тестового окружения
+    local OUTFILE=continued_transfer.sh
+    (
+    cat << '_EOF_'
+#!/usr/bin/env bash
+mount --bind /proc /mnt/proc
+mount --bind /dev /mnt/dev
+mount --bind /sys /mnt/sys
+mount --bind /run /mnt/run
+chroot /mnt/ /bin/bash <<'EOT'
+# Создание нового /etc/fstab
+echo "# My scripted /etc/fstab" >> /etc/fstab
+echo -n `blkid |grep md6p2 | cut -d" " -f 2`  >> /etc/fstab
+echo '  /boot   ext4    default         0       0' >> /etc/fstab
+echo -n `blkid |grep md6p3 | cut -d" " -f 2`  >> /etc/fstab
+echo '  /home   ext4    default         0       0' >> /etc/fstab
+echo -n `blkid |grep md6p4 | cut -d" " -f 2`  >> /etc/fstab
+echo '  /swap   swap    default         0       0' >> /etc/fstab
+echo -n `blkid |grep md6p5 | cut -d" " -f 2`  >> /etc/fstab
+echo '  /var    ext4    default         0       0' >> /etc/fstab
+echo -n `blkid |grep md6p6 | cut -d" " -f 2`  >> /etc/fstab
+echo '  /       ext4    default         0       0' >> /etc/fstab
+# Создание файла конфигурации mdadm.conf
+echo "DEVICE partitions" > /etc/mdadm.conf
+mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
+dracut --force /boot/initramfs-$(uname -r).img $(uname -r)
+# grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sdb
+EOT
+
+_EOF_
+    ) > $OUTFILE
+    chmod +x $OUTFILE
+
 }
 
 
 init
 raid 6
 transfer_to_raid 6
-
-# Формирование скрипта, который необходимо запустить вручную после
-# развертывания тестового окружения
-OUTFILE=continued_transfer.sh
-(
-cat <<- '_EOF_'
-    #!/usr/bin/env bash
-
-    mount --bind /proc /mnt/proc && \
-    mount --bind /dev /mnt/dev && \
-    mount --bind /sys /mnt/sys && \
-    mount --bind /run /mnt/run
-
-    chroot /mnt/
-
-    # Создание нового /etc/fstab
-    echo "# My scripted /etc/fstab" >> /etc/fstab
-    echo -n `blkid |grep md6p2 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /boot   ext4    default         0       0' >> /etc/fstab
-    echo -n `blkid |grep md6p3 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /home   ext4    default         0       0' >> /etc/fstab
-    echo -n `blkid |grep md6p4 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /swap   swap    default         0       0' >> /etc/fstab
-    echo -n `blkid |grep md6p5 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /var    ext4    default         0       0' >> /etc/fstab
-    echo -n `blkid |grep md6p6 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /       ext4    default         0       0' >> /etc/fstab
-
-    # Создание файла конфигурации mdadm.conf
-    echo "DEVICE partitions" > /etc/mdadm.conf
-    mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
-
-    dracut --force /boot/initramfs-$(uname -r).img $(uname -r)
-
-    ################################################################################
-    #    UUID="4daf1104-9bc9-4ccb-9a90-c6a46324f224" /boot       ext4    defaults        0 0
-    #    UUID="f7eed10b-506e-459b-8987-f54f80833705" /home       ext4    defaults        0 0
-    #    UUID="98fb21b4-3861-4df0-b920-7d29e513ab34" /swap       swap    defaults        0 0
-    #    UUID="70934ad9-5b8f-4673-b82c-7827726b0a65" /var        ext4    defaults        0 0
-    #    UUID="dc4ff553-8b08-4ca4-b49d-e7aa4e59c82b" /           ext4    defaults        0 0
-    ################################################################################
-
-_EOF_
-) > $OUTFILE
-chmod +x $OUTFILE
