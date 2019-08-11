@@ -60,13 +60,14 @@ function raid {
 
     parted -s /dev/md$1 mklabel gpt
 
-    parted /dev/md$1 mkpart primary ext4 0% 5%
+    parted /dev/md$1 mkpart primary non-fs 0M 1M
+    parted /dev/md$1 mkpart primary ext4 1M 5%
     parted /dev/md$1 mkpart primary ext4 5% 10%
     parted /dev/md$1 mkpart primary ext4 10% 25%
     parted /dev/md$1 mkpart primary ext4 25% 50%
     parted /dev/md$1 mkpart primary ext4 50% 100%
 
-    for i in $(seq 1 5); do
+    for i in $(seq 2 6); do
         mkdir -p /mnt/raid/md$1p$i
         mkfs.ext4 /dev/md$1p$i
         mount /dev/md$1p$i /mnt/raid/md$1p$i
@@ -83,23 +84,23 @@ function raid {
 function transfer_to_raid {
 
     # Удалеям ошметки предыдущего задания
-    for i in $(seq 1 5); do
+    for i in $(seq 2 6); do
         umount /dev/md$1p$i
         rmdir /mnt/raid/md$1p$i
     done
     rmdir /mnt/raid
 
-    mkfs.ext4   /dev/md$1p1
     mkfs.ext4   /dev/md$1p2
-    mkswap      /dev/md$1p3
-    mkfs.ext4   /dev/md$1p4
+    mkfs.ext4   /dev/md$1p3
+    mkswap      /dev/md$1p4
     mkfs.ext4   /dev/md$1p5
+    mkfs.ext4   /dev/md$1p6
 
     mkdir -p /mnt/{boot,home,var,root_dir}
-    mount /dev/md$1p1 /mnt/boot
-    mount /dev/md$1p2 /mnt/home
-    mount /dev/md$1p4 /mnt/var
-    mount /dev/md$1p5 /mnt/
+    mount /dev/md$1p2 /mnt/boot
+    mount /dev/md$1p3 /mnt/home
+    mount /dev/md$1p5 /mnt/var
+    mount /dev/md$1p6 /mnt/
 
     # Копируем рабочую систему в /mnt.
     rsync -axu /boot/ /mnt/boot/
@@ -110,8 +111,7 @@ function transfer_to_raid {
             --exclude /boot \
             --exclude /home \
             --exclude /var \
-            --exclude swapfile \
-            / /mnt/
+            --exclude swapfile / /mnt/
 
 }
 
@@ -130,20 +130,21 @@ cat <<- '_EOF_'
     mount --bind /proc /mnt/proc && \
     mount --bind /dev /mnt/dev && \
     mount --bind /sys /mnt/sys && \
-    mount --bind /run /mnt/run && \
+    mount --bind /run /mnt/run
+
     chroot /mnt/
 
     # Создание нового /etc/fstab
-    echo "# My scripted /etc/fstab" > /etc/fstab
-    echo -n `blkid |grep md6p1 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /boot   ext4    default         0       0' >> /etc/fstab
+    echo "# My scripted /etc/fstab" >> /etc/fstab
     echo -n `blkid |grep md6p2 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /home   ext4    default         0       0' >> /etc/fstab
+    echo '  /boot   ext4    default         0       0' >> /etc/fstab
     echo -n `blkid |grep md6p3 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /swap   swap    default         0       0' >> /etc/fstab
+    echo '  /home   ext4    default         0       0' >> /etc/fstab
     echo -n `blkid |grep md6p4 | cut -d" " -f 2`  >> /etc/fstab
-    echo '  /var    ext4    default         0       0' >> /etc/fstab
+    echo '  /swap   swap    default         0       0' >> /etc/fstab
     echo -n `blkid |grep md6p5 | cut -d" " -f 2`  >> /etc/fstab
+    echo '  /var    ext4    default         0       0' >> /etc/fstab
+    echo -n `blkid |grep md6p6 | cut -d" " -f 2`  >> /etc/fstab
     echo '  /       ext4    default         0       0' >> /etc/fstab
 
     # Создание файла конфигурации mdadm.conf
@@ -153,16 +154,6 @@ cat <<- '_EOF_'
     dracut --force /boot/initramfs-$(uname -r).img $(uname -r)
 
     ################################################################################
-        #
-        # /etc/fstab
-        # Created by anaconda on Sat Jun  1 17:13:31 2019
-        #
-        # Accessible filesystems, by reference, are maintained under '/dev/disk'
-        # See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
-        #
-        #UUID=8ac075e3-1124-4bb6-bef7-a6811bf8b870 /                       xfs     defaults        0 0
-        #/swapfile none swap defaults 0 0
-
     #    UUID="4daf1104-9bc9-4ccb-9a90-c6a46324f224" /boot       ext4    defaults        0 0
     #    UUID="f7eed10b-506e-459b-8987-f54f80833705" /home       ext4    defaults        0 0
     #    UUID="98fb21b4-3861-4df0-b920-7d29e513ab34" /swap       swap    defaults        0 0
