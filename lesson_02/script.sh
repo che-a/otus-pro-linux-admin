@@ -2,6 +2,7 @@
 
 LOG_FILE=report.log
 
+# Логирование вывода команд для последующего составления отчета в README.md
 function output_log {
     echo "== CMD ==: lsblk" >> $LOG_FILE
     lsblk >> $LOG_FILE
@@ -34,7 +35,7 @@ function init {
 }
 
 # Создание RAID уровней 0/1/5/6/10 для тестирования
-function test_raid {
+function raid {
     case $1 in
         0)  echo "Creating RAID 0"
             mdadm --create --verbose /dev/md$1 --force --level=0 --raid-devices=2 /dev/sd{b,c}
@@ -84,6 +85,5 @@ function transfer_to_raid {
     return
 }
 
-
 init
-test_raid 5
+raid 1
