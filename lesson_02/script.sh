@@ -140,8 +140,8 @@ echo '  /       ext4    default         0       0' >> /etc/fstab
 # Создание файла конфигурации mdadm.conf
 echo "DEVICE partitions" > /etc/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
-dracut --force /boot/initramfs-$(uname -r).img $(uname -r)
-grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sdb
+dracut --mdadmconf --force /boot/initramfs-$(uname -r).img $(uname -r)
+# grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sdb
 EOT
 
 _EOF_
