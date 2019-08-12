@@ -141,7 +141,7 @@ echo '  /       ext4    default         0       0' >> /etc/fstab
 echo "DEVICE partitions" > /etc/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
 dracut --force /boot/initramfs-$(uname -r).img $(uname -r)
-# grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sdb
+grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sdb
 EOT
 
 _EOF_
@@ -152,5 +152,5 @@ _EOF_
 
 
 init
-raid 6
-transfer_to_raid 6
+raid 1
+transfer_to_raid 1
