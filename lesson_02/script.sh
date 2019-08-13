@@ -25,13 +25,18 @@ function output_log {
     echo "---" >> $LOG_FILE
 }
 
-function init {
+function prepare_system {
     yum update -y
     yum install -y mdadm smartmontools hdparm gdisk
     yum install -y nano wget tree mc
 
     touch $LOG_FILE
     output_log
+}
+
+# Подготовка дисков
+function prepare_disks {
+    return
 }
 
 # Создание RAID уровней 0/1/5/6/10 для тестирования
@@ -127,15 +132,15 @@ mount --bind /run /mnt/run
 chroot /mnt/ /bin/bash <<'EOT'
 # Создание нового /etc/fstab
 echo "# My scripted /etc/fstab" >> /etc/fstab
-echo -n `blkid |grep md6p2 | cut -d" " -f 2`  >> /etc/fstab
+echo -n `blkid |grep md6p1 | cut -d" " -f 2`  >> /etc/fstab
 echo '  /boot   ext4    default         0       0' >> /etc/fstab
-echo -n `blkid |grep md6p3 | cut -d" " -f 2`  >> /etc/fstab
+echo -n `blkid |grep md6p2 | cut -d" " -f 2`  >> /etc/fstab
 echo '  /home   ext4    default         0       0' >> /etc/fstab
-echo -n `blkid |grep md6p4 | cut -d" " -f 2`  >> /etc/fstab
+echo -n `blkid |grep md6p3 | cut -d" " -f 2`  >> /etc/fstab
 echo '  /swap   swap    default         0       0' >> /etc/fstab
-echo -n `blkid |grep md6p5 | cut -d" " -f 2`  >> /etc/fstab
+echo -n `blkid |grep md6p4 | cut -d" " -f 2`  >> /etc/fstab
 echo '  /var    ext4    default         0       0' >> /etc/fstab
-echo -n `blkid |grep md6p6 | cut -d" " -f 2`  >> /etc/fstab
+echo -n `blkid |grep md6p5 | cut -d" " -f 2`  >> /etc/fstab
 echo '  /       ext4    default         0       0' >> /etc/fstab
 # Создание файла конфигурации mdadm.conf
 echo "DEVICE partitions" > /etc/mdadm.conf
@@ -151,6 +156,7 @@ _EOF_
 }
 
 
-init
+prepare_system
+prepare_disks
 raid 1
 transfer_to_raid 1
