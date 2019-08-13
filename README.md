@@ -16,3 +16,6 @@
 
 **3. Занятие 3. Файловые системы и LVM**  
 *Задание:* [Работа с LVM](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_03/)  
+
+**4. Занятие 4. Bash, awk, sed, grep и другие**  
+*Задание:* [Написать скрипт на языке bash](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_04/)
