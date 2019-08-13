@@ -1,34 +1,39 @@
 #!/usr/bin/env bash
 
 LOG_FILE=report.log
+OUTFILE=continued_transfer.sh
+DISKS=("/dev/sdb" "/dev/sdc" "/dev/sdd" "/dev/sde")
 
 # Логирование вывода команд для последующего составления отчета в README.md
 function output_log {
-    echo "== CMD ==: lsblk" >> $LOG_FILE
-    lsblk >> $LOG_FILE
-    echo "---" >> $LOG_FILE
+    (
+        echo "== CMD ==: lsblk"
+        lsblk
+        echo "---"
 
-    echo '== CMD ==: lshw -short | grep disk' >> $LOG_FILE
-    lshw -short | grep disk >> $LOG_FILE
-    echo "---" >> $LOG_FILE
+        echo '== CMD ==: lshw -short | grep disk'
+        lshw -short | grep disk
+        echo "---"
 
-    echo '== CMD ==: df -h -x tmpfs -x devtmpfs' >> $LOG_FILE
-    df -h -x tmpfs -x devtmpfs >> $LOG_FILE
-    echo "---" >> $LOG_FILE
+        echo '== CMD ==: df -h -x tmpfs -x devtmpfs'
+        df -h -x tmpfs -x devtmpfs
+        echo "---"
 
-    echo '== CMD ==: blkid' >> $LOG_FILE
-    blkid >> $LOG_FILE
-    echo "---" >> $LOG_FILE
+        echo '== CMD ==: blkid'
+        blkid
+        echo "---"
 
-    echo '== CMD ==: cat /proc/mdstat' >> $LOG_FILE
-    cat /proc/mdstat >> $LOG_FILE
-    echo "---" >> $LOG_FILE
+        echo '== CMD ==: cat /proc/mdstat'
+        cat /proc/mdstat
+        echo "---"
+    ) >> $LOG_FILE
 }
 
 function prepare_system {
     yum update -y
     yum install -y mdadm smartmontools hdparm gdisk
-    yum install -y nano wget tree mc
+    yum install -y epel-release
+    yum install -y nano wget tree mc haveged
 
     touch $LOG_FILE
     output_log
@@ -36,31 +41,19 @@ function prepare_system {
 
 # Подготовка дисков
 function prepare_disks {
-    return
+
+    for i in ${DISKS[@]}; do
+        parted -s $i mktable gpt
+        parted -s $i mkpart primary 2048s 4096s   # GPT-раздел
+        parted -s $i set 1 bios_grub on
+        parted -s $i mkpart primary ext4 4M 100%  # раздел для RAID
+    done
+
+    output_log
 }
 
 # Создание RAID уровней 0/1/5/6/10 для тестирования
 function raid {
-
-    parted -s /dev/sdb mktable gpt
-    parted -s /dev/sdb mkpart primary 2048s 4096s   # GPT-раздел
-    parted -s /dev/sdb set 1 bios_grub on
-    parted -s /dev/sdb mkpart primary ext4 4M 100%  # раздел для RAID
-
-    parted -s /dev/sdc mktable gpt
-    parted -s /dev/sdc mkpart primary 2048s 4096s   # GPT-раздел
-    parted -s /dev/sdc set 1 bios_grub on
-    parted -s /dev/sdc mkpart primary ext4 4M 100%  # раздел для RAID
-
-    parted -s /dev/sdd mktable gpt
-    parted -s /dev/sdd mkpart primary 2048s 4096s   # GPT-раздел
-    parted -s /dev/sdd set 1 bios_grub on
-    parted -s /dev/sdd mkpart primary ext4 4M 100%  # раздел для RAID
-
-    parted -s /dev/sde mktable gpt
-    parted -s /dev/sde mkpart primary 2048s 4096s   # GPT-раздел
-    parted -s /dev/sde set 1 bios_grub on
-    parted -s /dev/sde mkpart primary ext4 4M 100%  # раздел для RAID
 
     case $1 in
         0)  echo "Creating RAID 0"
@@ -142,7 +135,6 @@ function transfer_to_raid {
     #
     # Формирование скрипта, который необходимо запустить вручную после
     # развертывания тестового окружения
-    local OUTFILE=continued_transfer.sh
     (
     cat << '_EOF_'
 #!/usr/bin/env bash
@@ -153,16 +145,23 @@ mount --bind /run /mnt/run
 chroot /mnt/ /bin/bash <<'EOT'
 # Создание нового /etc/fstab
 echo "# My scripted /etc/fstab" > /etc/fstab
-echo -n `blkid |grep md1p1 | cut -d" " -f 2`  >> /etc/fstab
-echo '  /boot   ext4    defaults         0       0' >> /etc/fstab
-echo -n `blkid |grep md1p2 | cut -d" " -f 2`  >> /etc/fstab
-echo '  /home   ext4    defaults         0       0' >> /etc/fstab
-echo -n `blkid |grep md1p3 | cut -d" " -f 2`  >> /etc/fstab
-echo '  /swap   swap    defaults         0       0' >> /etc/fstab
-echo -n `blkid |grep md1p4 | cut -d" " -f 2`  >> /etc/fstab
-echo '  /var    ext4    defaults         0       0' >> /etc/fstab
-echo -n `blkid |grep md1p5 | cut -d" " -f 2`  >> /etc/fstab
-echo '  /       ext4    defaults         0       0' >> /etc/fstab
+#echo -n `blkid |grep md1p1 | cut -d" " -f 2`  >> /etc/fstab
+#echo '  /boot   ext4    defaults         0       0' >> /etc/fstab
+#echo -n `blkid |grep md1p2 | cut -d" " -f 2`  >> /etc/fstab
+#echo '  /home   ext4    defaults         0       0' >> /etc/fstab
+#echo -n `blkid |grep md1p3 | cut -d" " -f 2`  >> /etc/fstab
+#echo '  /swap   swap    defaults         0       0' >> /etc/fstab
+#echo -n `blkid |grep md1p4 | cut -d" " -f 2`  >> /etc/fstab
+#echo '  /var    ext4    defaults         0       0' >> /etc/fstab
+#echo -n `blkid |grep md1p5 | cut -d" " -f 2`  >> /etc/fstab
+#echo '  /       ext4    defaults         0       0' >> /etc/fstab
+(
+echo '/dev/md1p1  /boot   ext4    defaults         0       0'
+echo '/dev/md1p2  /home   ext4    defaults         0       0'
+echo '/dev/md1p3  /swap   swap    defaults         0       0'
+echo '/dev/md1p4  /var     ext4    defaults         0       0'
+echo '/dev/md1p5  /        ext4    defaults         0       0'
+) >> /etc/fstab
 # Создание файла конфигурации mdadm.conf
 echo "DEVICE partitions" > /etc/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
