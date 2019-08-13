@@ -25,13 +25,18 @@ function output_log {
     echo "---" >> $LOG_FILE
 }
 
-function init {
+function prepare_system {
     yum update -y
     yum install -y mdadm smartmontools hdparm gdisk
     yum install -y nano wget tree mc
 
     touch $LOG_FILE
     output_log
+}
+
+# Подготовка дисков
+function prepare_disks {
+    return
 }
 
 # Создание RAID уровней 0/1/5/6/10 для тестирования
@@ -177,6 +182,7 @@ _EOF_
 }
 
 
-init
+prepare_system
+prepare_disks
 raid 1
 transfer_to_raid 1
