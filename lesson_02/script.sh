@@ -6,34 +6,18 @@ DISKS=("/dev/sdb" "/dev/sdc" "/dev/sdd" "/dev/sde")
 
 # Логирование вывода команд для последующего составления отчета в README.md
 function output_log {
-    (
-        echo "== CMD ==: lsblk"
-        lsblk
-        echo "---"
 
-        echo '== CMD ==: lshw -short | grep disk'
-        lshw -short | grep disk
-        echo "---"
-
-        echo '== CMD ==: df -h -x tmpfs -x devtmpfs'
-        df -h -x tmpfs -x devtmpfs
-        echo "---"
-
-        echo '== CMD ==: blkid'
-        blkid
-        echo "---"
-
-        echo '== CMD ==: cat /proc/mdstat'
-        cat /proc/mdstat
-        echo "---"
-    ) >> $LOG_FILE
+    local CMDS=('lsblk' 'lshw -short | grep disk' 'df -h -x tmpfs -x devtmpfs' 'blkid' 'cat /proc/mdstat')
+    for i in "${CMDS[@]}"; do
+        ( echo ==== $i ====; sh -c "$i" ) >> $LOG_FILE
+    done
 }
 
 function prepare_system {
-    yum update -y
+#    yum update -y
     yum install -y mdadm smartmontools hdparm gdisk
-    yum install -y epel-release
-    yum install -y nano wget tree mc haveged
+    #yum install -y epel-release
+    yum install -y nano wget tree #haveged
 
     touch $LOG_FILE
     output_log
@@ -102,35 +86,43 @@ function raid {
 # Подготовка "живой" системы к переносу на RAID
 function transfer_to_raid {
 
-    # Удалеям ошметки предыдущего задания
+    # Удаляем ошметки предыдущего задания
     for i in $(seq 1 5); do
         umount /dev/md$1p$i
         rmdir /mnt/raid/md$1p$i
     done
     rmdir /mnt/raid
 
-    mkfs.ext4   /dev/md$1p1
-    mkfs.ext4   /dev/md$1p2
-    mkswap      /dev/md$1p3
-    mkfs.ext4   /dev/md$1p4
-    mkfs.ext4   /dev/md$1p5
+#    mkfs.ext4   /dev/md$1p1
+#    mkfs.ext4   /dev/md$1p2
+#    mkswap      /dev/md$1p3
+#    mkfs.ext4   /dev/md$1p4
+#    mkfs.ext4   /dev/md$1p5
 
-    mkdir -p /mnt/{boot,home,var}
-    mount /dev/md$1p1 /mnt/boot
-    mount /dev/md$1p2 /mnt/home
-    mount /dev/md$1p4 /mnt/var
-    mount /dev/md$1p5 /mnt/
+    parted -s /dev/md$1 mktable gpt
+#    parted -s /dev/md$1 mkpart primary ext4 0% 100%
+
+    mkfs.ext4   /dev/md$1
+    mount /dev/md$1 /mnt/
+
+#    mkdir -p /mnt/{boot,home,var}
+#    mount /dev/md$1p1 /mnt/boot
+#    mount /dev/md$1p2 /mnt/home
+#    mount /dev/md$1p4 /mnt/var
+#    mount /dev/md$1p5 /mnt/
 
     # Копируем рабочую систему в /mnt.
-    rsync -axu /boot/ /mnt/boot/
-    rsync -axu /home/ /mnt/home/
-    rsync -axu /var/ /mnt/var/
-    rsync   -axu --recursive --progress \
-            --exclude /vagrant \
-            --exclude /boot \
-            --exclude /home \
-            --exclude /var \
-            --exclude swapfile / /mnt/
+#    rsync -axu /boot/ /mnt/boot/
+#    rsync -axu /home/ /mnt/home/
+#    rsync -axu /var/ /mnt/var/
+#    rsync   -axu --recursive --progress \
+#            --exclude /vagrant \
+#            --exclude /boot \
+#            --exclude /home \
+#            --exclude /var \
+#            --exclude swapfile / /mnt/
+
+    rsync -axu --progress --exclude /vagrant / /mnt/
 
     #
     # Формирование скрипта, который необходимо запустить вручную после
@@ -156,22 +148,20 @@ echo "# My scripted /etc/fstab" > /etc/fstab
 #echo -n `blkid |grep md1p5 | cut -d" " -f 2`  >> /etc/fstab
 #echo '  /       ext4    defaults         0       0' >> /etc/fstab
 (
-echo '/dev/md1p1  /boot   ext4    defaults         0       0'
-echo '/dev/md1p2  /home   ext4    defaults         0       0'
-echo '/dev/md1p3  /swap   swap    defaults         0       0'
-echo '/dev/md1p4  /var     ext4    defaults         0       0'
-echo '/dev/md1p5  /        ext4    defaults         0       0'
+echo -n `blkid |grep md1 | cut -d" " -f 2`
+echo '  /   ext4    defaults         0       0'
 ) >> /etc/fstab
 # Создание файла конфигурации mdadm.conf
 echo "DEVICE partitions" > /etc/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
-dracut --mdadmconf --force /boot/initramfs-$(uname -r).img $(uname -r)
+sed -i 's/SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
+sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.auto=1"/' /etc/default/grub
+dracut --force /boot/initramfs-$(uname -r).img $(uname -r)
 grub2-mkconfig -o /boot/grub2/grub.cfg && \
 grub2-install /dev/sdb && \
 grub2-install /dev/sdc && \
 grub2-install /dev/sdd && \
 grub2-install /dev/sde
-echo "SELINUX=permissive" >> /etc/selinux/config
 EOT
 
 _EOF_
