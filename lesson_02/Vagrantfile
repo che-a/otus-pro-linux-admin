@@ -7,22 +7,22 @@ MACHINES = {
         :disks => {
             :sata1 => {
                 :dfile => './sata1.vdi',
-                :size => 4096,
+                :size => 2048,
                 :port => 1
             },
             :sata2 => {
                 :dfile => './sata2.vdi',
-                :size => 4096,
+                :size => 2048,
                 :port => 2
             },
             :sata3 => {
                 :dfile => './sata3.vdi',
-                :size => 4096,
+                :size => 2048,
                 :port => 3
             },
             :sata4 => {
                 :dfile => './sata4.vdi',
-                :size => 4096,
+                :size => 2048,
                 :port => 4
             }
         }
