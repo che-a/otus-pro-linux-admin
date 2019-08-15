@@ -3,7 +3,7 @@
 LOG_FILE=report.log
 OUTFILE=finish.sh
 DISKS=("/dev/sdb" "/dev/sdc" "/dev/sdd" "/dev/sde")
-RAID_LEVEL=6
+RAID_LEVEL=10
 
 # Логирование вывода информационных команд с целью отслеживания изменений в дисковой подсистеме
 function output_log {
@@ -18,8 +18,9 @@ function output_log {
                 'cat /proc/mdstat')
 
     for i in $(seq 1 80); do echo -n "*" >> $LOG_FILE; done
-    echo; echo "**** $1:" >> $LOG_FILE
+    (echo ; echo "**** $1:") >> $LOG_FILE
     for i in $(seq 1 80); do echo -n "*" >> $LOG_FILE; done
+    echo >> $LOG_FILE
 
     for i in "${CMDS[@]}"; do
         (echo ==== $i ====; sh -c "$i") >> $LOG_FILE;

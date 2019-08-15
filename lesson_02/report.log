@@ -1,0 +1,323 @@
+********************************************************************************
+**** Исходная система:
+********************************************************************************
+==== lsblk ====
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sda      8:0    0  40G  0 disk
+└─sda1   8:1    0  40G  0 part /
+sdb      8:16   0   2G  0 disk
+sdc      8:32   0   2G  0 disk
+sdd      8:48   0   2G  0 disk
+sde      8:64   0   2G  0 disk
+==== parted -s /dev/sda print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sda: 42.9GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+Disk Flags:
+
+Number  Start   End     Size    Type     File system  Flags
+ 1      1049kB  42.9GB  42.9GB  primary  xfs          boot
+
+==== parted -s /dev/sdb print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdb: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags:
+==== parted -s /dev/sdc print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdc: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags:
+==== parted -s /dev/sdd print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdd: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags:
+==== parted -s /dev/sde print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sde: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags:
+==== df -h -x tmpfs -x devtmpfs ====
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        40G   11G   30G  27% /
+==== blkid ====
+/dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
+==== cat /proc/mdstat ====
+Personalities :
+unused devices: <none>
+********************************************************************************
+**** Обновленная система с доустановленными пакетами:
+********************************************************************************
+==== lsblk ====
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sda      8:0    0  40G  0 disk
+└─sda1   8:1    0  40G  0 part /
+sdb      8:16   0   2G  0 disk
+sdc      8:32   0   2G  0 disk
+sdd      8:48   0   2G  0 disk
+sde      8:64   0   2G  0 disk
+==== parted -s /dev/sda print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sda: 42.9GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+Disk Flags:
+
+Number  Start   End     Size    Type     File system  Flags
+ 1      1049kB  42.9GB  42.9GB  primary  xfs          boot
+
+==== parted -s /dev/sdb print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdb: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags:
+==== parted -s /dev/sdc print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdc: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags:
+==== parted -s /dev/sdd print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdd: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags:
+==== parted -s /dev/sde print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sde: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags:
+==== df -h -x tmpfs -x devtmpfs ====
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        40G   12G   29G  28% /
+==== blkid ====
+/dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
+==== cat /proc/mdstat ====
+Personalities :
+unused devices: <none>
+********************************************************************************
+**** Разметка дисков:
+********************************************************************************
+==== lsblk ====
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sda      8:0    0  40G  0 disk
+└─sda1   8:1    0  40G  0 part /
+sdb      8:16   0   2G  0 disk
+├─sdb1   8:17   0   1M  0 part
+└─sdb2   8:18   0   2G  0 part
+sdc      8:32   0   2G  0 disk
+├─sdc1   8:33   0   1M  0 part
+└─sdc2   8:34   0   2G  0 part
+sdd      8:48   0   2G  0 disk
+├─sdd1   8:49   0   1M  0 part
+└─sdd2   8:50   0   2G  0 part
+sde      8:64   0   2G  0 disk
+├─sde1   8:65   0   1M  0 part
+└─sde2   8:66   0   2G  0 part
+==== parted -s /dev/sda print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sda: 42.9GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+Disk Flags:
+
+Number  Start   End     Size    Type     File system  Flags
+ 1      1049kB  42.9GB  42.9GB  primary  xfs          boot
+
+==== parted -s /dev/sdb print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdb: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  2098kB  1049kB               primary  bios_grub
+ 2      4194kB  2146MB  2142MB               primary
+
+==== parted -s /dev/sdc print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdc: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  2098kB  1049kB               primary  bios_grub
+ 2      4194kB  2146MB  2142MB               primary
+
+==== parted -s /dev/sdd print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdd: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  2098kB  1049kB               primary  bios_grub
+ 2      4194kB  2146MB  2142MB               primary
+
+==== parted -s /dev/sde print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sde: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  2098kB  1049kB               primary  bios_grub
+ 2      4194kB  2146MB  2142MB               primary
+
+==== df -h -x tmpfs -x devtmpfs ====
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        40G   12G   29G  28% /
+==== blkid ====
+/dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
+/dev/sdb1: PARTLABEL="primary" PARTUUID="d25c9202-1694-4d9c-95b3-4f7523eb5413"
+/dev/sdb2: PARTLABEL="primary" PARTUUID="e771636f-f0c9-47a3-93da-e26b8f2d3a2f"
+/dev/sdc1: PARTLABEL="primary" PARTUUID="fb19a0ec-ba78-49ab-bd24-b4e213b78f1b"
+/dev/sdc2: PARTLABEL="primary" PARTUUID="5a590a0d-4499-4473-a286-c09eccd3ad0b"
+/dev/sdd1: PARTLABEL="primary" PARTUUID="c7b3307c-ea21-495d-bc19-62b5cc5ca723"
+/dev/sdd2: PARTLABEL="primary" PARTUUID="5516ffda-0b04-495a-8176-ff86d84cc2da"
+/dev/sde1: PARTLABEL="primary" PARTUUID="4787693f-88cd-4e94-858b-fee8f26d2ea7"
+/dev/sde2: PARTLABEL="primary" PARTUUID="3b74f32d-8bca-4e1b-8097-0672a2a50931"
+==== cat /proc/mdstat ====
+Personalities :
+unused devices: <none>
+********************************************************************************
+**** Создание RAID:
+********************************************************************************
+==== lsblk ====
+NAME         MAJ:MIN RM  SIZE RO TYPE   MOUNTPOINT
+sda            8:0    0   40G  0 disk
+└─sda1         8:1    0   40G  0 part   /
+sdb            8:16   0    2G  0 disk
+├─sdb1         8:17   0    1M  0 part
+└─sdb2         8:18   0    2G  0 part
+  └─md10       9:10   0    4G  0 raid10
+    ├─md10p1 259:0    0  200M  0 md     /mnt/raid/md10p1
+    ├─md10p2 259:1    0  204M  0 md     /mnt/raid/md10p2
+    ├─md10p3 259:2    0  612M  0 md     /mnt/raid/md10p3
+    ├─md10p4 259:3    0 1021M  0 md     /mnt/raid/md10p4
+    └─md10p5 259:4    0    2G  0 md     /mnt/raid/md10p5
+sdc            8:32   0    2G  0 disk
+├─sdc1         8:33   0    1M  0 part
+└─sdc2         8:34   0    2G  0 part
+  └─md10       9:10   0    4G  0 raid10
+    ├─md10p1 259:0    0  200M  0 md     /mnt/raid/md10p1
+    ├─md10p2 259:1    0  204M  0 md     /mnt/raid/md10p2
+    ├─md10p3 259:2    0  612M  0 md     /mnt/raid/md10p3
+    ├─md10p4 259:3    0 1021M  0 md     /mnt/raid/md10p4
+    └─md10p5 259:4    0    2G  0 md     /mnt/raid/md10p5
+sdd            8:48   0    2G  0 disk
+├─sdd1         8:49   0    1M  0 part
+└─sdd2         8:50   0    2G  0 part
+  └─md10       9:10   0    4G  0 raid10
+    ├─md10p1 259:0    0  200M  0 md     /mnt/raid/md10p1
+    ├─md10p2 259:1    0  204M  0 md     /mnt/raid/md10p2
+    ├─md10p3 259:2    0  612M  0 md     /mnt/raid/md10p3
+    ├─md10p4 259:3    0 1021M  0 md     /mnt/raid/md10p4
+    └─md10p5 259:4    0    2G  0 md     /mnt/raid/md10p5
+sde            8:64   0    2G  0 disk
+├─sde1         8:65   0    1M  0 part
+└─sde2         8:66   0    2G  0 part
+  └─md10       9:10   0    4G  0 raid10
+    ├─md10p1 259:0    0  200M  0 md     /mnt/raid/md10p1
+    ├─md10p2 259:1    0  204M  0 md     /mnt/raid/md10p2
+    ├─md10p3 259:2    0  612M  0 md     /mnt/raid/md10p3
+    ├─md10p4 259:3    0 1021M  0 md     /mnt/raid/md10p4
+    └─md10p5 259:4    0    2G  0 md     /mnt/raid/md10p5
+==== parted -s /dev/sda print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sda: 42.9GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+Disk Flags:
+
+Number  Start   End     Size    Type     File system  Flags
+ 1      1049kB  42.9GB  42.9GB  primary  xfs          boot
+
+==== parted -s /dev/sdb print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdb: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  2098kB  1049kB               primary  bios_grub
+ 2      4194kB  2146MB  2142MB               primary
+
+==== parted -s /dev/sdc print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdc: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  2098kB  1049kB               primary  bios_grub
+ 2      4194kB  2146MB  2142MB               primary
+
+==== parted -s /dev/sdd print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sdd: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  2098kB  1049kB               primary  bios_grub
+ 2      4194kB  2146MB  2142MB               primary
+
+==== parted -s /dev/sde print ====
+Model: ATA VBOX HARDDISK (scsi)
+Disk /dev/sde: 2147MB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  2098kB  1049kB               primary  bios_grub
+ 2      4194kB  2146MB  2142MB               primary
+
+==== df -h -x tmpfs -x devtmpfs ====
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        40G   12G   29G  28% /
+/dev/md10p1     190M  1.6M  175M   1% /mnt/raid/md10p1
+/dev/md10p2     194M  1.8M  178M   1% /mnt/raid/md10p2
+/dev/md10p3     587M  936K  543M   1% /mnt/raid/md10p3
+/dev/md10p4     989M  2.6M  920M   1% /mnt/raid/md10p4
+/dev/md10p5     2.0G  6.0M  1.9G   1% /mnt/raid/md10p5
+==== blkid ====
+/dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
+/dev/sdb1: PARTLABEL="primary" PARTUUID="d25c9202-1694-4d9c-95b3-4f7523eb5413"
+/dev/sdb2: UUID="b90ac1e4-09fc-0f15-5206-b992dc93fa4a" UUID_SUB="e25db60d-42db-3542-f2ad-66ac424be39d" LABEL="cheLesson2RAID:10" TYPE="linux_raid_member" PARTLABEL="primary" PARTUUID="e771636f-f0c9-47a3-93da-e26b8f2d3a2f"
+/dev/sdc1: PARTLABEL="primary" PARTUUID="fb19a0ec-ba78-49ab-bd24-b4e213b78f1b"
+/dev/sdc2: UUID="b90ac1e4-09fc-0f15-5206-b992dc93fa4a" UUID_SUB="1a875bfa-04ae-980a-511c-85f1311fa3d4" LABEL="cheLesson2RAID:10" TYPE="linux_raid_member" PARTLABEL="primary" PARTUUID="5a590a0d-4499-4473-a286-c09eccd3ad0b"
+/dev/sdd1: PARTLABEL="primary" PARTUUID="c7b3307c-ea21-495d-bc19-62b5cc5ca723"
+/dev/sdd2: UUID="b90ac1e4-09fc-0f15-5206-b992dc93fa4a" UUID_SUB="805b6159-4c3f-dec2-06c7-1650d1201231" LABEL="cheLesson2RAID:10" TYPE="linux_raid_member" PARTLABEL="primary" PARTUUID="5516ffda-0b04-495a-8176-ff86d84cc2da"
+/dev/sde1: PARTLABEL="primary" PARTUUID="4787693f-88cd-4e94-858b-fee8f26d2ea7"
+/dev/sde2: UUID="b90ac1e4-09fc-0f15-5206-b992dc93fa4a" UUID_SUB="343c7f83-7acc-7b68-362d-e5e9cd6806d2" LABEL="cheLesson2RAID:10" TYPE="linux_raid_member" PARTLABEL="primary" PARTUUID="3b74f32d-8bca-4e1b-8097-0672a2a50931"
+/dev/md10: PTTYPE="gpt"
+/dev/md10p1: UUID="9f48c674-7717-447e-bba8-7fe260aba8f9" TYPE="ext4" PARTLABEL="primary" PARTUUID="64ce6c8a-2e89-4f00-b106-09eb1e051905"
+/dev/md10p2: UUID="6a752b20-bc65-4248-a3ec-d3f2ef533e6c" TYPE="ext4" PARTLABEL="primary" PARTUUID="c9f4e46d-903d-493a-9bc6-aba76df18fe6"
+/dev/md10p3: UUID="724b5b27-7509-4b22-becb-cb2bcd96b82d" TYPE="ext4" PARTLABEL="primary" PARTUUID="d8e81484-cf16-4582-9d5d-df9357c05bc5"
+/dev/md10p4: UUID="f1126363-a8a2-46bd-bf64-86a72f86e002" TYPE="ext4" PARTLABEL="primary" PARTUUID="d6bcb2ba-0e50-4ae5-9794-46577411ef88"
+/dev/md10p5: UUID="d831bb4e-bc10-4adc-a64e-f343a9b61302" TYPE="ext4" PARTLABEL="primary" PARTUUID="c40a2000-8d66-4c68-832d-731932459acf"
+==== cat /proc/mdstat ====
+Personalities : [raid10]
+md10 : active raid10 sde2[3] sdd2[2] sdc2[1] sdb2[0]
+      4179968 blocks super 1.2 512K chunks 2 near-copies [4/4] [UUUU]
+      [>....................]  resync =  0.2% (12160/4179968) finish=17.1min speed=4053K/sec
+
+unused devices: <none>
