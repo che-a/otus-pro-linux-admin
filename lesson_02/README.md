@@ -6,7 +6,7 @@
 3. [Выполнение](#exec)
    - [Сбор информации о дисках](#smartctl)
    - [Создание RAID 0/1/5/6/10](#raid)
-   - [Восстановление RAID после сбоя диска](#fail)
+   - [Восстановление RAID](#fail)
    - [Перенос работающей системы с одним диском на RAID](#transfer)  
 
 ## 1. Описание занятия <a name="description"></a>
@@ -45,6 +45,8 @@
 - автоматическом развертывании тестового окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с подключенным RAID 0/1/5/6/10, уровень которого задается переменной `RAID_LEVEL` в сценарии [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh);  
 - последующей ручной имитацией сбоя диска в RAID и восстановлением RAID;  
 - автоматическом переносе &laquo;живой&raquo; системы на созданный ранее RAID.  
+
+Файл сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh) содержит подробные комментарии о выполняемых командах, поэтому далее описываются только те действия, которые не включены в указанный скрипт. 
 
 ### Сбор информации о дисках  <a name="smartctl"></a>  
 Работа с дисками начинается со сбора информации с использованием следующих команд:
@@ -428,179 +430,10 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 </details>
 
 ### Создание RAID 0/1/5/6/10 <a name="raid"></a>
-
-Сборка двух экземпляров RAID 0:
-```bash
-mdadm --create --verbose /dev/md0 --force --level=0 --raid-devices=2 /dev/sdb2 /dev/sdc2
-mdadm --create --verbose /dev/md1 --force --level=0 --raid-devices=2 /dev/sdb4 /dev/sdc4
-```
-Сборка трех экземпляров RAID 1:
-```bash
-mdadm --create --metadata=1.2 --verbose /dev/md2 --force --level=1 --raid-devices=2 /dev/sdb3 /dev/sdc3
-mdadm --create --metadata=1.2 --verbose /dev/md3 --force --level=1 --raid-devices=2 /dev/sdb5 /dev/sdc5
-mdadm --create --metadata=1.2 --verbose /dev/md4 --force --level=1 --raid-devices=2 /dev/sdb6 /dev/sdc6
-```
-```bash
-cat /proc/mdstat
-```
-```console
-Personalities : [raid0] [raid1]
-md4 : active raid1 sdc6[1] sdb6[0]
-      2747328 blocks super 1.2 [2/2] [UU]
-      [===========>.........]  resync = 57.2% (1573760/2747328) finish=0.1min speed=174862K/sec
-
-md3 : active raid1 sdc5[1] sdb5[0]
-      130048 blocks super 1.2 [2/2] [UU]
-        resync=DELAYED
-
-md2 : active raid1 sdc3[1] sdb3[0]
-      261120 blocks super 1.2 [2/2] [UU]
-
-md1 : active raid0 sdc4[1] sdb4[0]
-      1044480 blocks super 1.2 512k chunks
-
-md0 : active raid0 sdc2[1] sdb2[0]
-      1044480 blocks super 1.2 512k chunks
-
-unused devices: <none>
-```
-<details>
-   <summary>Подробная информация о созданных RAID</summary>
-
-```bash
-lsblk
-```
-```console
-NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-sda       8:0    0   40G  0 disk
-└─sda1    8:1    0   40G  0 part  /
-sdb       8:16   0    4G  0 disk
-├─sdb1    8:17   0    1M  0 part
-├─sdb2    8:18   0  512M  0 part
-│ └─md0   9:0    0 1020M  0 raid0
-├─sdb3    8:19   0  256M  0 part
-│ └─md2   9:2    0  255M  0 raid1
-├─sdb4    8:20   0  512M  0 part
-│ └─md1   9:1    0 1020M  0 raid0
-├─sdb5    8:21   0  128M  0 part
-│ └─md3   9:3    0  127M  0 raid1
-└─sdb6    8:22   0  2,6G  0 part
-  └─md4   9:4    0  2,6G  0 raid1
-sdc       8:32   0    4G  0 disk
-├─sdc1    8:33   0    1M  0 part
-├─sdc2    8:34   0  512M  0 part
-│ └─md0   9:0    0 1020M  0 raid0
-├─sdc3    8:35   0  256M  0 part
-│ └─md2   9:2    0  255M  0 raid1
-├─sdc4    8:36   0  512M  0 part
-│ └─md1   9:1    0 1020M  0 raid0
-├─sdc5    8:37   0  128M  0 part
-│ └─md3   9:3    0  127M  0 raid1
-└─sdc6    8:38   0  2,6G  0 part
-  └─md4   9:4    0  2,6G  0 raid1
-sdd       8:48   0  256M  0 disk
-sde       8:64   0  256M  0 disk
-sdf       8:80   0  256M  0 disk
-sdg       8:96   0  256M  0 disk
-```
-```bash
-sudo mdadm -D /dev/md0
-```
-```console
-/dev/md0:
-           Version : 1.2
-     Creation Time : Fri Aug  9 09:16:19 2019
-        Raid Level : raid0
-        Array Size : 1044480 (1020.00 MiB 1069.55 MB)
-      Raid Devices : 2
-     Total Devices : 2
-       Persistence : Superblock is persistent
-
-       Update Time : Fri Aug  9 09:16:19 2019
-             State : clean
-    Active Devices : 2
-   Working Devices : 2
-    Failed Devices : 0
-     Spare Devices : 0
-
-        Chunk Size : 512K
-
-Consistency Policy : none
-
-              Name : cheLesson2RAID:0  (local to host cheLesson2RAID)
-              UUID : 651ca33d:f89bfa30:29f728ef:acd6aa83
-            Events : 0
-
-    Number   Major   Minor   RaidDevice State
-       0       8       18        0      active sync   /dev/sdb2
-       1       8       34        1      active sync   /dev/sdc2
-```
-```bash
-sudo mdadm -D /dev/md4
-```
-```console
-/dev/md4:
-           Version : 1.2
-     Creation Time : Fri Aug  9 09:16:19 2019
-        Raid Level : raid1
-        Array Size : 2747328 (2.62 GiB 2.81 GB)
-     Used Dev Size : 2747328 (2.62 GiB 2.81 GB)
-      Raid Devices : 2
-     Total Devices : 2
-       Persistence : Superblock is persistent
-
-       Update Time : Fri Aug  9 09:16:36 2019
-             State : clean
-    Active Devices : 2
-   Working Devices : 2
-    Failed Devices : 0
-     Spare Devices : 0
-
-Consistency Policy : resync
-
-              Name : cheLesson2RAID:4  (local to host cheLesson2RAID)
-              UUID : a8131daa:fa8cc24c:8d9d4908:4b4fdb46
-            Events : 17
-
-    Number   Major   Minor   RaidDevice State
-       0       8       22        0      active sync   /dev/sdb6
-       1       8       38        1      active sync   /dev/sdc6
-```
-```bash
-sudo mdadm --detail --scan --verbose
-```
-```console
-ARRAY /dev/md0 level=raid0 num-devices=2 metadata=1.2 name=cheLesson2RAID:0 UUID=825cb19e:5bd8415f:fd98e4bb:7144b27f
-   devices=/dev/sdb2,/dev/sdc2
-ARRAY /dev/md1 level=raid0 num-devices=2 metadata=1.2 name=cheLesson2RAID:1 UUID=c40450c3:eab96268:94c2d342:bcf3b2c0
-   devices=/dev/sdb4,/dev/sdc4
-ARRAY /dev/md2 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:2 UUID=118c3c22:a34ae45d:c79bc37e:5d86de00
-   devices=/dev/sdb3,/dev/sdc3
-ARRAY /dev/md3 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:3 UUID=56ab36e7:89e24f90:d939f575:22e3915e
-   devices=/dev/sdb5,/dev/sdc5
-ARRAY /dev/md4 level=raid1 num-devices=2 metadata=1.2 name=cheLesson2RAID:4 UUID=81437f7d:b4e2bc0e:5a672738:dbf87ae5
-   devices=/dev/sdb6,/dev/sdc6
-```
-```bash
-blkid
-```
-```console
-/dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
-/dev/sdc2: UUID="651ca33d-f89b-fa30-29f7-28efacd6aa83" UUID_SUB="a3a8be2e-d727-ee94-f9ca-51d30cf5120a" LABEL="cheLesson2RAID:0" TYPE="linux_raid_member" PARTUUID="7174af66-b838-49ce-a537-433448162b74"
-/dev/sdc3: UUID="8237d8b4-91dc-07a7-3795-a22976b309e0" UUID_SUB="b00887f3-6b50-ad1d-8875-98b5bdd31b0c" LABEL="cheLesson2RAID:2" TYPE="linux_raid_member" PARTUUID="83c6a80c-95b4-41ad-8093-677975954e98"
-/dev/sdc4: UUID="10987d58-405b-1c16-0795-e8412648e8d5" UUID_SUB="99cfdefb-d92f-f37d-3631-15a6776c3219" LABEL="cheLesson2RAID:1" TYPE="linux_raid_member" PARTUUID="b12b4e86-9c9d-43b7-8898-cbf87901ccfd"
-/dev/sdc5: UUID="6fea294f-f427-3284-6e37-1580598eab6c" UUID_SUB="461ba3c3-4023-30ad-b1fc-6eae3d20ec43" LABEL="cheLesson2RAID:3" TYPE="linux_raid_member" PARTUUID="bb97cc6f-49fa-44b3-9a5c-152570c12006"
-/dev/sdc6: UUID="a8131daa-fa8c-c24c-8d9d-49084b4fdb46" UUID_SUB="3aee3801-bfe1-99a4-6060-b49cd10f7eea" LABEL="cheLesson2RAID:4" TYPE="linux_raid_member" PARTUUID="43a8ae85-8a4f-4237-a97f-00c35dc1d830"
-/dev/sdb2: UUID="651ca33d-f89b-fa30-29f7-28efacd6aa83" UUID_SUB="d331a80c-fbcf-0123-6664-9fb97a58efbe" LABEL="cheLesson2RAID:0" TYPE="linux_raid_member" PARTUUID="9c61b841-a205-4217-9a14-d5c920afc5a0"
-/dev/sdb3: UUID="8237d8b4-91dc-07a7-3795-a22976b309e0" UUID_SUB="d68490ea-742a-f11a-337e-f14b77259f49" LABEL="cheLesson2RAID:2" TYPE="linux_raid_member" PARTUUID="271fa1d5-9b7e-4611-a646-de66122ee645"
-/dev/sdb4: UUID="10987d58-405b-1c16-0795-e8412648e8d5" UUID_SUB="ee24e2fb-f42d-3b86-0fad-4906ea88950c" LABEL="cheLesson2RAID:1" TYPE="linux_raid_member" PARTUUID="23a837bb-8346-46ed-9f9b-ddef29800a99"
-/dev/sdb5: UUID="6fea294f-f427-3284-6e37-1580598eab6c" UUID_SUB="0d6c6fb1-d904-760e-1023-9786678d26b8" LABEL="cheLesson2RAID:3" TYPE="linux_raid_member" PARTUUID="2a737331-1592-4b74-b8b9-fab9b07354e0"
-/dev/sdb6: UUID="a8131daa-fa8c-c24c-8d9d-49084b4fdb46" UUID_SUB="fb9f993a-b120-a687-0065-2fa986be91e8" LABEL="cheLesson2RAID:4" TYPE="linux_raid_member" PARTUUID="2d09e818-a1ad-4699-be53-52a7ee137c84"
-```
-</details>
+См. файл [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh).
 
 
-### Восстановление RAID после сбоя диска <a name="fail"></a>
+### Восстановление RAID <a name="fail"></a>
 #### Восстановление RAID 1
 Рассмотрим восстановление работоспособности RAID 1 на примере `/dev/md3`.
 Сначала имитируем сбой одного из дисков массива, например, `/dev/sdb5`:
