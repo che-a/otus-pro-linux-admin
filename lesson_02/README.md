@@ -243,7 +243,190 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
    <summary>Пример вывода информации S.M.A.R.T. реального неисправного диска:</summary>
 
 ```console
+smartctl 6.6 2016-05-31 r4324 [x86_64-linux-4.9.0-9-amd64] (local build)
+Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
 
+=== START OF INFORMATION SECTION ===
+Model Family:     Seagate Barracuda 7200.10
+Device Model:     ST3160815AS
+Serial Number:    9RA0AHCY
+Firmware Version: 3.AAC
+User Capacity:    160 041 885 696 bytes [160 GB]
+Sector Size:      512 bytes logical/physical
+Device is:        In smartctl database [for details use: -P show]
+ATA Version is:   ATA/ATAPI-7 (minor revision not indicated)
+Local Time is:    Mon Aug 12 16:47:32 2019 MSK
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+
+=== START OF READ SMART DATA SECTION ===
+SMART overall-health self-assessment test result: FAILED!
+Drive failure expected in less than 24 hours. SAVE ALL DATA.
+See vendor-specific Attribute list for failed Attributes.
+
+General SMART Values:
+Offline data collection status:  (0x82)	Offline data collection activity
+					was completed without error.
+					Auto Offline Data Collection: Enabled.
+Self-test execution status:      (   0)	The previous self-test routine completed
+					without error or no self-test has ever 
+					been run.
+Total time to complete Offline 
+data collection: 		(  430) seconds.
+Offline data collection
+capabilities: 			 (0x5b) SMART execute Offline immediate.
+					Auto Offline data collection on/off support.
+					Suspend Offline collection upon new
+					command.
+					Offline surface scan supported.
+					Self-test supported.
+					No Conveyance Self-test supported.
+					Selective Self-test supported.
+SMART capabilities:            (0x0003)	Saves SMART data before entering
+					power-saving mode.
+					Supports SMART auto save timer.
+Error logging capability:        (0x01)	Error logging supported.
+					General Purpose Logging supported.
+Short self-test routine 
+recommended polling time: 	 (   1) minutes.
+Extended self-test routine
+recommended polling time: 	 (  54) minutes.
+
+SMART Attributes Data Structure revision number: 10
+Vendor Specific SMART Attributes with Thresholds:
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+  1 Raw_Read_Error_Rate     0x000f   112   089   006    Pre-fail  Always       -       47673471
+  3 Spin_Up_Time            0x0003   097   097   000    Pre-fail  Always       -       0
+  4 Start_Stop_Count        0x0032   100   100   020    Old_age   Always       -       341
+  5 Reallocated_Sector_Ct   0x0033   001   001   036    Pre-fail  Always   FAILING_NOW 65453
+  7 Seek_Error_Rate         0x000f   089   060   030    Pre-fail  Always       -       807870030
+  9 Power_On_Hours          0x0032   041   041   000    Old_age   Always       -       51938
+ 10 Spin_Retry_Count        0x0013   100   100   097    Pre-fail  Always       -       0
+ 12 Power_Cycle_Count       0x0032   100   100   020    Old_age   Always       -       107
+187 Reported_Uncorrect      0x0032   001   001   000    Old_age   Always       -       313
+189 High_Fly_Writes         0x003a   100   100   000    Old_age   Always       -       0
+190 Airflow_Temperature_Cel 0x0022   070   052   045    Old_age   Always       -       30 (Min/Max 26/30)
+194 Temperature_Celsius     0x0022   030   048   000    Old_age   Always       -       30 (0 18 0 0 0)
+195 Hardware_ECC_Recovered  0x001a   110   054   000    Old_age   Always       -       208712500
+197 Current_Pending_Sector  0x0012   001   001   000    Old_age   Always       -       11166
+198 Offline_Uncorrectable   0x0010   001   001   000    Old_age   Offline      -       11166
+199 UDMA_CRC_Error_Count    0x003e   200   200   000    Old_age   Always       -       0
+200 Multi_Zone_Error_Rate   0x0000   100   253   000    Old_age   Offline      -       0
+202 Data_Address_Mark_Errs  0x0032   226   123   000    Old_age   Always       -       130
+
+SMART Error Log Version: 1
+ATA Error Count: 439 (device log contains only the most recent five errors)
+	CR = Command Register [HEX]
+	FR = Features Register [HEX]
+	SC = Sector Count Register [HEX]
+	SN = Sector Number Register [HEX]
+	CL = Cylinder Low Register [HEX]
+	CH = Cylinder High Register [HEX]
+	DH = Device/Head Register [HEX]
+	DC = Device Command Register [HEX]
+	ER = Error register [HEX]
+	ST = Status register [HEX]
+Powered_Up_Time is measured from power on, and printed as
+DDd+hh:mm:SS.sss where DD=days, hh=hours, mm=minutes,
+SS=sec, and sss=millisec. It "wraps" after 49.710 days.
+
+Error 439 occurred at disk power-on lifetime: 51939 hours (2164 days + 3 hours)
+  When the command that caused the error occurred, the device was active or idle.
+
+  After command completion occurred, registers were:
+  ER ST SC SN CL CH DH
+  -- -- -- -- -- -- --
+  84 51 4f a1 e4 1c e0  Error: ICRC, ABRT 79 sectors at LBA = 0x001ce4a1 = 1893537
+
+  Commands leading to the command that caused the error were:
+  CR FR SC SN CL CH DH DC   Powered_Up_Time  Command/Feature_Name
+  -- -- -- -- -- -- -- --  ----------------  --------------------
+  25 03 f0 00 e4 1c e0 00      00:58:17.540  READ DMA EXT
+  25 03 10 f0 e3 1c e0 00      00:58:17.537  READ DMA EXT
+  25 03 f0 00 e3 1c e0 00      00:58:17.536  READ DMA EXT
+  25 03 10 f0 e2 1c e0 00      00:58:17.533  READ DMA EXT
+  25 03 f0 00 e2 1c e0 00      00:58:17.562  READ DMA EXT
+
+Error 438 occurred at disk power-on lifetime: 51939 hours (2164 days + 3 hours)
+  When the command that caused the error occurred, the device was active or idle.
+
+  After command completion occurred, registers were:
+  ER ST SC SN CL CH DH
+  -- -- -- -- -- -- --
+  84 51 2f c1 a8 1a e0  Error: ICRC, ABRT 47 sectors at LBA = 0x001aa8c1 = 1747137
+
+  Commands leading to the command that caused the error were:
+  CR FR SC SN CL CH DH DC   Powered_Up_Time  Command/Feature_Name
+  -- -- -- -- -- -- -- --  ----------------  --------------------
+  25 03 f0 00 a8 1a e0 00      00:58:07.398  READ DMA EXT
+  25 03 10 f0 a7 1a e0 00      00:58:07.398  READ DMA EXT
+  25 03 f0 00 a7 1a e0 00      00:58:07.394  READ DMA EXT
+  25 03 10 f0 a6 1a e0 00      00:58:07.393  READ DMA EXT
+  25 03 f0 00 a6 1a e0 00      00:58:07.390  READ DMA EXT
+
+Error 437 occurred at disk power-on lifetime: 51939 hours (2164 days + 3 hours)
+  When the command that caused the error occurred, the device was active or idle.
+
+  After command completion occurred, registers were:
+  ER ST SC SN CL CH DH
+  -- -- -- -- -- -- --
+  84 51 9f 51 4f 0b e0  Error: ICRC, ABRT 159 sectors at LBA = 0x000b4f51 = 741201
+
+  Commands leading to the command that caused the error were:
+  CR FR SC SN CL CH DH DC   Powered_Up_Time  Command/Feature_Name
+  -- -- -- -- -- -- -- --  ----------------  --------------------
+  25 03 f0 00 4f 0b e0 00      00:57:00.524  READ DMA EXT
+  25 03 10 f0 4e 0b e0 00      00:57:00.520  READ DMA EXT
+  25 03 f0 00 4e 0b e0 00      00:57:00.520  READ DMA EXT
+  25 03 10 f0 4d 0b e0 00      00:57:00.516  READ DMA EXT
+  25 03 f0 00 4d 0b e0 00      00:57:00.515  READ DMA EXT
+
+Error 436 occurred at disk power-on lifetime: 51939 hours (2164 days + 3 hours)
+  When the command that caused the error occurred, the device was active or idle.
+
+  After command completion occurred, registers were:
+  ER ST SC SN CL CH DH
+  -- -- -- -- -- -- --
+  84 51 9f 51 41 0b e0  Error: ICRC, ABRT 159 sectors at LBA = 0x000b4151 = 737617
+
+  Commands leading to the command that caused the error were:
+  CR FR SC SN CL CH DH DC   Powered_Up_Time  Command/Feature_Name
+  -- -- -- -- -- -- -- --  ----------------  --------------------
+  25 03 f0 00 41 0b e0 00      00:56:59.140  READ DMA EXT
+  25 03 10 f0 40 0b e0 00      00:56:59.139  READ DMA EXT
+  25 03 f0 00 40 0b e0 00      00:56:59.135  READ DMA EXT
+  25 03 10 f0 3f 0b e0 00      00:56:59.135  READ DMA EXT
+  25 03 f0 00 3f 0b e0 00      00:56:59.131  READ DMA EXT
+
+Error 435 occurred at disk power-on lifetime: 51939 hours (2164 days + 3 hours)
+  When the command that caused the error occurred, the device was active or idle.
+
+  After command completion occurred, registers were:
+  ER ST SC SN CL CH DH
+  -- -- -- -- -- -- --
+  84 51 af 41 1d 0a e0  Error: ICRC, ABRT 175 sectors at LBA = 0x000a1d41 = 662849
+
+  Commands leading to the command that caused the error were:
+  CR FR SC SN CL CH DH DC   Powered_Up_Time  Command/Feature_Name
+  -- -- -- -- -- -- -- --  ----------------  --------------------
+  25 03 f0 00 1d 0a e0 00      00:56:53.765  READ DMA EXT
+  25 03 10 f0 1c 0a e0 00      00:56:53.765  READ DMA EXT
+  25 03 f0 00 1c 0a e0 00      00:56:53.761  READ DMA EXT
+  25 03 10 f0 1b 0a e0 00      00:56:53.761  READ DMA EXT
+  25 03 f0 00 1b 0a e0 00      00:56:53.757  READ DMA EXT
+
+SMART Self-test log structure revision number 1
+
+SMART Selective self-test log data structure revision number 1
+ SPAN  MIN_LBA  MAX_LBA  CURRENT_TEST_STATUS
+    1        0        0  Not_testing
+    2        0        0  Not_testing
+    3        0        0  Not_testing
+    4        0        0  Not_testing
+    5        0        0  Not_testing
+Selective self-test flags (0x0):
+  After scanning selected spans, do NOT read-scan remainder of disk.
+If Selective self-test is pending on power-up, resume after 0 minute delay.
 ```
 </details>
 
