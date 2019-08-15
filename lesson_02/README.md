@@ -478,52 +478,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 /dev/md10       3,9G  1,1G  2,6G  30% /
 ```
 ### Восстановление RAID <a name="fail"></a>
-#### Восстановление RAID 1 
-Рассмотрим восстановление работоспособности RAID 1 на примере `/dev/md3`.
-Сначала имитируем сбой одного из дисков массива, например, `/dev/sdb5`:
-```bash
-sudo mdadm /dev/md3 --fail /dev/sdb5
-```
-```console
-mdadm: set /dev/sdb5 faulty in /dev/md3
-```
-```bash
-cat /proc/mdstat | grep -A1  md3
-```
-```console
-md3 : active raid1 sdc5[1] sdb5[0](F)
-      130048 blocks super 1.2 [2/1] [_U]
-```
-Далее необходимо удалить &laquo;сбойный&raquo; диск из массива:
-```bash
-sudo mdadm /dev/md3 --remove /dev/sdb5
-```
-```console
-mdadm: hot removed /dev/sdb5 from /dev/md3
-```
-```bash
-cat /proc/mdstat |grep -A1 md3
-```
-```console
-md3 : active raid1 sdc5[1]
-      130048 blocks super 1.2 [2/1] [_U]
-```
-Представим, что мы вставили новый диск `/dev/sdb5` в сервер и теперь нам нужно 
-добавить его в RAID. Делается это следующей командой:
-```bash
-sudo mdadm /dev/md3 --add /dev/sdb5
-```
-```console
-mdadm: added /dev/sdb5
-```
-```bash
-cat /proc/mdstat |grep -A1 md3
-```
-```console
-md3 : active raid1 sdb5[2] sdc5[1]
-      130048 blocks super 1.2 [2/2] [UU]
-```
-#### Восстановление RAID 10
+#### Восстановление RAID 10   
 Итак, имеется собранный из дисков `/dev/sdb`, `/dev/sdc`, `/dev/sdd` и `/dev/sde` RAID 10.
 ```bash
 cat /proc/mdstat 
