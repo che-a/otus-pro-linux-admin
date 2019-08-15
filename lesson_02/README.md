@@ -4,10 +4,8 @@
 1. [Описание занятия](#description)  
 2. [Домашнее задание](#homework)  
 3. [Выполнение](#exec)
-   - [Сбор информации о дисках](#intro)
-   - [Разметка дисков](#partitioning)
-   - [Создание RAID 0/1 на разделах дисков](#raid-0-1)
-   - [Создание файла конфигурации mdadm](#conf)
+   - [Сбор информации о дисках](#smartctl)
+   - [Создание RAID 0/1/5/6/10](#raid)
    - [Восстановление RAID после сбоя диска](#fail)
    - [Перенос работающей системы с одним диском на RAID](#transfer)  
 
@@ -48,7 +46,7 @@
 - последующей ручной имитацией сбоя диска в RAID и восстановлением RAID;  
 - автоматическом переносе &laquo;живой&raquo; системы на созданный ранее RAID.  
 
-### Сбор информации о дисках  <a name="intro"></a>  
+### Сбор информации о дисках  <a name="smartctl"></a>  
 Работа с дисками начинается со сбора информации с использованием следующих команд:
 ```bash
 lsblk
@@ -429,11 +427,7 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 ```
 </details>
 
-
-### Разметка дисков <a name="partitioning"></a>  
-
-
-### Создание RAID 0/1 на разделах дисков <a name="raid-0-1"></a>
+### Создание RAID 0/1/5/6/10 <a name="raid"></a>
 
 Сборка двух экземпляров RAID 0:
 ```bash
@@ -604,7 +598,6 @@ blkid
 /dev/sdb6: UUID="a8131daa-fa8c-c24c-8d9d-49084b4fdb46" UUID_SUB="fb9f993a-b120-a687-0065-2fa986be91e8" LABEL="cheLesson2RAID:4" TYPE="linux_raid_member" PARTUUID="2d09e818-a1ad-4699-be53-52a7ee137c84"
 ```
 </details>
-
 
 
 ### Восстановление RAID после сбоя диска <a name="fail"></a>
