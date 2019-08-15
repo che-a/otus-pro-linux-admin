@@ -48,10 +48,10 @@
 
 Файл сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh) содержит подробные комментарии о назначении выполняемых команд, поэтому далее описываются только те действия, которые не включены в указанный скрипт.  
 Сценарий [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh) состоит из нескольких функций, каждая из которых объединяет логически связанные команды, что упрощает отладку.  
-Для отслеживания изменения состояния дисковой подсистемы производится логирование вывода информационных команд в файл [report.log]().
+Для отслеживания изменения состояния дисковой подсистемы производится логирование вывода информационных команд в файл [report.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/report.log).
 
 ### Сбор информации о дисках  <a name="smartctl"></a>  
-Работа с дисками начинается со сбора информации о них с использованием следующих команд:
+Работа с дисками начинается со сбора информации о них с использованием, например, следующих команд:
 ```bash
 lsblk
 sudo lshw -short | grep disk
@@ -432,19 +432,47 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 </details>
 
 ### Создание RAID 0/1/5/6/10 <a name="raid"></a>
-Выбор нужного уровня RAID происходит перед запуском тестового окружения путем редатирования значения переменной `RAID_LEVEL` в файле [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh).
+Выбор нужного уровня RAID происходит перед запуском тестового окружения путем редактирования значения переменной `RAID_LEVEL` в файле [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh).  
+RAID 0 создается на двух дисках, RAID 1 -- на трех, RAID 5/6/10 -- на четырех.
 
-
-### Перенос работающей системы с одним диском на RAID <a name="transfer"></a>
+### Перенос работающей системы на RAID <a name="transfer"></a>
 Перенос работающей системы с диска `/dev/sda` на собранный в предыдущем задании RAID 0/1/5/6/10 произоводится ручным запуском сценария `finish.sh`, который автоматически создается при развертывании тестового окружения:
 ```bash
 sudo -s
 ./finish.sh
 ```
+Далее необходимо перезапустить систему и выбрать в меню загрузки виртуальной машины дополнительный диск. 
 ```bash
 reboot
 ```
-
+В итоге получается перенесенная с одиночного диска на RAID система:
+```console
+lsblk
+NAME     MAJ:MIN RM SIZE RO TYPE   MOUNTPOINT
+sda        8:0    0  40G  0 disk   
+└─sda1     8:1    0  40G  0 part   
+sdb        8:16   0   2G  0 disk   
+├─sdb1     8:17   0   1M  0 part   
+└─sdb2     8:18   0   2G  0 part   
+  └─md10   9:10   0   4G  0 raid10 /
+sdc        8:32   0   2G  0 disk   
+├─sdc1     8:33   0   1M  0 part   
+└─sdc2     8:34   0   2G  0 part   
+  └─md10   9:10   0   4G  0 raid10 /
+sdd        8:48   0   2G  0 disk   
+├─sdd1     8:49   0   1M  0 part   
+└─sdd2     8:50   0   2G  0 part   
+  └─md10   9:10   0   4G  0 raid10 /
+sde        8:64   0   2G  0 disk   
+├─sde1     8:65   0   1M  0 part   
+└─sde2     8:66   0   2G  0 part   
+  └─md10   9:10   0   4G  0 raid10 /
+```
+```console
+df -h -x tmpfs -x devtmpfs
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/md10       3,9G  1,1G  2,6G  30% /
+```
 ### Восстановление RAID <a name="fail"></a>
 #### Восстановление RAID 1
 Рассмотрим восстановление работоспособности RAID 1 на примере `/dev/md3`.
