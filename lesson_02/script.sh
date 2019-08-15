@@ -3,14 +3,26 @@
 LOG_FILE=report.log
 OUTFILE=finish.sh
 DISKS=("/dev/sdb" "/dev/sdc" "/dev/sdd" "/dev/sde")
-RAID_LEVEL=5
+RAID_LEVEL=6
 
-# Логирование вывода команд для последующего составления отчета в README.md
+# Логирование вывода информационных команд с целью отслеживания изменений в дисковой подсистеме
 function output_log {
+    local CMDS=('lsblk' \
+                'parted -s /dev/sda print' \
+                'parted -s /dev/sdb print' \
+                'parted -s /dev/sdc print' \
+                'parted -s /dev/sdd print' \
+                'parted -s /dev/sde print' \
+                'df -h -x tmpfs -x devtmpfs' \
+                'blkid' \
+                'cat /proc/mdstat')
 
-    local CMDS=('lsblk' 'lshw -short | grep disk' 'df -h -x tmpfs -x devtmpfs' 'blkid' 'cat /proc/mdstat')
+    for i in $(seq 1 80); do echo -n "*" >> $LOG_FILE; done
+    echo; echo "**** $1:" >> $LOG_FILE
+    for i in $(seq 1 80); do echo -n "*" >> $LOG_FILE; done
+
     for i in "${CMDS[@]}"; do
-        ( echo ==== $i ====; sh -c "$i" ) >> $LOG_FILE
+        (echo ==== $i ====; sh -c "$i") >> $LOG_FILE;
     done
 }
 
@@ -22,7 +34,6 @@ function prepare_disks {
         parted -s $i set 1 bios_grub on
         parted -s $i mkpart primary ext4 4M 100%  # раздел для RAID
     done
-    output_log
 }
 
 # Создание RAID одного из уровней 0/1/5/6/10
@@ -52,8 +63,6 @@ function create_raid {
 
     # Создание разделов на RAID`е
     parted -s /dev/md$1 mktable gpt
-#    parted -s /dev/md$1 mkpart primary 2048s 4096s      #GPT-раздел
-#    parted -s /dev/md$1 set 1 bios_grub on
     parted -s /dev/md$1 mkpart primary ext4 4M 5%       #раздел №1
     parted -s /dev/md$1 mkpart primary ext4 5% 10%      #раздел №2
     parted -s /dev/md$1 mkpart primary ext4 10% 25%     #раздел №3
@@ -70,8 +79,6 @@ function create_raid {
     # Создание файла конфигурации mdadm.conf
     echo "DEVICE partitions" > /etc/mdadm.conf
     mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm.conf
-
-    output_log
 }
 
 # Подготовка к переносу "живой" системы с одним разделом
@@ -90,6 +97,7 @@ function transfer_to_raid {
     mkfs.ext4 /dev/md$1
     mount /dev/md$1 /mnt/
     rsync -axu --progress --exclude /swapfile --exclude /vagrant / /mnt/
+
 }
 
 # Формирование сценария, который необходимо запустить вручную после
@@ -98,6 +106,9 @@ function gen_finish_script {
     (
     cat << '_EOF_'
 #!/usr/bin/env bash
+
+RAID_NAME=`cat /proc/mdstat |grep md | cut -d" " -f1`
+mount /dev/$RAID_NAME /mnt/
 
 mount --bind /proc /mnt/proc
 mount --bind /dev /mnt/dev
@@ -121,15 +132,24 @@ grub2-install /dev/sdb && grub2-install /dev/sdc
 EOT
 
 _EOF_
-    ) > $1
-    chmod +x $1
+    ) > $2
+    chmod +x $2
 
+shutdown -r now
 }
 
 
-yum install -y mdadm smartmontools hdparm gdisk nano tree
-touch $LOG_FILE
-output_log
+touch $LOG_FILE; output_log "Исходная система"
 
-prepare_disks && create_raid $RAID_LEVEL
-transfer_to_raid $RAID_LEVEL && gen_finish_script $OUTFILE
+yum update -y
+yum install -y mdadm smartmontools hdparm gdisk nano
+output_log "Обновленная система с доустановленными пакетами"
+
+prepare_disks
+output_log "Разметка дисков"
+
+create_raid $RAID_LEVEL
+output_log "Создание RAID"
+
+transfer_to_raid $RAID_LEVEL && gen_finish_script $RAID_LEVEL $OUTFILE
+output_log "Перенос системы на RAID"
