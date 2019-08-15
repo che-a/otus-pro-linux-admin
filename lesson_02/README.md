@@ -619,7 +619,7 @@ Consistency Policy : resync
 
 ```
 ```bash
-cat /pro/mdstat
+cat /proc/mdstat
 ```
 ```console
 Personalities : [raid10] 
@@ -681,11 +681,59 @@ Consistency Policy : resync
        2       8       50        2      active sync set-A   /dev/sdd2
        3       8       66        3      active sync set-B   /dev/sde2
 ```
-
-
+Теперь представим, что мы вставили новый диск `/dev/sdb2` в сервер и нам необходимо добавить его в RAID. Делается это следующей командой:
 ```bash
-
+mdadm /dev/md10 --add /dev/sdb2
 ```
 ```console
+mdadm: added /dev/sdb2
+```
+```bash
+cat /proc/mdstat 
+```
+```console
+Personalities : [raid10] 
+md10 : active raid10 sdb2[4] sdd2[2] sde2[3] sdc2[1]
+      4179968 blocks super 1.2 512K chunks 2 near-copies [4/3] [_UUU]
+      [=========>...........]  recovery = 49.8% (1042816/2089984) finish=0.6min speed=27716K/sec
+      
+unused devices: <none>
+```
+```bash
+mdadm --detail /dev/md10
+```
+```console
+/dev/md10:
+           Version : 1.2
+     Creation Time : Thu Aug 15 21:07:19 2019
+        Raid Level : raid10
+        Array Size : 4179968 (3.99 GiB 4.28 GB)
+     Used Dev Size : 2089984 (2041.00 MiB 2140.14 MB)
+      Raid Devices : 4
+     Total Devices : 4
+       Persistence : Superblock is persistent
 
+       Update Time : Thu Aug 15 22:03:04 2019
+             State : clean, degraded, recovering 
+    Active Devices : 3
+   Working Devices : 4
+    Failed Devices : 0
+     Spare Devices : 1
+
+            Layout : near=2
+        Chunk Size : 512K
+
+Consistency Policy : resync
+
+    Rebuild Status : 17% complete
+
+              Name : cheLesson2RAID:10  (local to host cheLesson2RAID)
+              UUID : b90ac1e4:09fc0f15:5206b992:dc93fa4a
+            Events : 108
+
+    Number   Major   Minor   RaidDevice State
+       4       8       18        0      spare rebuilding   /dev/sdb2
+       1       8       34        1      active sync set-B   /dev/sdc2
+       2       8       50        2      active sync set-A   /dev/sdd2
+       3       8       66        3      active sync set-B   /dev/sde2
 ```
