@@ -44,9 +44,10 @@
 - &laquo;5&raquo; - сделаны доп. задания.
 
 ## 3. Выполнение <a name="exec"></a>  
-Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), который запускает обновление системы, установку необходимых пакетов, а также:  
-- создает RAID 0 и RAID 1 на разделах дисков `/dev/sdb` и `/dev/sdc`;  
-- последовательно создает и удаляет RAID 5, RAID 6 и RAID 10 на дисках `/dev/sdd`, `/dev/sde`, `/dev/sdf` и `/dev/sdg`.  
+Суть выполненного мною задания состоит в:  
+- автоматическом развертывании тестового окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с подключенным RAID 0/1/5/6/10, уровень которого задается переменной `RAID_LEVEL` в сценарии [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh);  
+- последующей ручной имитацией сбоя диска в RAID и восстановлением RAID;  
+- автоматическом переносе &laquo;живой&raquo; системы на созданный ранее RAID.  
 
 ### Сбор информации о дисках  <a name="intro"></a>  
 Работа с дисками начинается со сбора информации с использованием следующих команд:
