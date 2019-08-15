@@ -7,8 +7,8 @@
    - [Сбор информации о дисках](#smartctl)  
    - [Создание RAID 0/1/5/6/10](#raid)  
    - [Перенос работающей системы на RAID](#transfer)  
-   - [Восстановление RAID](#fail)
-
+   - [Восстановление RAID](#fail)  
+      
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
 - перечислить виды RAID массивов и их отличия,  
@@ -446,8 +446,10 @@ sudo -s
 reboot
 ```
 В итоге получается перенесенная с одиночного диска на RAID система:
-```console
+```bash
 lsblk
+```
+```console
 NAME     MAJ:MIN RM SIZE RO TYPE   MOUNTPOINT
 sda        8:0    0  40G  0 disk   
 └─sda1     8:1    0  40G  0 part   
@@ -468,13 +470,15 @@ sde        8:64   0   2G  0 disk
 └─sde2     8:66   0   2G  0 part   
   └─md10   9:10   0   4G  0 raid10 /
 ```
-```console
+```bash
 df -h -x tmpfs -x devtmpfs
+```
+```console
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/md10       3,9G  1,1G  2,6G  30% /
 ```
 ### Восстановление RAID <a name="fail"></a>
-#### Восстановление RAID 1
+#### Восстановление RAID 1 
 Рассмотрим восстановление работоспособности RAID 1 на примере `/dev/md3`.
 Сначала имитируем сбой одного из дисков массива, например, `/dev/sdb5`:
 ```bash
@@ -520,21 +524,32 @@ md3 : active raid1 sdb5[2] sdc5[1]
       130048 blocks super 1.2 [2/2] [UU]
 ```
 #### Восстановление RAID 10
+Итак, имеем собранный из дисков `/dev/sdb`, `/dev/sdc`, `/dev/sdd` и `/dev/sde` RAID 10.
 ```bash
-sudo mdadm -D /dev/md10
+cat /proc/mdstat 
+```
+```console
+Personalities : [raid10] 
+md10 : active raid10 sdd2[2] sdb2[0] sde2[3] sdc2[1]
+      4179968 blocks super 1.2 512K chunks 2 near-copies [4/4] [UUUU]
+      
+unused devices: <none>
+```
+```bash
+mdadm --detail /dev/md10
 ```
 ```console
 /dev/md10:
            Version : 1.2
-     Creation Time : Fri Aug  9 19:16:24 2019
+     Creation Time : Thu Aug 15 21:07:19 2019
         Raid Level : raid10
-        Array Size : 520192 (508.00 MiB 532.68 MB)
-     Used Dev Size : 260096 (254.00 MiB 266.34 MB)
+        Array Size : 4179968 (3.99 GiB 4.28 GB)
+     Used Dev Size : 2089984 (2041.00 MiB 2140.14 MB)
       Raid Devices : 4
      Total Devices : 4
        Persistence : Superblock is persistent
 
-       Update Time : Fri Aug  9 19:16:53 2019
+       Update Time : Thu Aug 15 21:37:26 2019
              State : clean 
     Active Devices : 4
    Working Devices : 4
@@ -547,33 +562,82 @@ sudo mdadm -D /dev/md10
 Consistency Policy : resync
 
               Name : cheLesson2RAID:10  (local to host cheLesson2RAID)
-              UUID : e7670989:1a35547c:e19051ca:5135c5a7
-            Events : 17
+              UUID : b90ac1e4:09fc0f15:5206b992:dc93fa4a
+            Events : 74
 
     Number   Major   Minor   RaidDevice State
-       0       8       48        0      active sync set-A   /dev/sdd
-       1       8       64        1      active sync set-B   /dev/sde
-       2       8       80        2      active sync set-A   /dev/sdf
-       3       8       96        3      active sync set-B   /dev/sdg
+       0       8       18        0      active sync set-A   /dev/sdb2
+       1       8       34        1      active sync set-B   /dev/sdc2
+       2       8       50        2      active sync set-A   /dev/sdd2
+       3       8       66        3      active sync set-B   /dev/sde2
+
 ```
+Имитируем отказ диска `/dev/sdb`:
 ```bash
-cat /proc/mdstat |grep -A1 md10
+mdadm /dev/md10 --fail /dev/sdb2
 ```
 ```console
-md10 : active raid10 sdg[3] sdf[2] sde[1] sdd[0]
-      520192 blocks super 1.2 512K chunks 2 near-copies [4/4] [UUUU]
-```
-Имитируем отказ диска:
-```bash
-sudo mdadm /dev/md10 --fail /dev/sdd
-```
-```console
-mdadm: set /dev/sdd faulty in /dev/md10
+mdadm: set /dev/sdb2 faulty in /dev/md10
 ```
 ```bash
-cat /proc/mdstat | grep -A2 md10
+mdadm --detail /dev/md10
 ```
 ```console
-md10 : active raid10 sdg[3] sdf[2] sde[1] sdd[0](F)
-      520192 blocks super 1.2 512K chunks 2 near-copies [4/3] [_UUU]
+/dev/md10:
+           Version : 1.2
+     Creation Time : Thu Aug 15 21:07:19 2019
+        Raid Level : raid10
+        Array Size : 4179968 (3.99 GiB 4.28 GB)
+     Used Dev Size : 2089984 (2041.00 MiB 2140.14 MB)
+      Raid Devices : 4
+     Total Devices : 4
+       Persistence : Superblock is persistent
+
+       Update Time : Thu Aug 15 21:47:51 2019
+             State : clean, degraded 
+    Active Devices : 3
+   Working Devices : 3
+    Failed Devices : 1
+     Spare Devices : 0
+
+            Layout : near=2
+        Chunk Size : 512K
+
+Consistency Policy : resync
+
+              Name : cheLesson2RAID:10  (local to host cheLesson2RAID)
+              UUID : b90ac1e4:09fc0f15:5206b992:dc93fa4a
+            Events : 81
+
+    Number   Major   Minor   RaidDevice State
+       -       0        0        0      removed
+       1       8       34        1      active sync set-B   /dev/sdc2
+       2       8       50        2      active sync set-A   /dev/sdd2
+       3       8       66        3      active sync set-B   /dev/sde2
+
+       0       8       18        -      faulty   /dev/sdb2
+
+```
+```bash
+cat /pro/mdstat
+```
+```console
+Personalities : [raid10] 
+md10 : active raid10 sdd2[2] sdb2[0](F) sde2[3] sdc2[1]
+      4179968 blocks super 1.2 512K chunks 2 near-copies [4/3] [_UUU]
+      
+unused devices: <none>
+```
+
+```bash
+
+```
+```console
+
+```
+```bash
+
+```
+```console
+
 ```
