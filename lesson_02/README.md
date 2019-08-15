@@ -139,7 +139,7 @@ SMART support is: Unavailable - device lacks SMART capability.
 A mandatory SMART command failed: exiting. To continue, add one or more '-T permissive' options.
 ```
 <details>
-   <summary>Пример вывода информации S.M.A.R.T. реального диска:</summary>
+   <summary>Пример вывода информации S.M.A.R.T. реального исправного диска:</summary>
 
 ```console
 smartctl 6.6 2017-11-05 r4594 [x86_64-linux-4.19.0-5-amd64] (local build)
@@ -239,6 +239,14 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 
 ```
 </details>
+<details>
+   <summary>Пример вывода информации S.M.A.R.T. реального неисправного диска:</summary>
+
+```console
+
+```
+</details>
+
 
 ### Разметка дисков <a name="partitioning"></a>  
 На дисках `/dev/sdb` и `/dev/sdc` необходимо создать разделы, чтобы на их основе организовать RAID.
@@ -718,6 +726,12 @@ md10 : active raid10 sdg[3] sdf[2] sde[1] sdd[0](F)
 ```
 ### Перенос работающей системы с одним диском на RAID 1 <a name="exec2"></a>
 Далее рассматривается перенос работающей системы с диска `/dev/sda` на любой RAID 0/1/5/6/10, собранный в предыдущем задании.
-План действий таков:  
-- ыаыва
-- ыаыва
+
+Для переноса системы на RAID необходимо после развертывания тестового окружения необходимо в него войти и вручную запустить сценарий
+```bash
+sudo -s
+./finish.sh
+```
+```bash
+reboot
+```
