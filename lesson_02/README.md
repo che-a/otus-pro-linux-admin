@@ -524,7 +524,7 @@ md3 : active raid1 sdb5[2] sdc5[1]
       130048 blocks super 1.2 [2/2] [UU]
 ```
 #### Восстановление RAID 10
-Итак, имеем собранный из дисков `/dev/sdb`, `/dev/sdc`, `/dev/sdd` и `/dev/sde` RAID 10.
+Итак, имеется собранный из дисков `/dev/sdb`, `/dev/sdc`, `/dev/sdd` и `/dev/sde` RAID 10.
 ```bash
 cat /proc/mdstat 
 ```
@@ -628,13 +628,61 @@ md10 : active raid10 sdd2[2] sdb2[0](F) sde2[3] sdc2[1]
       
 unused devices: <none>
 ```
-
+Удаляем «сбойный» диск из массива:
 ```bash
-
+mdadm /dev/md10 --remove /dev/sdb2
 ```
 ```console
-
+mdadm: hot removed /dev/sdb2 from /dev/md10
 ```
+```bash
+cat /proc/mdstat
+```
+```console
+Personalities : [raid10] 
+md10 : active raid10 sdd2[2] sde2[3] sdc2[1]
+      4179968 blocks super 1.2 512K chunks 2 near-copies [4/3] [_UUU]
+      
+unused devices: <none>
+```
+```bash
+mdadm --detail /dev/md10
+```
+```console
+/dev/md10:
+           Version : 1.2
+     Creation Time : Thu Aug 15 21:07:19 2019
+        Raid Level : raid10
+        Array Size : 4179968 (3.99 GiB 4.28 GB)
+     Used Dev Size : 2089984 (2041.00 MiB 2140.14 MB)
+      Raid Devices : 4
+     Total Devices : 3
+       Persistence : Superblock is persistent
+
+       Update Time : Thu Aug 15 21:56:26 2019
+             State : clean, degraded 
+    Active Devices : 3
+   Working Devices : 3
+    Failed Devices : 0
+     Spare Devices : 0
+
+            Layout : near=2
+        Chunk Size : 512K
+
+Consistency Policy : resync
+
+              Name : cheLesson2RAID:10  (local to host cheLesson2RAID)
+              UUID : b90ac1e4:09fc0f15:5206b992:dc93fa4a
+            Events : 96
+
+    Number   Major   Minor   RaidDevice State
+       -       0        0        0      removed
+       1       8       34        1      active sync set-B   /dev/sdc2
+       2       8       50        2      active sync set-A   /dev/sdd2
+       3       8       66        3      active sync set-B   /dev/sde2
+```
+
+
 ```bash
 
 ```
