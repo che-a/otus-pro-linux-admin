@@ -14,3 +14,8 @@ function set_mirror(parameter) {
     #statements
     return
 }
+
+function new_volume(parameter) {
+    #statements
+    return
+}
