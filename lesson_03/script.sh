@@ -19,3 +19,8 @@ function new_volume(parameter) {
     #statements
     return
 }
+
+function gen_files(parameter) {
+    #statements
+    return
+}
