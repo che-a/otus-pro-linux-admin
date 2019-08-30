@@ -24,3 +24,8 @@ function gen_files(parameter) {
     #statements
     return
 }
+
+function gen_files2(parameter) {
+    #statements
+    return
+}
