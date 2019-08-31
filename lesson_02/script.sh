@@ -31,7 +31,7 @@ function output_log {
 function prepare_disks {
     for i in ${DISKS[@]}; do
         parted -s $i mktable gpt
-        parted -s $i mkpart primary 2048s 4096s   # GPT-раздел
+        parted -s $i mkpart primary 2048s 4096s   # GPT-раздел, 2048s -- выравнивание
         parted -s $i set 1 bios_grub on
         parted -s $i mkpart primary ext4 4M 100%  # раздел для RAID
     done
