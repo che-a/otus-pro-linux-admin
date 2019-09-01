@@ -54,7 +54,7 @@
 
 ## 3. Выполнение <a name="exec"></a>  
 
-Суть выполненного мною задания состоит в развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/Vagrantfile) тестового окружения с установленной на LVM системой CentOS 7 и последующим ручным запуском в произвольном порядке двух сценариев: [lvm.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh) и [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh), первый из которых соотвествует базовому заданию и посвящен работе с LVM, а второй -- дополнительному заданию по работе с ZFS.
+Суть выполненного мною задания состоит в развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/Vagrantfile) тестового окружения с установленной на LVM системой CentOS 7 и последующим ручным запуском в произвольном порядке двух сценариев: [lvm.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/lvm.sh) и [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/zfs.sh), первый из которых соотвествует базовому заданию и посвящен работе с LVM, а второй -- дополнительному заданию по работе с ZFS.
 ```bash
 sudo -s
 ./lvm.sh
