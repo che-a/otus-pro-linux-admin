@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# Домашнее задание №3
-# +-------+--------------------------------------------------------------------+
-# | STAGE |                       Описание                                     |
-# +-------+--------------------------------------------------------------------+
-# |   0   | Первый запуск сценария, создание временного тома,                  |
-# |       | настройка загрузки с нового тома, перезагрузка                     |
-# +-------+--------------------------------------------------------------------+
-# |   1   | Загрузка с временного тома, удаление старого раздела,
-# |       | создание нового раздела нужного размера
-# +-------+--------------------------------------------------------------------+
-
 REPORT_LOG=report_lvm.log   # Файл, в который будет логироваться ход выполнения всех заданий
 STAGE_LOG=/home/vagrant/stage.log         # Файл, в который записывается уровенеь проведенных изменений, чтобы после перезагрузки системы не начинать все сначала
 
@@ -28,7 +17,6 @@ NEW_LV='lv_reduce_root'
 
 STAGE=
 
-#
 # Логирование вывода информационных команд с целью отслеживания изменений
 # по ходу выполнения задания
 function report {
@@ -48,21 +36,20 @@ function report {
     done
 }
 
-# Создание временного корневого раздела и копирование на него данных из текущего
+# Создание временного тома для корня и копирование в него данных из текущего
 function lvm_create_tmp_root {
-    # Создание временного тома
     pvcreate $TMP_PV
     vgcreate $TMP_VG $TMP_PV
     lvcreate -n $TMP_LV -l +100%FREE /dev/$TMP_VG
-
-    # Создание ФС на временном томе и монтирование ее
     mkfs.xfs /dev/$TMP_VG/$TMP_LV
+}
+
+function lvm_move_to_tmp_root {
     mount /dev/$TMP_VG/$TMP_LV /mnt
-
-    # Копирование всех файлов текущего тома корневого каталога на временный том
     xfsdump -J - /dev/$VG/$LV | xfsrestore -J - /mnt
+}
 
-    # Переконфигурирование grub, чтобы после рестарта временный том был корнем ФС
+function lvm_reconfig_grub2 {
     for i in /proc/ /sys/ /dev/ /run/ /boot/; do
         mount --bind $i /mnt/$i;
     done
@@ -74,32 +61,37 @@ for i in `ls initramfs-*img`; do
     dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force;
 done
 EOT
-    sed -i "s+rd.lvm.lv=$VG/$LV+rd.lvm.lv=$TMP_VG/$TMP_LV+" \
+    sed -i "s+rd.lvm.lv=$1/$2+rd.lvm.lv=$3/$4+" \
         /boot/grub2/grub.cfg
 }
 
+# Удаление старого корневого тома и создание нового
 function lvm_create_new_root {
     lvremove /dev/$VG/$LV --force
     lvcreate -y -n $NEW_LV -L $NEW_SIZE /dev/$VG
-
     mkfs.xfs /dev/$VG/$NEW_LV
+}
+
+function lvm_move_to_new_root {
     mount /dev/$VG/$NEW_LV /mnt
-
     xfsdump -J - /dev/$TMP_VG/$TMP_LV | xfsrestore -J - /mnt
+}
 
-    for i in /proc/ /sys/ /dev/ /run/ /boot/; do
-        mount --bind $i /mnt/$i;
-    done
+function lvm_del_tmp_root {
+    lvremove /dev/$TMP_VG/$TMP_LV --force
+    vgremove /dev/$TMP_VG
+    pvremove $TMP_PV
+}
 
-chroot /mnt/ /bin/bash <<'EOT'
-grub2-mkconfig -o /boot/grub2/grub.cfg
-cd /boot ;
-for i in `ls initramfs-*img`; do
-    dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force;
-done
-EOT
-    sed -i "s+rd.lvm.lv=$VG/$LV+rd.lvm.lv=$VG/$NEW_LV+" \
-        /boot/grub2/grub.cfg
+function lvm_create_new_var {
+    pvcreate /dev/sdc /dev/sdd
+    vgcreate VG01 /dev/sdc /dev/sdd
+    lvcreate -L 950M -m1 -n lv_var VG01
+    mkfs.ext4 /dev/VG01/lv_var
+}
+
+function lvm_move_to_new_var {
+
 }
 
 
@@ -109,19 +101,29 @@ if [ ! -f $STAGE_LOG ]; then
 else
     STAGE=`cat $STAGE_LOG`
     case $STAGE in
-        0)  report "Исходная система, копирование на временный том"
+        0)  report "Исходная система"
             echo "1" > $STAGE_LOG
             lvm_create_tmp_root
+            lvm_move_to_tmp_root
+            lvm_reconfig_grub2 $VG $LV $TMP_VG $TMP_LV
             reboot
             ;;
 
-        1)  report "Создание нового тома, копирование на него файлов с временного"
+        1)  report "Система с корнем на временном томе"
             echo "2" > $STAGE_LOG
             lvm_create_new_root
+            lvm_move_to_new_root
+            lvm_reconfig_grub2 $VG $LV $VG $NEW_LV
             reboot
             ;;
 
-        2)  report "Размер корневого раздела с ФС XFS уменьшен"
+        2)  report "Система с уменьшенным корневым томом с ФС XFS"
+            echo "3" > $STAGE_LOG
+            lvm_del_tmp_root
+            lvm_create_new_var
+            ;;
+
+        3)  echo "Текущий уровень 3"
             ;;
 
         *)  echo "Ошибка в файле $STAGE_LOG"
