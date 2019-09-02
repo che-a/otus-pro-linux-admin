@@ -24,7 +24,7 @@ TMP_PV='/dev/sdb'           # Временный физческий том
 TMP_VG='VGTMP'               #
 TMP_LV='lv_tmp'        #
 
-#NEW_LV='lv_reduce_root'
+NEW_LV='lv_reduce_root'
 
 STAGE=
 
@@ -80,10 +80,10 @@ EOT
 
 function lvm_create_new_root {
     lvremove /dev/$VG/$LV --force
-    lvcreate -n $LV -L $NEW_SIZE /dev/$VG
+    lvcreate -y -n $NEW_LV -L $NEW_SIZE /dev/$VG
 
-    mkfs.xfs /dev/$VG/$LV
-    mount /dev/$VG/$LV /mnt
+    mkfs.xfs /dev/$VG/$NEW_LV
+    mount /dev/$VG/$NEW_LV /mnt
 
     xfsdump -J - /dev/$TMP_VG/$TMP_LV | xfsrestore -J - /mnt
 
@@ -98,8 +98,8 @@ for i in `ls initramfs-*img`; do
     dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force;
 done
 EOT
-#    sed -i "s+rd.lvm.lv=$TMP_VG/$TMP_LV+rd.lvm.lv=$VG/$NEW_LV+" \
-#        /boot/grub2/grub.cfg
+    sed -i "s+rd.lvm.lv=$VG/$LV+rd.lvm.lv=$VG/$NEW_LV+" \
+        /boot/grub2/grub.cfg
 }
 
 
