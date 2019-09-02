@@ -1,28 +1,37 @@
 #!/usr/bin/env bash
 
 # Домашнее задание №3
-# STAGE 0       Первый запуск сценария, создание временного тома,
-#               настройка загрузки с нового тома, перезагрузка
-# STAGE 1       Загрузка с временного тома, удаление старого раздела,
-#               создание нового раздела нужного размера
+# +-------+--------------------------------------------------------------------+
+# | STAGE |                       Описание                                     |
+# +-------+--------------------------------------------------------------------+
+# |   0   | Первый запуск сценария, создание временного тома,                  |
+# |       | настройка загрузки с нового тома, перезагрузка                     |
+# +-------+--------------------------------------------------------------------+
+# |   1   | Загрузка с временного тома, удаление старого раздела,
+# |       | создание нового раздела нужного размера
+# +-------+--------------------------------------------------------------------+
 
 REPORT_LOG=report_lvm.log   # Файл, в который будет логироваться ход выполнения всех заданий
 STAGE_LOG=/home/vagrant/stage.log         # Файл, в который записывается уровенеь проведенных изменений, чтобы после перезагрузки системы не начинать все сначала
-REDUCE_TO_SIZE=8G           # Новый размер тома, ГБ
+
+NEW_SIZE=8G           # Новый размер тома, ГБ
+
+PV='/dev/sda3'
+VG='VolGroup00'
+LV='LogVol00'
+
 TMP_PV='/dev/sdb'           # Временный физческий том
-TMP_VG='VG01'               #
-TMP_LV='lv_tmp_root'        #
-CUR_PV=
-CUR_VG=
-CUR_LV=
-NEW_PV=
-NEW_VG=
-NEW_LV=
+TMP_VG='VGTMP'               #
+TMP_LV='lv_tmp'        #
+
+#NEW_LV='lv_reduce_root'
+
 STAGE=
 
+#
 # Логирование вывода информационных команд с целью отслеживания изменений
 # по ходу выполнения задания
-function output_log {
+function report {
     local CMDS=('lsblk' \
                 'df -h -x tmpfs -x devtmpfs' \
                 'pvs' \
@@ -39,9 +48,8 @@ function output_log {
     done
 }
 
-# Уменьшение размера тома корневого каталога с файловой системой XFS
-function reduce_size_root() {
-
+# Создание временного корневого раздела и копирование на него данных из текущего
+function lvm_create_tmp_root {
     # Создание временного тома
     pvcreate $TMP_PV
     vgcreate $TMP_VG $TMP_PV
@@ -52,7 +60,7 @@ function reduce_size_root() {
     mount /dev/$TMP_VG/$TMP_LV /mnt
 
     # Копирование всех файлов текущего тома корневого каталога на временный том
-    xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
+    xfsdump -J - /dev/$VG/$LV | xfsrestore -J - /mnt
 
     # Переконфигурирование grub, чтобы после рестарта временный том был корнем ФС
     for i in /proc/ /sys/ /dev/ /run/ /boot/; do
@@ -66,33 +74,56 @@ for i in `ls initramfs-*img`; do
     dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force;
 done
 EOT
-    sed -i 's/rd.lvm.lv=VolGroup00/LogVol00 =.*/rd.lvm.lv=VG01/lv_tmp_root/' /boot/grub2/grub.cfg
-    # reboot
-    #
+    sed -i "s+rd.lvm.lv=$VG/$LV+rd.lvm.lv=$TMP_VG/$TMP_LV+" \
+        /boot/grub2/grub.cfg
+}
 
-    #
+function lvm_create_new_root {
+    lvremove /dev/$VG/$LV --force
+    lvcreate -n $LV -L $NEW_SIZE /dev/$VG
+
+    mkfs.xfs /dev/$VG/$LV
+    mount /dev/$VG/$LV /mnt
+
+    xfsdump -J - /dev/$TMP_VG/$TMP_LV | xfsrestore -J - /mnt
+
+    for i in /proc/ /sys/ /dev/ /run/ /boot/; do
+        mount --bind $i /mnt/$i;
+    done
+
+chroot /mnt/ /bin/bash <<'EOT'
+grub2-mkconfig -o /boot/grub2/grub.cfg
+cd /boot ;
+for i in `ls initramfs-*img`; do
+    dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force;
+done
+EOT
+#    sed -i "s+rd.lvm.lv=$TMP_VG/$TMP_LV+rd.lvm.lv=$VG/$NEW_LV+" \
+#        /boot/grub2/grub.cfg
 }
 
 
-#touch $REPORT_LOG; output_log "Исходная система"
-
-#reduce_size_root
-#output_log "Уменьшение тома с корневой ФС"
-
-
 if [ ! -f $STAGE_LOG ]; then
-   echo "Файл '$STAGE_LOG' не существует. Выполнять нечего."
+   echo "Выполнять нечего (файл '$STAGE_LOG' не существует)."
    exit 1
 else
     STAGE=`cat $STAGE_LOG`
-
     case $STAGE in
-        0)  echo "Текущий уровень: 0"
+        0)  report "Исходная система, копирование на временный том"
+            echo "1" > $STAGE_LOG
+            lvm_create_tmp_root
+            reboot
             ;;
-        1)  echo "Текущий уровень: 1"
+
+        1)  report "Создание нового тома, копирование на него файлов с временного"
+            echo "2" > $STAGE_LOG
+            lvm_create_new_root
+            reboot
             ;;
-        2)  echo "Текущий уровень: 2"
+
+        2)  report "Размер корневого раздела с ФС XFS уменьшен"
             ;;
+
         *)  echo "Ошибка в файле $STAGE_LOG"
             exit 1
             ;;
