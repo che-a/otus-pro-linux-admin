@@ -91,7 +91,25 @@ function lvm_create_new_var {
 }
 
 function lvm_move_to_new_var {
+    mount /dev/VG01/lv_var /mnt
+    cp -aR /var/* /mnt/
+    mkdir /tmp/oldvar && mv /var/* /tmp/oldvar
+    umount /mnt
+    mount /dev/VG01/lv_var /var
+    echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" \
+        >> /etc/fstab
+}
 
+function lv_create_new_home {
+    lvcreate -n LogVol_Home -L 2G /dev/VolGroup00
+    mkfs.xfs /dev/VolGroup00/LogVol_Home
+    mount /dev/VolGroup00/LogVol_Home /mnt/
+    cp -aR /home/* /mnt/
+    rm -rf /home/*
+    umount /mnt
+    mount /dev/VolGroup00/LogVol_Home /home/
+    echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" \
+        >> /etc/fstab
 }
 
 
@@ -121,6 +139,8 @@ else
             echo "3" > $STAGE_LOG
             lvm_del_tmp_root
             lvm_create_new_var
+            lvm_move_to_new_var
+            lv_create_new_home
             ;;
 
         3)  echo "Текущий уровень 3"
