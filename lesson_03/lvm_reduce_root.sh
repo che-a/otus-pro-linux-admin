@@ -21,12 +21,10 @@ cat > $SERVICE_FILE <<'_EOF_'
 [Unit]
 Description=Reduce XFS root volume
 After=network.target
-
 [Service]
 Type=oneshot
 User=root
 ExecStart=/home/vagrant/lvm_reduce_root.sh
-
 [Install]
 WantedBy=multi-user.target
 _EOF_

@@ -16,12 +16,10 @@ cat > $SERVICE_FILE <<'_EOF_'
 [Unit]
 Description=Migrating home to a separate volume
 After=network.target
-
 [Service]
 Type=oneshot
 User=root
 ExecStart=/home/vagrant/lvm_move_home.sh
-
 [Install]
 WantedBy=multi-user.target
 _EOF_
