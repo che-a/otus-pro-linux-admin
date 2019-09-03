@@ -71,7 +71,7 @@ Vagrant.configure("2") do |config|
                 echo "move_var=0" >> stage.log
                 echo "move_home=0" >> stage.log
 
-                yum install -y dialog nano xfsdump
+                yum install -y dialog mc nano xfsdump
             SHELL
 
         end

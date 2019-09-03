@@ -13,7 +13,7 @@ NEW_SIZE=8G
 
 # Автозапуск данного сценария после перезагрузки системы
 function make_service {
-    local SERVICE_FILE='/etc/systemd/system/reduce_root.service'
+    local SERVICE_FILE='/etc/systemd/system/lvm_reduce_root.service'
     touch $SERVICE_FILE
     chmod 664 $SERVICE_FILE
 
@@ -31,7 +31,7 @@ ExecStart=/home/vagrant/lvm_reduce_root.sh
 WantedBy=multi-user.target
 _EOF_
 
-    systemctl enable reduce_root.service
+    systemctl enable lvm_reduce_root.service
 }
 
 # Создание временного тома для корня и копирование в него данных из текущего
@@ -102,7 +102,7 @@ case $STAGE in
 
     2)  sed -i 's/reduce_root=.*/reduce_root=3/' $STAGE_LOG
         lvm_del_tmp_root
-        systemctl disable reduce_root.service
+        systemctl disable lvm_reduce_root.service
         ;;
 
     3)  echo "Корневой том уменьшен. Все операции завершены"
