@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+STAGE_LOG=/home/vagrant/stage.log
+
 VG='VolGroup00'
 LV='LogVol00'
 
@@ -8,6 +10,29 @@ TMP_VG='VGTMP'
 TMP_LV='lv_tmp'
 
 NEW_SIZE=8G
+
+# Автозапуск данного сценария после перезагрузки системы
+function make_service {
+    local SERVICE_FILE='/etc/systemd/system/reduce_root.service'
+    touch $SERVICE_FILE
+    chmod 664 $SERVICE_FILE
+
+cat > $SERVICE_FILE <<'_EOF_'
+[Unit]
+Description=Reduce XFS root volume
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/home/vagrant/lvm_reduce_root.sh
+
+[Install]
+WantedBy=multi-user.target
+_EOF_
+
+    systemctl enable reduce_root.service
+}
 
 # Создание временного тома для корня и копирование в него данных из текущего
 function lvm_create_tmp_root {
@@ -57,27 +82,30 @@ function lvm_del_tmp_root {
     pvremove $TMP_PV
 }
 
-STAGE=`cat stage.log |grep reduce_root | cut -d "=" -f 2`
+STAGE=`cat $STAGE_LOG |grep reduce_root | cut -d "=" -f 2`
 case $STAGE in
-    0)  sed -i 's/reduce_root=.*/reduce_root=1/' stage.log
+    0)  sed -i 's/reduce_root=.*/reduce_root=1/' $STAGE_LOG
+        make_service
+
         lvm_create_tmp_root
         lvm_move_to_tmp_root
         lvm_reconfig_grub2 $VG $LV $TMP_VG $TMP_LV
         reboot
         ;;
 
-    1)  sed -i 's/reduce_root=.*/reduce_root=2/' stage.log
+    1)  sed -i 's/reduce_root=.*/reduce_root=2/' $STAGE_LOG
         lvm_create_new_root
         lvm_move_to_new_root
         lvm_reconfig_grub2 $VG $LV $VG $LV
         reboot
         ;;
 
-    2)  sed -i 's/reduce_root=.*/reduce_root=3/' stage.log
+    2)  sed -i 's/reduce_root=.*/reduce_root=3/' $STAGE_LOG
         lvm_del_tmp_root
+        systemctl disable reduce_root.service
         ;;
 
-    3)  echo "Корневой том уменьшен. Операции завершены"
+    3)  echo "Корневой том уменьшен. Все операции завершены"
         ;;
 
     *)  echo "Ошибка в файле $STAGE_LOG"
