@@ -66,10 +66,12 @@ Vagrant.configure("2") do |config|
             box.vm.provision "shell", inline: <<-SHELL
                 mkdir -p ~root/.ssh
                 cp ~vagrant/.ssh/auth* ~root/.ssh
-                cp /vagrant/{lvm,zfs}.sh /home/vagrant/
-                echo "0" > stage.log
+                cp /vagrant/{menu,lvm_{reduce_root,move_{var,home}}}.sh /home/vagrant/
+                echo "reduce_root=0" > stage.log
+                echo "move_var=0" >> stage.log
+                echo "move_home=0" >> stage.log
 
-                yum install -y nano xfsdump
+                yum install -y dialog mc nano xfsdump
             SHELL
 
         end
