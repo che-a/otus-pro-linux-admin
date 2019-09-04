@@ -73,7 +73,70 @@
 ```bash
 sudo ./lvm_reduce_move.sh
 ```
-Во время выполнения сценария будет дважды выполнена перезагрузка системы. Контролировать ход и завершение работы сценария можно, например, через преввью менеджера виртуальных машин `Oracle VirtualBox`. 
+Во время выполнения сценария будет дважды выполнена перезагрузка системы. Контролировать ход и завершение работы сценария можно, например, через превью менеджера виртуальных машин `Oracle VirtualBox` или по разрывам SSH-сессии. Структура сценария разделена на несколько этапов, что связано с необходимостью перезагрузки системы во время его выполнения. Текущий этап выполнения сценария записывается в файл, что позволяет после перезагрузки системы выполнять сценарий не с начала, а с определеннго места. Автозагрузка сценария реализована возможностями `systemd`.  
+
+Начальное состояние тестового окружения:
+```bash
+df -h -x tmpfs -x devtmpfs
+```
+```console
+Filesystem                       Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup00-LogVol00   38G  816M   37G   3% /
+/dev/sda2                       1014M   63M  952M   7% /boot
+```
+```bash
+lsblk
+```
+```console
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00 253:0    0 37.5G  0 lvm  /
+  └─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+sdb                       8:16   0   10G  0 disk 
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+```
+
+Конечное состояние тестового окружения:
+```bash
+df -h -x tmpfs -x devtmpfs
+```
+```console
+Filesystem                       Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup00-LogVol00  8.0G  677M  7.4G   9% /
+/dev/mapper/VolGroup00-lv_home   2.0G   33M  2.0G   2% /home
+/dev/mapper/VG01-lv_var          922M  142M  716M  17% /var
+/dev/sda2                       1014M   61M  954M   6% /boot
+```
+```bash
+lsblk
+```
+```console
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-lv_home  253:8    0    2G  0 lvm  /home
+sdb                       8:16   0   10G  0 disk 
+sdc                       8:32   0    2G  0 disk 
+├─VG01-lv_var_rmeta_0   253:3    0    4M  0 lvm  
+│ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_0  253:4    0  952M  0 lvm  
+  └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+sdd                       8:48   0    1G  0 disk 
+├─VG01-lv_var_rmeta_1   253:5    0    4M  0 lvm  
+│ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_1  253:6    0  952M  0 lvm  
+  └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+sde                       8:64   0    1G  0 disk 
+```
 
 ### LVM. Создание снапшота, восстановление со снапшота <a name="snap"></a>  
 ### LVM. Использование кэша и снапшотов <a name="zfs"></a>  
