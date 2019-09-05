@@ -35,11 +35,12 @@ case $STAGE in
         reboot
         ;;
 
-    1)  CENTOS7_MINOR_VER=`cat /etc/redhat-release | cut -d" " -f 4 | cut -d"." -f 2`
+    1)  # В CentOS 7 по умолчанию не поддержки ZFS
+        CENTOS7_MINOR_VER=`cat /etc/redhat-release | cut -d" " -f 4 | cut -d"." -f 2`
         ZFS_REPO_PATH="http://download.zfsonlinux.org/epel"
         ZFS_REPO="$ZFS_REPO_PATH/zfs-release.el7_$CENTOS7_MINOR_VER.noarch.rpm"
         yum install -y $ZFS_REPO
-        # kABI-tracking kmod
+        # Включение kABI-tracking kmod
         sed -i '0,/enabled=0/{s/enabled=0/enabled=1/}' /etc/yum.repos.d/zfs.repo
         sed -i '0,/enabled=1/{s/enabled=1/enabled=0/}' /etc/yum.repos.d/zfs.repo
         yum install -y zfs
