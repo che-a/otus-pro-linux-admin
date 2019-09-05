@@ -139,34 +139,32 @@ sde                       8:64   0    1G  0 disk
 ### LVM. Создание снапшота, восстановление со снапшота <a name="snap"></a>  
 Необходимо сгенерировать файлы в `/home/`, снять снапшот, удалить часть файлов, восстановиться со снапшота.  
 
-Сгенерируем файлы в /home/:
+Выполнение этой части задания автоматизировано с помощью сценария [lvm_snapshot_home.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/lvm_snapshot_home.sh), но т.к. корректное восстановление тома из снапшота производится только на размонтированный раздел, то указанный сценарий необходимо запустить из консоли тестового окружения под пользователем `root` (использование `su` или `sudo` не подходит), чтобы было возможным размонтирование каталога `/home`. Соответственно, сеансы работы с системой других пользователей должны быть завершены.  
 ```bash
-lvs -s
+w
 ```
 ```console
-  LV       VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
-  lv_var   VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                100.00               HD0qRx-Gnkq-5Czy-BQGk-EFP5-C5WJ-qBVsvI         
-  LogVol00 VolGroup00    1 -wi-ao----   8.00g  -1  -1  253    0                                                     fXksTH-uJXs-2tVE-odIV-489K-5hCZ-AQpo04         
-  LogVol01 VolGroup00    1 -wi-ao----   1.50g  -1  -1  253    1                                                     IAjIC6-ScnM-tvH6-7BTy-TN31-hd82-bgDSzd         
-  lv_home  VolGroup00    1 -wi-ao----   2.00g  -1  -1  253    8                                                     hpNUQc-7iIv-QcOg-wVeq-9SWZ-EvCv-cwsoYD  
+ 09:40:20 up 29 min,  2 users,  load average: 0.00, 0.01, 0.05
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+root     tty1                      09:25   14:44   0.04s  0.04s -bash
+vagrant  pts/0    10.0.2.2         09:28    4.00s  0.06s  0.20s sshd: vagrant [priv] 
 ```
-Снять снапшот:
-[root@otuslinux ~]# 
-lvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home
-Удалить часть файлов:
-[root@otuslinux ~]# 
-rm -f /home/file{11..20}
-Процесс восстановления со снапшота:
-[root@otuslinux ~]# 
-umount /home
-[root@otuslinux ~]# 
-lvconvert --merge /dev/VolGroup00/home_snap
-[root@otuslinux ~]# 
-mount /home
+```bash
+./lvm_snapshot_home.sh
+```
+```console
+Rounding up size to full physical extent 128.00 MiB
+Logical volume "home_snap" created.
+Merging of volume VolGroup00/home_snap started.
+VolGroup00/lv_home: Merged: 100.00%
+```
 
 <details>
-   <summary>Вывод вышеперечисленных команд:</summary>
-	
+   <summary>Вывод содержимого файла отчета:</summary>
+
+```bash
+cat report.log
+```
 ```console
 ********************************************************************************
 **** Исходное состояние::
