@@ -431,9 +431,10 @@ drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
 ```bash
 sudo ./zfs.sh
 ```
-Процесс развертывания занимает некоторое время, включая две перезагрузки.  
+Процесс развертывания тестового окружения с обновлением системы, установкой ZFS требует некоторого время, включая две перезагрузки.  
 
-Создание пула из двух дисков разных рамеров без автоматического монтирования:
+#### Базовые команды по работе с ZFS
+Создание пула из двух дисков разных размеров без автоматического монтирования пула:
 ```bash
 zpool create otus_pool /dev/sdb /dev/sdc -m none
 ```
@@ -496,4 +497,35 @@ zfs list
 NAME            USED  AVAIL  REFER  MOUNTPOINT
 otus_pool       171K  11.5G    24K  none
 otus_pool/opt    39K  11.5G    26K  /opt
+```
+#### Снимки состояния (снапшоты)
+
+Во время работы сценария [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/zfs.sh) создается один снапшот для пула `otus_pool`, смонтированного как `/opt`:
+```bash
+zfs list -t snapshot
+```
+```console
+NAME                     USED  AVAIL  REFER  MOUNTPOINT
+otus_pool/opt@version1    13K      -    26K  -
+```
+Следующие команды показаны с целью демонстрации возможности отката до состояния, сдленного в момент создания снапшота: 
+```bash
+cat /opt/test.txt
+```
+```console
+Version 1
+```
+```bash
+echo "Version 2" > /opt/test.txt
+cat /opt/test.txt
+```
+```console
+Version 2
+```
+```bash
+zfs rollback otus_pool/opt@version1
+cat /opt/test.txt
+```
+```console
+Version 1
 ```
