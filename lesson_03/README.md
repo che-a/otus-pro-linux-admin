@@ -71,7 +71,7 @@
 ```bash
 sudo ./lvm_reduce_move.sh
 ```
-Во время выполнения сценария будет дважды выполнена перезагрузка системы. Контролировать ход и завершение работы сценария можно, например, через превью менеджера виртуальных машин `Oracle VirtualBox` или по разрывам SSH-сессии. Структура сценария разделена на несколько этапов, что связано с необходимостью перезагрузки системы во время его выполнения. Текущий этап выполнения сценария записывается в файл, что позволяет после перезагрузки системы продолжить выполнение сценария. Автозагрузка сценария реализована средствами `systemd`.  
+Во время выполнения сценария будет дважды выполнена перезагрузка системы. Контролировать ход и завершение работы сценария можно, например, через превью менеджера виртуальных машин `Oracle VirtualBox` или по разрывам `SSH`-сессии. Структура сценария разделена на несколько этапов, что связано с необходимостью перезагрузки системы во время его выполнения. Текущий этап выполнения сценария записывается в файл, что позволяет после перезагрузки системы продолжить выполнение сценария. Автозагрузка сценария реализована средствами `systemd`.  
 
 Начальное состояние тестового окружения:
 ```bash
@@ -137,4 +137,293 @@ sde                       8:64   0    1G  0 disk
 ```
 
 ### LVM. Создание снапшота, восстановление со снапшота <a name="snap"></a>  
+Необходимо сгенерировать файлы в `/home/`, снять снапшот, удалить часть файлов, восстановиться со снапшота.  
+
+Сгенерируем файлы в /home/:
+```bash
+lvs -s
+```
+```console
+  LV       VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
+  lv_var   VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                100.00               HD0qRx-Gnkq-5Czy-BQGk-EFP5-C5WJ-qBVsvI         
+  LogVol00 VolGroup00    1 -wi-ao----   8.00g  -1  -1  253    0                                                     fXksTH-uJXs-2tVE-odIV-489K-5hCZ-AQpo04         
+  LogVol01 VolGroup00    1 -wi-ao----   1.50g  -1  -1  253    1                                                     IAjIC6-ScnM-tvH6-7BTy-TN31-hd82-bgDSzd         
+  lv_home  VolGroup00    1 -wi-ao----   2.00g  -1  -1  253    8                                                     hpNUQc-7iIv-QcOg-wVeq-9SWZ-EvCv-cwsoYD  
+```
+Снять снапшот:
+[root@otuslinux ~]# 
+lvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home
+Удалить часть файлов:
+[root@otuslinux ~]# 
+rm -f /home/file{11..20}
+Процесс восстановления со снапшота:
+[root@otuslinux ~]# 
+umount /home
+[root@otuslinux ~]# 
+lvconvert --merge /dev/VolGroup00/home_snap
+[root@otuslinux ~]# 
+mount /home
+
+<details>
+   <summary>Вывод вышеперечисленных команд:</summary>
+	
+```console
+********************************************************************************
+**** Исходное состояние::
+********************************************************************************
+==== lsblk ====
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-lv_home  253:2    0    2G  0 lvm  /home
+sdb                       8:16   0   10G  0 disk 
+sdc                       8:32   0    2G  0 disk 
+├─VG01-lv_var_rmeta_0   253:3    0    4M  0 lvm  
+│ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_0  253:4    0  952M  0 lvm  
+  └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+sdd                       8:48   0    1G  0 disk 
+├─VG01-lv_var_rmeta_1   253:5    0    4M  0 lvm  
+│ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_1  253:6    0  952M  0 lvm  
+  └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+sde                       8:64   0    1G  0 disk 
+==== lvs -v ====
+  LV       VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
+  lv_var   VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
+  LogVol00 VolGroup00    1 -wi-ao----   8.00g  -1  -1  253    0                                                     yVRfXr-YQoA-x4m8-kRwR-NdvF-O2ZZ-ylw5Lv         
+  LogVol01 VolGroup00    1 -wi-ao----   1.50g  -1  -1  253    1                                                     IAjIC6-ScnM-tvH6-7BTy-TN31-hd82-bgDSzd         
+  lv_home  VolGroup00    1 -wi-ao----   2.00g  -1  -1  253    2                                                     j4lARa-6US5-9huS-Exdr-DT0y-R298-DZjIqM         
+==== ls -al /home ====
+total 0
+drwxr-xr-x.  3 root    root     21 Sep  5 09:10 .
+drwxr-xr-x. 18 root    root    239 Sep  5 09:10 ..
+drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
+********************************************************************************
+**** Создание тестовых файлов::
+********************************************************************************
+==== lsblk ====
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-lv_home  253:2    0    2G  0 lvm  /home
+sdb                       8:16   0   10G  0 disk 
+sdc                       8:32   0    2G  0 disk 
+├─VG01-lv_var_rmeta_0   253:3    0    4M  0 lvm  
+│ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_0  253:4    0  952M  0 lvm  
+  └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+sdd                       8:48   0    1G  0 disk 
+├─VG01-lv_var_rmeta_1   253:5    0    4M  0 lvm  
+│ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_1  253:6    0  952M  0 lvm  
+  └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+sde                       8:64   0    1G  0 disk 
+==== lvs -v ====
+  LV       VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
+  lv_var   VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
+  LogVol00 VolGroup00    1 -wi-ao----   8.00g  -1  -1  253    0                                                     yVRfXr-YQoA-x4m8-kRwR-NdvF-O2ZZ-ylw5Lv         
+  LogVol01 VolGroup00    1 -wi-ao----   1.50g  -1  -1  253    1                                                     IAjIC6-ScnM-tvH6-7BTy-TN31-hd82-bgDSzd         
+  lv_home  VolGroup00    1 -wi-ao----   2.00g  -1  -1  253    2                                                     j4lARa-6US5-9huS-Exdr-DT0y-R298-DZjIqM         
+==== ls -al /home ====
+total 80
+drwxr-xr-x.  3 root    root    292 Sep  5 09:25 .
+drwxr-xr-x. 18 root    root    239 Sep  5 09:10 ..
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file1
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file10
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file11
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file12
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file13
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file14
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file15
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file16
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file17
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file18
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file19
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file2
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file20
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file3
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file4
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file5
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file6
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file7
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file8
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file9
+drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
+********************************************************************************
+**** После создания снапшота::
+********************************************************************************
+==== lsblk ====
+NAME                         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                            8:0    0   40G  0 disk 
+├─sda1                         8:1    0    1M  0 part 
+├─sda2                         8:2    0    1G  0 part /boot
+└─sda3                         8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00      253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01      253:1    0  1.5G  0 lvm  [SWAP]
+  ├─VolGroup00-lv_home-real  253:8    0    2G  0 lvm  
+  │ ├─VolGroup00-lv_home     253:2    0    2G  0 lvm  /home
+  │ └─VolGroup00-home_snap   253:10   0    2G  0 lvm  
+  └─VolGroup00-home_snap-cow 253:9    0  128M  0 lvm  
+    └─VolGroup00-home_snap   253:10   0    2G  0 lvm  
+sdb                            8:16   0   10G  0 disk 
+sdc                            8:32   0    2G  0 disk 
+├─VG01-lv_var_rmeta_0        253:3    0    4M  0 lvm  
+│ └─VG01-lv_var              253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_0       253:4    0  952M  0 lvm  
+  └─VG01-lv_var              253:7    0  952M  0 lvm  /var
+sdd                            8:48   0    1G  0 disk 
+├─VG01-lv_var_rmeta_1        253:5    0    4M  0 lvm  
+│ └─VG01-lv_var              253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_1       253:6    0  952M  0 lvm  
+  └─VG01-lv_var              253:7    0  952M  0 lvm  /var
+sde                            8:64   0    1G  0 disk 
+==== lvs -v ====
+  LV        VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin  Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
+  lv_var    VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                 100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
+  LogVol00  VolGroup00    1 -wi-ao----   8.00g  -1  -1  253    0                                                      yVRfXr-YQoA-x4m8-kRwR-NdvF-O2ZZ-ylw5Lv         
+  LogVol01  VolGroup00    1 -wi-ao----   1.50g  -1  -1  253    1                                                      IAjIC6-ScnM-tvH6-7BTy-TN31-hd82-bgDSzd         
+  home_snap VolGroup00    1 swi-a-s--- 128.00m  -1  -1  253   10      lv_home 0.00                                    faynnc-JyTu-p1cb-Bcku-QH0v-SrBh-79beKN         
+  lv_home   VolGroup00    1 owi-aos---   2.00g  -1  -1  253    2                                                      j4lARa-6US5-9huS-Exdr-DT0y-R298-DZjIqM         
+==== ls -al /home ====
+total 80
+drwxr-xr-x.  3 root    root    292 Sep  5 09:25 .
+drwxr-xr-x. 18 root    root    239 Sep  5 09:10 ..
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file1
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file10
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file11
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file12
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file13
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file14
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file15
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file16
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file17
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file18
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file19
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file2
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file20
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file3
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file4
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file5
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file6
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file7
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file8
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file9
+drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
+********************************************************************************
+**** Удаление части тестовых файлов::
+********************************************************************************
+==== lsblk ====
+NAME                         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                            8:0    0   40G  0 disk 
+├─sda1                         8:1    0    1M  0 part 
+├─sda2                         8:2    0    1G  0 part /boot
+└─sda3                         8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00      253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01      253:1    0  1.5G  0 lvm  [SWAP]
+  ├─VolGroup00-lv_home-real  253:8    0    2G  0 lvm  
+  │ ├─VolGroup00-lv_home     253:2    0    2G  0 lvm  /home
+  │ └─VolGroup00-home_snap   253:10   0    2G  0 lvm  
+  └─VolGroup00-home_snap-cow 253:9    0  128M  0 lvm  
+    └─VolGroup00-home_snap   253:10   0    2G  0 lvm  
+sdb                            8:16   0   10G  0 disk 
+sdc                            8:32   0    2G  0 disk 
+├─VG01-lv_var_rmeta_0        253:3    0    4M  0 lvm  
+│ └─VG01-lv_var              253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_0       253:4    0  952M  0 lvm  
+  └─VG01-lv_var              253:7    0  952M  0 lvm  /var
+sdd                            8:48   0    1G  0 disk 
+├─VG01-lv_var_rmeta_1        253:5    0    4M  0 lvm  
+│ └─VG01-lv_var              253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_1       253:6    0  952M  0 lvm  
+  └─VG01-lv_var              253:7    0  952M  0 lvm  /var
+sde                            8:64   0    1G  0 disk 
+==== lvs -v ====
+  LV        VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin  Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
+  lv_var    VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                 100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
+  LogVol00  VolGroup00    1 -wi-ao----   8.00g  -1  -1  253    0                                                      yVRfXr-YQoA-x4m8-kRwR-NdvF-O2ZZ-ylw5Lv         
+  LogVol01  VolGroup00    1 -wi-ao----   1.50g  -1  -1  253    1                                                      IAjIC6-ScnM-tvH6-7BTy-TN31-hd82-bgDSzd         
+  home_snap VolGroup00    1 swi-a-s--- 128.00m  -1  -1  253   10      lv_home 0.00                                    faynnc-JyTu-p1cb-Bcku-QH0v-SrBh-79beKN         
+  lv_home   VolGroup00    1 owi-aos---   2.00g  -1  -1  253    2                                                      j4lARa-6US5-9huS-Exdr-DT0y-R298-DZjIqM         
+==== ls -al /home ====
+total 40
+drwxr-xr-x.  3 root    root    152 Sep  5 09:25 .
+drwxr-xr-x. 18 root    root    239 Sep  5 09:10 ..
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file1
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file10
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file2
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file3
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file4
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file5
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file6
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file7
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file8
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file9
+drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
+********************************************************************************
+**** После восстановления из снапшота::
+********************************************************************************
+==== lsblk ====
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-lv_home  253:2    0    2G  0 lvm  /home
+sdb                       8:16   0   10G  0 disk 
+sdc                       8:32   0    2G  0 disk 
+├─VG01-lv_var_rmeta_0   253:3    0    4M  0 lvm  
+│ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_0  253:4    0  952M  0 lvm  
+  └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+sdd                       8:48   0    1G  0 disk 
+├─VG01-lv_var_rmeta_1   253:5    0    4M  0 lvm  
+│ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+└─VG01-lv_var_rimage_1  253:6    0  952M  0 lvm  
+  └─VG01-lv_var         253:7    0  952M  0 lvm  /var
+sde                       8:64   0    1G  0 disk 
+==== lvs -v ====
+  LV       VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
+  lv_var   VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
+  LogVol00 VolGroup00    1 -wi-ao----   8.00g  -1  -1  253    0                                                     yVRfXr-YQoA-x4m8-kRwR-NdvF-O2ZZ-ylw5Lv         
+  LogVol01 VolGroup00    1 -wi-ao----   1.50g  -1  -1  253    1                                                     IAjIC6-ScnM-tvH6-7BTy-TN31-hd82-bgDSzd         
+  lv_home  VolGroup00    1 -wi-ao----   2.00g  -1  -1  253    2                                                     j4lARa-6US5-9huS-Exdr-DT0y-R298-DZjIqM         
+==== ls -al /home ====
+total 80
+drwxr-xr-x.  3 root    root    292 Sep  5 09:25 .
+drwxr-xr-x. 18 root    root    239 Sep  5 09:10 ..
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file1
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file10
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file11
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file12
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file13
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file14
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file15
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file16
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file17
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file18
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file19
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file2
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file20
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file3
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file4
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file5
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file6
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file7
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file8
+-rw-r--r--.  1 root    root     37 Sep  5 09:25 file9
+drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
+```
+</details>
+
 ### ZFS. Использование кэша и снапшотов <a name="zfs"></a>  
