@@ -425,6 +425,11 @@ drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
 </details>
 
 ### ZFS. Использование кэша и снапшотов <a name="zfs"></a>  
-В этой части домашнего задания (&laquo;поставить btrfs/zfs - с кешем, снапшотами - разметить здесь каталог `/opt` &raquo;) рассматривается установка и использование [OpenZFS](http://open-zfs.org/wiki/Main_Page).
+Необходимо &laquo;поставить btrfs/zfs - с кешем, снапшотами - разметить здесь каталог `/opt` &raquo;.  
+
+Выполнение этой части задания автоматизировано с помощью сценария [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/zfs.sh). Если в тестовом окружении ранее запускался сценарий [lvm_reduce_move.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/lvm_reduce_move.sh), то необходимо развернуть окружении заново и только после этого запускать [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/zfs.sh), т.к. оба сценария используют для своей работы одни и теже диски.
+```bash
+sudo ./zfs.sh
+```
 
 Поддержка файловой системы ZFS по умолчанию не включена в CentOS 7.
