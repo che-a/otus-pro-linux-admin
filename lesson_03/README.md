@@ -437,12 +437,63 @@ sudo ./zfs.sh
 ```bash
 zpool create otus_pool /dev/sdb /dev/sdc -m none
 ```
-В ZFS часть ОЗУ системы используется для кэширования данных, которые использовались недавно, или к которым обращаются чаще всего. Такой кэш называют «адаптивным кэшем замены» (ARC). L2ARC, или ARC уровня 2, является расширением ARC. Такой кэш используется на выделенном устройстве (SSD) и хранит все данные, которые не слишком важны для того, чтобы оставаться в ARC.
-Добавление кэша L2ARC в пул:
+В ZFS часть ОЗУ системы используется для кэширования данных, которые использовались недавно, или к которым обращаются чаще всего. Такой кэш называют «адаптивным кэшем замены» (ARC). L2ARC, или ARC уровня 2, является расширением ARC. Такой кэш используется на выделенном устройстве (SSD) и хранит все данные, которые не слишком важны для того, чтобы оставаться в ARC.  
+Добавление в пул кэша L2ARC:
 ```bash
 zpool add otus_pool cache /dev/sdd
 ```
-
+Небольшое и быстрое хранилище можно использовать в качестве отдельного ZFS intent log (ZIL), в котором вновь поступившие данные будут временно храниться перед их записью на диски пула.  
+Добавление в пул лога ZIL:
 ```bash
 zpool add otus_pool log /dev/sde
+```
+Создание ФС ZFS и монтироание ее как `/opt`:  
+```bash
+zfs create otus_pool/opt
+zfs set mountpoint=/opt otus_pool/opt
+```
+Результаты выполнения вышеописанных команд:
+```bash
+df -h -x tmpfs -x devtmpfs
+```
+```console
+Filesystem                       Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup00-LogVol00   38G  1.2G   37G   3% /
+/dev/sda2                       1014M   87M  928M   9% /boot
+otus_pool/opt                     12G     0   12G   0% /opt
+```
+```bash
+zpool list
+```
+```console
+NAME        SIZE  ALLOC   FREE  EXPANDSZ   FRAG    CAP  DEDUP  HEALTH  ALTROOT
+otus_pool  11.9G   196K  11.9G         -     0%     0%  1.00x  ONLINE  -
+```
+```bash
+zpool status
+```
+```console
+  pool: otus_pool
+ state: ONLINE
+  scan: none requested
+config:
+
+        NAME        STATE     READ WRITE CKSUM
+        otus_pool   ONLINE       0     0     0
+          sdb       ONLINE       0     0     0
+          sdc       ONLINE       0     0     0
+        logs
+          sde       ONLINE       0     0     0
+        cache
+          sdd       ONLINE       0     0     0
+
+errors: No known data errors
+```
+```bash
+zfs list
+```
+```console
+NAME            USED  AVAIL  REFER  MOUNTPOINT
+otus_pool       171K  11.5G    24K  none
+otus_pool/opt    39K  11.5G    26K  /opt
 ```
