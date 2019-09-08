@@ -40,4 +40,24 @@
 Трапы и функции, а также sed и find +1 балл.  
 
 ## 3. Выполнение <a name="exec"></a>  
+Описание хода выполнения. Будет добавлено позднее.
+
 ### Структура файла access.log  <a name="access.log"></a>  
+`access.log` — файл, использующийся веб-серверами (Apache, Nginx, Lighttpd, boa, прокси-сервером squid и т. д.) для записи обращений к сайту.  
+Является текстовым файлом, на каждой строчке которого записывается одно обращение к серверу. Используется для сбора статистики сайта и для обнаружения возможных злоупотреблений на сайте.  
+Наиболее часто используемым форматом access.log является combined, при котором данные записываются в следующем виде:
+
+```console
+207.46.13.73 - - [21/May/2019:03:08:12 +0300] "GET /catalog/mototekhnika/pitbayki/?display=table HTTP/1.0" 200 32236 "-" "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"
+178.154.244.16 - - [21/May/2019:03:16:45 +0300] "POST /bitrix/tools/conversion/ajax_counter.php HTTP/1.0" 200 22 "https://nomoto.ru/company/news/novaya/" "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)"
+200.33.155.30 - - [14/Aug/2019:04:12:10 +0300] "GET / HTTP/1.1" 200 3698 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.7 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.7"rt=0.000 uct="-" uht="-" urt="-"
+165.22.19.102 - - [14/Aug/2019:04:38:36 +0300] "POST /wp-login.php HTTP/1.1" 200 1721 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0"rt=0.255 uct="0.000" uht="0.193" urt="0.193"
+```
+Где:  
+`207.46.13.73` -- хост/IP-адрес, с которого произведён запрос к серверу;  
+`[21/May/2019:03:08:12 +0300]` -- время запроса к серверу и часовой пояс сервера;  
+`"GET /catalog/mototekhnika/pitbayki/?display=table HTTP/1.0"` -- тип запроса, его содержимое и версия;  
+`200` -- код состояния HTTP;  
+`32236` -- количество отданных сервером байт;  
+`"-"` -- URL-источник запроса;  
+`"Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"` -- HTTP-заголовок, содержащий информацию о запросе (клиентское приложение, язык и т. д.);  
