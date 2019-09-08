@@ -3,7 +3,7 @@
 1. [Описание занятия](#description)  
 2. [Домашнее задание](#homework)  
 3. [Выполнение](#exec)  
-    - [XYZ](#XYZ)  
+    - [Структура файла access.log](#access.log)  
  
 
 ## 1. Описание занятия <a name="description"></a>
@@ -40,4 +40,4 @@
 Трапы и функции, а также sed и find +1 балл.  
 
 ## 3. Выполнение <a name="exec"></a>  
-### XYZ  <a name="XYZ"></a>  
+### Структура файла access.log  <a name="access.log"></a>  
