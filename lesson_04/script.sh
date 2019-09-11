@@ -2,16 +2,47 @@
 
 #LOG_FILE='access.log'
 LOG_FILE='access-4560-644067.log'
-X_IP_FILE='x_ip.log'
-X='10'
-ALL_IP=`cat $LOG_FILE | cut -d" " -f1 | sort -n | uniq`
-#ALL_IP_COUNT=`cat $LOG_FILE | cut -d" " -f1 | sort -n | uniq | wc -l`
-ALL_IP_COUNT=`echo ${#ALL_IP[@]}`
+TMP_X_FILE='/tmp/x.tmp'
+TMP_Y_FILE='/tmp/y.tmp'
+X='25'
+Y='15'
 
-declare -A X_IP
+function get_x {
+    gawk '
+                {
+                    count[$1]++
+                }
 
-function get_x_ip {
+        END     {
+                    for (ip in count) print count[ip], ip
+                }
+    ' $LOG_FILE | sort -n -r | head -n $X |
+    gawk '
+        BEGIN   {
+                    print "----+-----------------+---------------------"
+                    print "  № |     IP-адрес    |Макс.кол-во запросов "
+                    print "----+-----------------+---------------------"
+                    i = 0
+                }
 
+                {
+                    # Меняем столбцы местами
+                    tmp_str = $1
+                    $1 = $2
+                    $2 = tmp_str
+                    printf "%4d| %-16s|%11d\n", ++i, $1, $2
+                }
+
+        END     {
+                    print "----+-----------------+---------------------"
+                }
+    ' > $TMP_X_FILE
 }
 
-get_x_ip
+function get_y {
+
+    return 0
+}
+
+get_x
+get_y
