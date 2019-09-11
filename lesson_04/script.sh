@@ -1,11 +1,30 @@
 #!/usr/bin/env bash
 
-#LOG_FILE='access.log'
-LOG_FILE='access-4560-644067.log'
+LOG_FILE='access.log'
+#LOG_FILE='access-4560-644067.log'
 TMP_X_FILE='/tmp/x.tmp'
 TMP_Y_FILE='/tmp/y.tmp'
-X='25'
+TMP_ERRORS_FILE='/tmp/errors.tmp'
+TMP_CODES_FILE='/tmp/codes.tmp'
+
+X='7'
 Y='15'
+
+RETURN_CODES=(  [100]='Continue' \
+                [101]='Switching Protocols' \
+                [102]='Processing' \
+                [200]='OK' \
+                [201]='Created' \
+                [202]='Accepted' \
+                [203]='Non-Authoritative Information' \
+                [204]='No Content («нет содержимого»)[2][3]' \
+                [205]='Reset Content («сбросить содержимое»)' \
+                [206]='Partial Content («частичное содержимое»)' \
+                [207]='Multi-Status («многостатусный»)' \
+                [208]='Already Reported («уже сообщалось»)' \
+                [226]='IM Used («использовано IM»)' \
+)
+
 
 function get_x {
     gawk '
@@ -44,5 +63,33 @@ function get_y {
     return 0
 }
 
+function all_errors {
+
+    return 0
+}
+
+function all_return_codes {
+    cat $LOG_FILE | cut -d " " -f 6-9 | cut -d '"' -f 3 | cut -d " " -f 2 | \
+        sort -n | uniq -c |
+    gawk '
+        BEGIN   {
+                    print "----+---------------+--------"
+                    print "  № | Код состояния | Кол-во "
+                    print "    |      HTTP     |        "
+                    print "----+---------------+--------"
+                    i = 0
+                }
+
+                {
+                    printf "%4d| %13d | %4d \n", ++i, $2, $1
+                }
+
+        END     {
+                    print "----+---------------+--------"
+                }
+    ' > $TMP_CODES_FILE
+}
 get_x
-get_y
+# get_y
+all_return_codes
+# all_errors
