@@ -115,7 +115,7 @@ function all_return_codes {
                 }
 
                 {
-                    printf "%4d| %13d | %4d | %-20s\n", ++i, $2, $1, return_codes[$2]
+                    printf "%4d| %13d | %5d | %-20s\n", ++i, $2, $1, return_codes[$2]
                 }
 
         END     {
