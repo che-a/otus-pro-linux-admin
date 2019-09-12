@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
 
-LOG_FILE='access.log'
-# LOG_FILE='access-4560-644067.log'
-TMP_X_FILE='/tmp/x.tmp'
-TMP_Y_FILE='/tmp/y.tmp'
-TMP_ERRORS_FILE='/tmp/errors.tmp'
-TMP_CODES_FILE='/tmp/codes.tmp'
+# LOG_FILE='access.log'
+LOG_FILE="access-4560-644067.log"
+TMP_X_FILE="/tmp/$0-x.tmp"
+TMP_Y_FILE="/tmp/$0-y.tmp"
+TMP_ERRORS_FILE="/tmp/$0-errors.tmp"
+TMP_CODES_FILE="/tmp/$0-codes.tmp"
 
-X='7'
+TMP_FILES=($TMP_X_FILE $TMP_Y_FILE $TMP_ERRORS_FILE $TMP_CODES_FILE)
+
+X='15'
 Y='15'
+
+USER="root"
+DOMAIN="localhost"
+MAIL=$USER'@'$DOMAIN
 
 function get_x {
     gawk '
@@ -22,9 +28,10 @@ function get_x {
     ' $LOG_FILE | sort -n -r | head -n $X |
     gawk '
         BEGIN   {
-                    print "----+-----------------+---------------------"
-                    print "  № |     IP-адрес    |Макс.кол-во запросов "
-                    print "----+-----------------+---------------------"
+                    print "+-----+-----------------+-------------+"
+                    print "|  №  |     IP-адрес    | Наиб.кол-во |"
+                    print "|     |                 |  запросов   |"
+                    print "+-----+-----------------+-------------+"
                     i = 0
                 }
 
@@ -33,17 +40,16 @@ function get_x {
                     tmp_str = $1
                     $1 = $2
                     $2 = tmp_str
-                    printf "%4d| %-16s|%11d\n", ++i, $1, $2
+                    printf "| %3d | %-15s |  %6d     |\n", ++i, $1, $2
                 }
 
         END     {
-                    print "----+-----------------+---------------------"
+                    print "+-----+-----------------+-------------+\n"
                 }
     ' > $TMP_X_FILE
 }
 
 function get_y {
-
     return 0
 }
 
@@ -52,11 +58,6 @@ function all_return_codes {
         sort -n | uniq -c |
     gawk '
         BEGIN   {
-                    print "----+---------------+--------"
-                    print "  № | Код состояния | Кол-во "
-                    print "    |      HTTP     |        "
-                    print "----+---------------+--------"
-                    i = 0
                     return_codes[100]="Continue"
                     return_codes[101]="Switching Protocols"
                     return_codes[102]="Processing"
@@ -111,15 +112,40 @@ function all_return_codes {
                     return_codes[451]="Unavailable For Legal Reasons"
                     return_codes[452]="Bad sended request"
                     return_codes[499]="Client Closed Request"
+                    return_codes[500]="Internal Server Error"
+                    return_codes[501]="Not Implemented"
+                    return_codes[502]="Bad Gateway"
+                    return_codes[503]="Service Unavailable"
+                    return_codes[504]="Gateway Timeout"
+                    return_codes[505]="HTTP Version Not Supported"
+                    return_codes[506]="Variant Also Negotiates"
+                    return_codes[507]="Insufficient Storage"
+                    return_codes[508]="Loop Detected"
+                    return_codes[509]="Bandwidth Limit Exceeded"
+                    return_codes[510]="Not Extended"
+                    return_codes[511]="Network Authentication Required"
+                    return_codes[520]="Unknown Error"
+                    return_codes[521]="Web Server Is Down"
+                    return_codes[522]="Connection Timed Out"
+                    return_codes[523]="Origin Is Unreachable"
+                    return_codes[524]="A Timeout Occurred"
+                    return_codes[525]="SSL Handshake Failed"
+                    return_codes[526]="Invalid SSL Certificate"
 
+                    i = 0
+
+                    print "+-----+---------------------------------+--------+"
+                    print "|  №  |        Код состояния HTTP       | Кол-во |"
+                    print "+-----+-----+---------------------------+--------+"
                 }
 
                 {
-                    printf "%4d| %13d | %5d | %-20s\n", ++i, $2, $1, return_codes[$2]
+                    printf "|%4d | %3d | %-25s | %6d |\n", \
+                        ++i, $2, return_codes[$2], $1
                 }
 
         END     {
-                    print "----+---------------+--------"
+                    print "+-----+-----+---------------------------+--------+"
                 }
     ' > $TMP_CODES_FILE
 }
@@ -129,8 +155,26 @@ function all_errors {
     return 0
 }
 
+function del_tmp_files {
+    for FILE in ${TMP_FILES[@]}; do
+        if [ -f $FILE ]; then
+            rm $FILE
+        fi
+    done
+}
 
+function send_message {
+    cat $TMP_X_FILE $TMP_CODES_FILE #| mail -s "REPORT" $MAIL
+}
+
+
+trap 'exit 1' 1 2 3 15
+trap 'del_tmp_files' 0
+
+clear
 get_x
 # get_y
 all_return_codes
 # all_errors
+
+send_message
