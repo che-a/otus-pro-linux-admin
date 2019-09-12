@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# LOG_FILE='access.log'
-LOG_FILE="access-4560-644067.log"
+LOG_FILE='access.log'
+#LOG_FILE="access-4560-644067.log"
 TMP_X_FILE="/tmp/$0-x.tmp"
 TMP_Y_FILE="/tmp/$0-y.tmp"
 TMP_ERRORS_FILE="/tmp/$0-errors.tmp"
@@ -9,48 +9,53 @@ TMP_CODES_FILE="/tmp/$0-codes.tmp"
 
 TMP_FILES=($TMP_X_FILE $TMP_Y_FILE $TMP_ERRORS_FILE $TMP_CODES_FILE)
 
-X='15'
-Y='15'
+X='12'
+Y='5'
 
 USER="root"
 DOMAIN="localhost"
 MAIL=$USER'@'$DOMAIN
 
 function get_x {
-    gawk '
-                {
-                    count[$1]++
-                }
-
-        END     {
-                    for (ip in count) print count[ip], ip
-                }
+    gawk '      { count[$1]++ }
+        END     { for (ip in count) print count[ip], ip }
     ' $LOG_FILE | sort -n -r | head -n $X |
     gawk '
-        BEGIN   {
-                    print "+-----+-----------------+-------------+"
-                    print "|  №  |     IP-адрес    | Наиб.кол-во |"
-                    print "|     |                 |  запросов   |"
-                    print "+-----+-----------------+-------------+"
-                    i = 0
-                }
-
-                {
-                    # Меняем столбцы местами
-                    tmp_str = $1
-                    $1 = $2
-                    $2 = tmp_str
-                    printf "| %3d | %-15s |  %6d     |\n", ++i, $1, $2
-                }
-
-        END     {
-                    print "+-----+-----------------+-------------+\n"
-                }
+        BEGIN {
+            print "+-----+-----------------+-------------+"
+            print "|  X  |     IP-адрес    | Наиб.кол-во |"
+            print "|     |                 |  запросов   |"
+            print "+-----+-----------------+-------------+"
+            i = 0
+        }
+        {   # Меняем столбцы местами
+            tmp_str = $1
+            $1 = $2
+            $2 = tmp_str
+            printf "| %3d | %-15s |  %6d     |\n", ++i, $1, $2
+        }
+        END { print "+-----+-----------------+-------------+\n" }
     ' > $TMP_X_FILE
 }
 
 function get_y {
-    return 0
+    cat $LOG_FILE | cut -d " " -f 6-9 | cut -d '"' -f 2,3 |
+    gawk '
+        /^[A-Z]/    { count[$2]++ }
+        END         { for (addr in count) print count[addr], addr }
+    ' | sort -n -r | head -n $Y |
+    gawk '
+        BEGIN {
+            print "+-----+--------+---------------------------------+"
+            print "|     |  Наиб. |                                  "
+            print "|  Y  | кол-во |             Адрес                "
+            print "|     |запросов|                                  "
+            print "+-----+--------+---------------------------------+"
+            i = 0
+        }
+        { printf "| %3d | %6d | %-s\n", ++i, $1, $2 }
+        END { print "+-----+--------+---------------------------------+\n" }
+    ' > $TMP_Y_FILE
 }
 
 function all_return_codes {
@@ -145,7 +150,7 @@ function all_return_codes {
                 }
 
         END     {
-                    print "+-----+-----+---------------------------+--------+"
+                    print "+-----+-----+---------------------------+--------+\n"
                 }
     ' > $TMP_CODES_FILE
 }
@@ -164,16 +169,16 @@ function del_tmp_files {
 }
 
 function send_message {
-    cat $TMP_X_FILE $TMP_CODES_FILE #| mail -s "REPORT" $MAIL
+    cat $TMP_X_FILE $TMP_Y_FILE $TMP_CODES_FILE #| mail -s "REPORT" $MAIL
 }
 
 
 trap 'exit 1' 1 2 3 15
-trap 'del_tmp_files' 0
+#trap 'del_tmp_files' 0
 
 clear
 get_x
-# get_y
+get_y
 all_return_codes
 # all_errors
 
