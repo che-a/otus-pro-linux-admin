@@ -1,4 +1,3 @@
-
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -14,6 +13,7 @@ Vagrant.configure("2") do |config|
             srv.memory = "2048"
         end
 
-        srv.vm.provision "shell", path: "script.sh"
+        srv.vm.provision "shell", path: "provision.sh"
+
     end
 end
