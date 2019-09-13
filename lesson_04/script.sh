@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# LOG_FILE='access.log'
-LOG_FILE="access-4560-644067.log"
-TMP_X_FILE="/tmp/$0-x.tmp"
-TMP_Y_FILE="/tmp/$0-y.tmp"
-TMP_CODES_FILE="/tmp/$0-codes.tmp"
+LOG_FILE='/opt/fake_srv/fake_srv.log'
+#LOG_FILE="access-4560-644067.log"
+TMP_X_FILE="/tmp/x.tmp"
+TMP_Y_FILE="/tmp/y.tmp"
+TMP_CODES_FILE="/tmp/codes.tmp"
 
 TMP_FILES=($TMP_X_FILE $TMP_Y_FILE $TMP_CODES_FILE)
 
@@ -33,7 +33,7 @@ function get_x {
             $2 = tmp_str
             printf "| %3d | %-15s |  %6d  |\n", ++i, $1, $2
         }
-        END { print "+-----+-----------------+-------------+\n" }
+        END { print "+-----+-----------------+----------+\n" }
     ' > $TMP_X_FILE
 }
 
