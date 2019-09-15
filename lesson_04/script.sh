@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-LOCKFILE=/tmp/script.lock
+#
+EXPORT_FILE=`find / -name export.txt 2>/dev/null`
+LOG_NAME_FULL=`gawk 'BEGIN {FS = "="} /LOG_NAME_FULL/ {print $2}' $EXPORT_FILE`
+DIR=`gawk 'BEGIN {FS = "="} /EXPORT_DIR/ {print $2}' $EXPORT_FILE`
 
-LOG_FILE='/opt/fake_srv/fake_srv.log'
-#LOG_FILE="access-4560-644067.log"
-TMP_X_FILE="/tmp/x.tmp"
-TMP_Y_FILE="/tmp/y.tmp"
-TMP_CODES_FILE="/tmp/codes.tmp"
+LOCKFILE=$DIR"file.lock"
+
+TMP_X_FILE=$DIR"x.tmp"
+TMP_Y_FILE=$DIR"y.tmp"
+TMP_CODES_FILE=$DIR"codes.tmp"
 
 TMP_FILES=($TMP_X_FILE $TMP_Y_FILE $TMP_CODES_FILE)
 
@@ -20,7 +23,7 @@ MAIL=$USER'@'$DOMAIN
 function get_x {
     gawk '      { count[$1]++ }
         END     { for (ip in count) print count[ip], ip }
-    ' $LOG_FILE | sort -n -r | head -n $X |
+    ' $LOG_NAME_FULL | sort -n -r | head -n $X |
     gawk '
         BEGIN {
             print "+=====+=================+==========+"
@@ -40,7 +43,7 @@ function get_x {
 }
 
 function get_y {
-    cat $LOG_FILE | cut -d " " -f 6-9 | cut -d '"' -f 2,3 |
+    cat $LOG_NAME_FULL | cut -d " " -f 6-9 | cut -d '"' -f 2,3 |
     gawk '
         /^[A-Z]/    { count[$2]++ }
         END         { for (addr in count) print count[addr], addr }
@@ -59,7 +62,7 @@ function get_y {
 }
 
 function all_return_codes {
-    cat $LOG_FILE | cut -d " " -f 6-9 | cut -d '"' -f 3 | cut -d " " -f 2 | \
+    cat $LOG_NAME_FULL | cut -d " " -f 6-9 | cut -d '"' -f 3 | cut -d " " -f 2 | \
         sort -n | uniq -c |
     gawk '
         BEGIN {
@@ -186,7 +189,7 @@ if [ -f $LOCKFILE ]; then
     exit -1
 else
     touch $LOCKFILE
-    sleep 10
+    #sleep 10
 
     get_x
     get_y

@@ -19,6 +19,10 @@ SOURCE_LOG_NAME_FULL=$SRV_DIR$SOURCE_LOG_NAME
 UNIT_NAME=$SRV".service"
 UNIT_NAME_FULL="/etc/systemd/system/"$UNIT_NAME
 
+EXPORT_FILE="export.txt"
+EXPORT_DIR="/tmp/"$SCRIPT"/"
+EXPORT_FILE_FULL=$EXPORT_DIR$EXPORT_FILE
+
 function prepare_system {
     mkdir -p ~root/.ssh
     cp ~vagrant/.ssh/auth* ~root/.ssh
@@ -31,6 +35,12 @@ function prepare_system {
 
     ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
     yum install -y mailx nano tree tmux
+
+    mkdir -p $EXPORT_DIR && chown -R vagrant: $EXPORT_DIR
+    (
+        echo 'EXPORT_DIR='$EXPORT_DIR
+        echo 'LOG_NAME_FULL='$LOG_NAME_FULL
+    ) > $EXPORT_FILE_FULL
 }
 
 function create_systemd_unit {
@@ -59,7 +69,7 @@ _EOF_
     systemctl start $UNIT_NAME
 }
 
-function create_srv_file {
+function create_fake_srv_script {
 
 (
 cat <<- '_EOF_'
@@ -90,25 +100,15 @@ _EOF_
 }
 
 function cron_tuning {
-    #crontab -l | { cat; echo "*/2 * * * * $SCRIPT_DIR$SCRIPT"; } | crontab -
 
 su vagrant <<'_EOF_'
 crontab -l | { cat; echo "*/1 * * * * /opt/mail_stat/script"; } | crontab -
 _EOF_
-
-
-#cat > /etc/cron.d/0minutely << '_EOF_'
-#SHELL=/bin/bash
-#PATH=/sbin:/bin:/usr/sbin:/usr/bin
-#MAILTO=root HOME=/
-#*/2 * * * * vagrant /opt/mail_stat/script
-#
-#_EOF_
 
 }
 
 
 prepare_system
 create_systemd_unit
-create_srv_file
+create_fake_srv_script
 cron_tuning
