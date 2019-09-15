@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+LOCKFILE=/tmp/script.lock
+
 LOG_FILE='/opt/fake_srv/fake_srv.log'
 #LOG_FILE="access-4560-644067.log"
 TMP_X_FILE="/tmp/x.tmp"
@@ -22,8 +24,8 @@ function get_x {
     gawk '
         BEGIN {
             print "+=====+=================+==========+"
-            print "|  X  |     IP-адрес    |  Кол-во  |"
-            print "|     |                 | запросов |"
+            print "|  X  |   IP-address    | Number of|"
+            print "|     |                 | requests |"
             print "+-----+-----------------+----------+"
             i = 0
         }
@@ -46,8 +48,8 @@ function get_y {
     gawk '
         BEGIN {
             print "+=====+========+====================================+"
-            print "|  Y  | Кол-во |             Адрес                   "
-            print "|     |запросов|                                     "
+            print "|  Y  | Num.of |             Address                 "
+            print "|     |requests|                                     "
             print "+-----+--------+------------------------------------+"
             i = 0
         }
@@ -140,7 +142,7 @@ function all_return_codes {
             flag_5xx = "false"
 
             print "+=====+=================================+========+"
-            print "|  №  |        Код состояния HTTP       | Кол-во |"
+            print "| No  |         HTTP status code        |  Count |"
             print "+-----+-----+---------------------------+--------+"
         }
         {
@@ -173,16 +175,23 @@ function del_tmp_files {
 }
 
 function send_message {
-    cat $TMP_X_FILE $TMP_Y_FILE $TMP_CODES_FILE #| mail -s "REPORT" $MAIL
+    cat $TMP_X_FILE $TMP_Y_FILE $TMP_CODES_FILE | mail -s "REPORT" $MAIL
 }
-
 
 trap 'exit 1' 1 2 3 15
 trap 'del_tmp_files' 0
 
-clear
-get_x
-get_y
-all_return_codes
+if [ -f $LOCKFILE ]; then
+    echo "Ошибка запуска! Уже работает другая копия этого сценария."
+    exit -1
+else
+    touch $LOCKFILE
+    sleep 10
 
-send_message
+    get_x
+    get_y
+    all_return_codes
+    send_message
+
+    rm $LOCKFILE
+fi

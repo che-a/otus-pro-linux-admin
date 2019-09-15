@@ -30,7 +30,7 @@ function prepare_system {
     chown -R vagrant: {$SRV_DIR,$SCRIPT_DIR}
 
     ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
-    yum install -y mc nano tree tmux
+    yum install -y mailx nano tree tmux
 }
 
 function create_systemd_unit {
