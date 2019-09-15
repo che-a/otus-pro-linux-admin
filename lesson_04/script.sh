@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-#
+# Согласно условию задания необходимо использовать утилиту find
+# Передача значений некоторых переменных из одного сценария в другой
+# используя файл
 EXPORT_FILE=`find / -name export.txt 2>/dev/null`
 LOG_NAME_FULL=`gawk 'BEGIN {FS = "="} /LOG_NAME_FULL/ {print $2}' $EXPORT_FILE`
 DIR=`gawk 'BEGIN {FS = "="} /EXPORT_DIR/ {print $2}' $EXPORT_FILE`
 
+# Файл блокировки, необходим для защиты от повторного запуска
 LOCKFILE=$DIR"file.lock"
 
 TMP_X_FILE=$DIR"x.tmp"
