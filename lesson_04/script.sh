@@ -173,7 +173,7 @@ function return_codes {
             flag_5xx = "false"
 
             print "+=====+=================================+========+"
-            print "| No  |         Код возврата HTTP       | Кол-во |"
+            print "|  №  |         Код возврата HTTP       | Кол-во |"
         }
         {
             if ($2 ~ /1[0-9][0-9]/ && flag_1xx == "false" ){

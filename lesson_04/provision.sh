@@ -75,8 +75,8 @@ function read_file {
         #Z=`LC_TIME=en_US date "+%d/%b/%Y:%T %z"`
         Z=`date "+%d/%b/%Y:%T %z"`
         echo $LINE | sed "s#../.../....:..:..:.. .[0-9][0-9][0-9][0-9]#$Z#" >> OutputLog
-        sleep `shuf -i 1-10 -n 1`
-        #sleep 0.1
+        #sleep `shuf -i 1-10 -n 1`
+        sleep 0.1
     done < SourceLog
 }
 
