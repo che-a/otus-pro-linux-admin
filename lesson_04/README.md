@@ -48,19 +48,121 @@
 ```console
 /opt/
 ├── fake_web
-│   ├── access1.log
-│   ├── access.log
-│   ├── fake_web.log
-│   └── fake_web.sh
+│   ├── access1.log     # Файл-образец
+│   ├── access.log      # Файл-образец
+│   ├── fake_web.log    # Лог-файл имитатора веб-сервера
+│   └── fake_web.sh     # Имитатор веб-сервера
 └── stat_to_mail
-    ├── num_str.txt
-    ├── stat_to_mail -> /opt/stat_to_mail/stat_to_mail.sh
-    └── stat_to_mail.sh
+    ├── file.lock       # Файл блокировки для исключения двойного запуска сценария
+    ├── num_str.txt     # Здесь хранится номер строки, с которой нужно начинать обработку лог-файла при запуске сценария
+    ├── report.tmp      # Временный файл, который формируется каждый раз при запуске сценария
+    ├── stat_to_mail -> /opt/stat_to_mail/stat_to_mail.sh # Для использования cron лучше использовать имена без символа точки
+    └── stat_to_mail.sh # Сценарий по сбору и отправке статистики
 /tmp/
 ├── stat_to_mail
-│   └── export.txt
+│   └── export.txt      # Файл для поиска его утилитой find (использование find необходимо по условию задачи)
 ├── ...
 └── vagrant-shell
+
+```
+
+```console
+From vagrant@centos7.localdomain  Tue Sep 17 21:48:01 2019
+Return-Path: <vagrant@centos7.localdomain>
+X-Original-To: root@localhost
+Delivered-To: root@localhost.localdomain
+Received: by localhost.localdomain (Postfix, from userid 1000)
+	id 898DF124; Tue, 17 Sep 2019 21:48:01 +0300 (MSK)
+Date: Tue, 17 Sep 2019 21:48:01 +0300
+To: root@localhost.localdomain
+Subject: REPORT
+User-Agent: Heirloom mailx 12.5 7/5/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Message-Id: <20190917184801.898DF124@centos7.localdomain>
+From: vagrant@centos7.localdomain (vagrant)
+
++======================================================+
+|                    ОТЧЕТ                             |
++--------+---------------------------------------------+
+| Файл:  | /opt/fake_web/fake_web.log                  |
++--------+---------------------------------------------+
+| Период:| 17/Sep/2019:21:47:02 +0300                  |
+|        | 17/Sep/2019:21:48:01 +0300                  |
++--------+-----------------+------------------+--------+
+| Строки:| 1259-1704       | Обработано строк:| 446    |
++--------+-----------------+------------------+--------+
+
++=====+=================+=================+
+|  X  |    IP-адрес     | Кол-во запросов |
++-----+-----------------+-----------------+
+|   1 | 109.236.252.130 |          39     |
+|   2 | 188.43.241.106  |          33     |
+|   3 | 93.158.167.130  |          32     |
+|   4 | 87.250.233.68   |          20     |
+|   5 | 217.118.66.161  |          17     |
+|   6 | 95.165.18.146   |          16     |
+|   7 | 62.75.198.172   |          14     |
+|   8 | 62.210.252.196  |          12     |
+|   9 | 162.243.13.195  |          12     |
+|  10 | 185.6.8.9       |          11     |
++-----+-----------------+-----------------+
+
++=====+=================+===================================
+|  Y  | Кол-во запросов |             Адрес                 
++-----+-----------------+-----------------------------------
+|   1 |             106 | /
+|   2 |              81 | /wp-login.php
+|   3 |              38 | /xmlrpc.php
+|   4 |              15 | /robots.txt
+|   5 |               8 | /wp-includes/js/wp-embed.min.js?ver=5.0.4
+|   6 |               8 | /favicon.ico
+|   7 |               7 | /wp-admin/admin-post.php?page=301bulkoptions
+|   8 |               7 | /1
+|   9 |               6 | /wp-admin/admin-ajax.php?page=301bulkoptions
+|  10 |               5 | /wp-content/themes/llorix-one-lite/style.css?ver=1.0.0
+|  11 |               4 | /wp-includes/js/wp-emoji-release.min.js?ver=5.0.4
+|  12 |               4 | /wp-includes/js/comment-reply.min.js?ver=5.0.4
+|  13 |               4 | /wp-includes/css/dist/block-library/style.min.css?ver=5.0.4
+|  14 |               4 | /wp-content/uploads/2016/10/robo5.jpg
+|  15 |               4 | /wp-content/uploads/2016/10/robo4.jpg
++-----+-----------------+-----------------------------------
+
++=====+=================================+========+
+|  №  |         Код возврата HTTP       | Кол-во |
++-----+-----+---------------------------+--------+
+|                  -- Success --                 |
++-----+-----+---------------------------+--------+
+|   1 | 200 | OK                        |    328 |
++-----+-----+---------------------------+--------+
+|                -- Redirection --               |
++-----+-----+---------------------------+--------+
+|   2 | 301 | Moved Permanently         |     63 |
++-----+-----+---------------------------+--------+
+|                -- Client error --              |
++-----+-----+---------------------------+--------+
+|   3 | 400 | Bad Request               |     11 |
+|   4 | 403 | Forbidden                 |      1 |
+|   5 | 404 | Not Found                 |     39 |
+|   6 | 405 | Method Not Allowed        |      1 |
+|   7 | 499 | Client Closed Request     |      1 |
++-----+-----+---------------------------+--------+
+|                -- Server error --              |
++-----+-----+---------------------------+--------+
+|   8 | 500 | Internal Server Error     |      2 |
++-----+-----+---------------------------+--------+
+
++=====+====================================================
+|                    ОШИБКИ                                
++-----+----------------------------------------------------
+|  №  |              HTTP запрос                           
++-----+----------------------------------------------------
+|   1 | "9xCDxC3Vx8C&x12Dz/xB7xC0tx96CxE2"
+|   2 | "x16x03x01x00Zx01x00x00Vx03x01]SxCD{xA0xFFx0Fx93Bx04x97x8B|2ix17xE44ZxADxE9x2243Bx85E6bxB1{xB6x00x00x18x00/x005x00x05x00"
+|   3 | "x16x03x01x00Zx01x00x00Vx03x01]SxCD{x8DxA5xE6xADxDE&x18xC9xDAxB1xCAxE1xE2x05x83x00xDE/xB3Gx18jx85xC7xBDxDEvpx00x00x18x00/x005x00x05x00"
+|   4 | "x01Ax02x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00x00"
+
 
 ```
 
