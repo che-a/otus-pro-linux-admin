@@ -45,6 +45,25 @@
 
 ### Демонстрация работы сценария <a name="demo"></a>  
 С целью отладки работы сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/script.sh) и демонстрации его действия в тестовом окружении создается демон, имитирующий работу веб-сервера в части формирования лог-файла путем копирования строк с изменением даты и времени из реального лог-файла [access.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/access.log) веб-сервера `nginx`.  
+```console
+/opt/
+├── fake_web
+│   ├── access1.log
+│   ├── access.log
+│   ├── fake_web.log
+│   └── fake_web.sh
+└── stat_to_mail
+    ├── num_str.txt
+    ├── stat_to_mail -> /opt/stat_to_mail/stat_to_mail.sh
+    └── stat_to_mail.sh
+/tmp/
+├── stat_to_mail
+│   └── export.txt
+├── ...
+└── vagrant-shell
+
+```
+
 
 ### Структура файла access.log  <a name="access.log"></a>  
 `access.log` — это текстовый файл, использующийся веб-серверами для записи обращений к сайту. В каждой строке этого файла записывается одно обращение к серверу.  
