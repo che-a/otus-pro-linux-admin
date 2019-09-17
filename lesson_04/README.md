@@ -41,7 +41,9 @@
 Трапы и функции, а также sed и find +1 балл.  
 
 ## 3. Выполнение <a name="exec"></a>  
-Описание хода выполнения. Будет добавлено позднее.
+Суть выполнненого задания заключается в развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/Vagrantfile) тестового окружения с его настройкой из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/provision.sh) и запуском через планировщик заданий `cron` сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/script.sh) , который периодически отправляет отчет с собранной статистикой лог-файла на почтовый адрес.  
+С целью отладки работы сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/script.sh) и демонстрации его действия в тестовом окружении создается демон, имитирующий работу веб-сервера в части формирования лог-файла путем копирования строк с изменением даты и времени из реального лог-файла [access.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/access.log) веб-сервера `nginx`.
+
 
 ### Структура файла access.log  <a name="access.log"></a>  
 `access.log` — это текстовый файл, использующийся веб-серверами для записи обращений к сайту. В каждой строке этого файла записывается одно обращение к серверу.  
