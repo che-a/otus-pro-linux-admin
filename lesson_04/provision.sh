@@ -47,7 +47,7 @@ function prepare_system {
     cp /vagrant/access*.log $SRV_DIR
     cp /vagrant/script.sh $SCRIPT_NAME_FULL
     ln -sf $SCRIPT_NAME_FULL $SCRIPT_DIR$SCRIPT
-    echo "1" > $STR_NUM_FILE_FULL
+    echo '1' > $STR_NUM_FILE_FULL
     chown -R vagrant: {$SRV_DIR,$SCRIPT_DIR}
 
     ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime

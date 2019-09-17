@@ -14,13 +14,7 @@ STR_CURR=
 # Файл блокировки для защиты сценария от повторного запуска
 LOCKFILE=$SCRIPT_DIR"file.lock"
 
-# Промежуточные файлы для отдельных заданий по сбору статистики лог-файла
-TMP_X_FILE=$SCRIPT_DIR"x.tmp"
-TMP_Y_FILE=$SCRIPT_DIR"y.tmp"
-TMP_CODES_FILE=$SCRIPT_DIR"codes.tmp"
 TMP_REPORT_FILE=$SCRIPT_DIR"report.tmp"
-# Массив с именами временных файлов для их более удобного удаления
-TMP_FILES=($TMP_X_FILE $TMP_Y_FILE $TMP_CODES_FILE $TMP_REPORT_FILE)
 
 X='10'  # Число IP-адресов с наибольшим количеством запросов
 Y='15'  # Число запрашиваемых адресов с наибольшим количеством запросов
@@ -30,12 +24,10 @@ DOMAIN="localhost"
 MAIL=$USER'@'$DOMAIN
 
 function create_report_header {
-    local TIME_FROM=`gawk 'NR == '"$STR_PREV"' {print $4}' $LOG_NAME_FULL | cut -d"[" -f2`
-    local TIME_TO=`gawk 'NR == '"$STR_CURR"' {print $4}' $LOG_NAME_FULL | cut -d"[" -f2`
-
     echo    "$LOG_NAME_FULL" \
-            $TIME_FROM \
-            $TIME_TO \
+            `gawk 'NR == '"$STR_PREV"' {print substr($4,2,20)}' $LOG_NAME_FULL` \
+            `gawk 'NR == '"$STR_PREV"' {print substr($5,1,5) }' $LOG_NAME_FULL` \
+            `gawk 'NR == '"$STR_CURR"' {print substr($4,2,20)}' $LOG_NAME_FULL` \
             "$STR_PREV-$STR_CURR" \
             "$(( $STR_CURR - $STR_PREV + 1))" |
     gawk '
@@ -45,16 +37,14 @@ function create_report_header {
             print  "+--------+---------------------------------------------+"
             printf "| Файл:  | %-43s |\n", $1
             print  "+--------+---------------------------------------------+"
-            printf "| Период:| %-43s |\n", $2
-            printf "|        | %-43s |\n", $3
+            printf "| Период:| %-20s %-5s                  |\n", $2, $3
+            printf "|        | %-20s %-5s                  |\n", $4, $3
             print  "+--------+-----------------+------------------+--------+"
-            printf "| Строки:| %-15s | Обработано строк:| %-6s |\n", $4, $5
+            printf "| Строки:| %-15s | Обработано строк:| %-6s |\n", $5, $6
             print  "+--------+-----------------+------------------+--------+\n"
         }
     ' >> $TMP_REPORT_FILE
 }
-
-# sudo tail -f -n 40 /var/spool/mail/root
 
 function get_x {
     gawk 'NR == '"$STR_PREV"', NR =='"$STR_CURR"' { count[$1]++ }
@@ -62,44 +52,43 @@ function get_x {
     ' $LOG_NAME_FULL | sort -n -r | head -n $X |
     gawk '
         BEGIN {
-            print "+=====+=================+==========+"
-            print "|  X  |    IP-адрес     | Number of|"
-            print "|     |                 | requests |"
-            print "+-----+-----------------+----------+"
+            print "+=====+=================+=================+"
+            print "|  X  |    IP-адрес     | Кол-во запросов |"
+            print "+-----+-----------------+-----------------+"
             i = 0
         }
         {   # Меняем столбцы местами
             tmp_str = $1
             $1 = $2
             $2 = tmp_str
-            printf "| %3d | %-15s |  %6d  |\n", ++i, $1, $2
+            printf "| %3d | %-15s |      %6d     |\n", ++i, $1, $2
         }
-        END {print "+-----+-----------------+----------+\n"}
+        END {print "+-----+-----------------+-----------------+\n"}
     ' >> $TMP_REPORT_FILE
 }
 
 function get_y {
-    cat $LOG_NAME_FULL | cut -d " " -f 6-9 | cut -d '"' -f 2,3 |
-    gawk 'NR == '"$STR_PREV"', NR =='"$STR_CURR"'
-        /^[A-Z]/    { count[$2]++ }
-        END         { for (addr in count) print count[addr], addr }
-    ' | sort -n -r | head -n $Y |
+    gawk 'NR == '"$STR_PREV"', NR == '"$STR_CURR"' {print substr($6, 2), $7}' $LOG_NAME_FULL | \
+    gawk '/^[A-Z]/ {count[$2]++} END {for (addr in count) print count[addr], addr }' | \
+    sort -r -n | head -n $Y |
     gawk '
         BEGIN {
-            print "+=====+========+====================================+"
-            print "|  Y  | Num.of |             Address                 "
-            print "|     |requests|                                     "
-            print "+-----+--------+------------------------------------+"
+            print "+=====+=================+==================================="
+            print "|  Y  | Кол-во запросов |             Адрес                 "
+            print "+-----+-----------------+-----------------------------------"
             i = 0
         }
-        { printf "| %3d | %6d | %-s\n", ++i, $1, $2 }
-        END { print "+-----+--------+------------------------------------+\n" }
-    ' > $TMP_Y_FILE
+        { printf "| %3d | %15d | %-s\n", ++i, $1, $2 }
+        END {
+            print "+-----+-----------------+-----------------------------------\n"
+        }
+    ' >> $TMP_REPORT_FILE
 }
 
-function all_return_codes {
-    cat $LOG_NAME_FULL | cut -d " " -f 6-9 | cut -d '"' -f 3 | cut -d " " -f 2 | \
-        sort -n | uniq -c |
+function return_codes {
+    gawk 'NR == '"$STR_PREV"', NR == '"$STR_CURR"' {print substr($6,2),$7, $8, $9}' $LOG_NAME_FULL | \
+    gawk '{if ($1 ~ /^[A-Z]/) {print $4} else {print $2}}'| \
+    sort -n | uniq -c |
     gawk '
         BEGIN {
             return_codes[100]="Continue"
@@ -177,14 +166,34 @@ function all_return_codes {
             return_codes[526]="Invalid SSL Certificate"
 
             i = 0
+            flag_1xx = "false"
+            flag_2xx = "false"
+            flag_3xx = "false"
             flag_4xx = "false"
             flag_5xx = "false"
 
             print "+=====+=================================+========+"
-            print "| No  |         HTTP status code        |  Count |"
-            print "+-----+-----+---------------------------+--------+"
+            print "| No  |         Код возврата HTTP       | Кол-во |"
         }
-        NR == '"$STR_PREV"', NR =='"$STR_CURR"'  {
+        {
+            if ($2 ~ /1[0-9][0-9]/ && flag_1xx == "false" ){
+                print "+-----------+---------------------------+--------+"
+                print "|              -- Informational --               |"
+                print "+-----+-----+---------------------------+--------+"
+                flag_1xx = "true"
+            }
+            if ($2 ~ /2[0-9][0-9]/ && flag_2xx == "false" ){
+                print "+-----+-----+---------------------------+--------+"
+                print "|                  -- Success --                 |"
+                print "+-----+-----+---------------------------+--------+"
+                flag_2xx = "true"
+            }
+            if ($2 ~ /3[0-9][0-9]/ && flag_3xx == "false" ){
+                print "+-----+-----+---------------------------+--------+"
+                print "|                -- Redirection --               |"
+                print "+-----+-----+---------------------------+--------+"
+                flag_3xx = "true"
+            }
             if ($2 ~ /4[0-9][0-9]/ && flag_4xx == "false" ){
                 print "+-----+-----+---------------------------+--------+"
                 print "|                -- Client error --              |"
@@ -202,15 +211,34 @@ function all_return_codes {
                 ++i, $2, return_codes[$2], $1
         }
         END { print "+-----+-----+---------------------------+--------+\n" }
-    ' > $TMP_CODES_FILE
+    ' >> $TMP_REPORT_FILE
+}
+
+function errors {
+    gawk 'NR == '"$STR_PREV"', NR =='"$STR_CURR"'{print}' $LOG_NAME_FULL | \
+    gawk '
+        BEGIN {
+            i = 0
+
+            print "+=====+===================================================="
+            print "|                    ОШИБКИ                                "
+            print "+-----+----------------------------------------------------"
+            print "|  №  |              HTTP запрос                           "
+            print "+-----+----------------------------------------------------"
+        }
+        {
+            if (substr($6,2) ~ /^[A-Z]/)
+                {}
+            else
+                {printf "| %3d | %s\n", ++i, $6}
+        }
+    ' >> $TMP_REPORT_FILE
 }
 
 function del_tmp_files {
-    for FILE in ${TMP_FILES[@]}; do
-        if [ -f $FILE ]; then
-            rm $FILE
-        fi
-    done
+    if [ -f $TMP_REPORT_FILE ]; then
+        rm $TMP_REPORT_FILE
+    fi
 }
 
 
@@ -229,7 +257,8 @@ else
     create_report_header
     get_x
     get_y
-    all_return_codes
+    return_codes
+    errors
 
     # Отправка отчета
     cat $TMP_REPORT_FILE | mail -s "REPORT" $MAIL
