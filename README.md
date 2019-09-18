@@ -19,3 +19,6 @@
 
 **4. Занятие 4. Bash, awk, sed, grep и другие**  
 *Задание:* [Написать скрипт на языке bash](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_04/)
+
+**5. Занятие 5. Управление процессами**  
+*Задание:* [Работа с процессами (bash, /proc)](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_05/)
