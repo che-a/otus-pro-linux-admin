@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "centos/7"
+
+    config.vm.define "centos7" do |srv|
+        srv.vm.hostname = "centos7"
+
+        config.vm.provider "virtualbox" do |srv|
+            srv.name = "centos7"
+            srv.cpus = 4
+            srv.memory = "2048"
+        end
+
+        srv.vm.provision "shell", path: "provision.sh"
+
+    end
+end
