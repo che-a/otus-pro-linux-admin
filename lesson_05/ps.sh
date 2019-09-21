@@ -1,28 +1,26 @@
 #!/usr/bin/env bash
 
-INFO_STR='Реализация команды ps ax на bash'
 PROGNAME=`basename $0`
 
-function help {
-    echo "Unknown parameter $1"
-    echo "help ... "
+function print_usage {
+    echo -e "\n$PROGNAME - реализация на bash программы ps ax"
+    echo -e "Использование: $PROGNAME [ -ax | -h | -v ]\n"
 }
 
 function ps_ax {
-    echo "ps с параметорм ax"
-}
-
-function debug {
-    echo "DEBUG ==> Count of paremeters: $1"
-    echo "DEBUG ==> Program name: $PROGNAME"
-    echo "----------------------------------"
+    echo "PID TTY      STAT   TIME COMMAND"
+    ls /proc/ | grep "^[0-9]" | sort -n
 }
 
 
-debug $#
+case $1 in
+    -ax)                ps_ax
+                        ;;
 
-if [[ $1 == ax ]]; then
-    ps_ax
-else
-    help $1
-fi
+    -h | --help)        print_usage
+                        ;;
+
+    *)                  print_usage >&2
+                        exit 1
+                        ;;
+esac
