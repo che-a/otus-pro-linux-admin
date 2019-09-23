@@ -22,3 +22,6 @@
 
 **5. Занятие 5. Управление процессами**  
 *Задание:* [Работа с процессами (bash, /proc)](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_05/)
+
+**6. Занятие 6. Управление пакетами. Дистрибьюция софта**  
+*Задание:* [Размещаем свой RPM в своем репозитории](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_06/)
