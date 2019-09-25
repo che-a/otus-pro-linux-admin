@@ -25,3 +25,6 @@
 
 **6. Занятие 6. Управление пакетами. Дистрибьюция софта**  
 *Задание:* [Размещаем свой RPM в своем репозитории](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_06/)
+
+**7. Занятие 7. Загрузка системы**  
+*Задание:* [Работа с загрузчиком](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_07/)
