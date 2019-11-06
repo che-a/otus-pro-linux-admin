@@ -8,8 +8,25 @@ function print_usage {
 }
 
 function ps_ax {
-    echo "PID TTY      STAT   TIME COMMAND"
-    ls /proc/ | grep "^[0-9]" | sort -n
+    local PIDS=(`ls /proc/ | grep "^[0-9]" | sort -n`)
+    local TTY=
+    local STAT=
+    local TIME=
+    local CMD=
+
+    echo -e "PID\tTTY\tSTAT\tTIME\tCOMMAND"
+
+    for PID in ${PIDS[@]}; do
+        if [ -d "/proc/$PID" ]; then
+            TTY=`cat /proc/$PID/stat | gawk '{print $7}'`
+            STAT=`cat /proc/$PID/stat | gawk '{print $3}'`
+            CMD=`cat /proc/$PID/cmdline | tr '\0' ' '`
+            if [[ -z $CMD ]]; then
+                CMD=`cat /proc/$PID/stat | gawk '{print $2}'`
+            fi
+            echo -e "$PID\t$TTY\t$STAT\t$TIME\t$CMD"
+        fi
+    done
 }
 
 
@@ -18,6 +35,9 @@ case $1 in
                         ;;
 
     -h | --help)        print_usage
+                        ;;
+
+    -v)                 echo "Админитсратор Linux"
                         ;;
 
     *)                  print_usage >&2
