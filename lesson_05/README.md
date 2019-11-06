@@ -5,6 +5,8 @@
 2. [Домашнее задание](#homework)  
 3. [Выполнение](#exec)  
     - [Реализация ps ax](#psax)  
+       - [Краткие сведения](#psax_short)  
+       - [Использование](#psax_exec)  
     - [Реализация lsof](#lsof)
 
 ## 1. Описание занятия <a name="description"></a>
@@ -45,7 +47,133 @@
 ## 3. Выполнение <a name="exec"></a>  
 ### 3.1. Реализация ps ax <a name="psax"></a>  
 
-#### Краткие сведения
+#### Краткие сведения <a name="psax_short"></a>  
+`Процесс` — это работающая программа. Каждому процессу в системе присвоен числовой идентификатор процесса (`PID`).  
+
+Чтобы быстро получить перечень работающих процессов, необходимо выполнить команду `ps`.  
+
+|  Команда  | Описание |
+|:---------------------|:---------|
+| `ps x`    | Показать все процессы, запущенные вами |
+| `ps ax`   | Показать все процессы системы, а не только те, владельцем которых являетесь вы |
+| `ps u`    | Включить детализированную информацию о процессах |
+| `ps w`    | Показать полные названия команд, а не только те, что помещаются в одной строке |
+| `ps u $$` | Показать информацию о текущем процессе оболочки |
+
+
+
+<details>
+    <summary>Пример выполнения команды ps ax:</summary>    
+    
+```console
+      PID TTY      STAT   TIME COMMAND
+    1 ?        Ss     0:01 /usr/lib/systemd/systemd --switched-root --system --deserialize 21
+    2 ?        S      0:00 [kthreadd]
+    3 ?        S      0:00 [ksoftirqd/0]
+    4 ?        S      0:00 [kworker/0:0]
+    5 ?        S<     0:00 [kworker/0:0H]
+    6 ?        S      0:00 [kworker/u8:0]
+    7 ?        S      0:00 [migration/0]
+    8 ?        S      0:00 [rcu_bh]
+    9 ?        S      0:00 [rcu_sched]
+   10 ?        S<     0:00 [lru-add-drain]
+   11 ?        S      0:00 [watchdog/0]
+   12 ?        S      0:00 [watchdog/1]
+   13 ?        S      0:00 [migration/1]
+   14 ?        S      0:00 [ksoftirqd/1]
+   15 ?        S      0:00 [kworker/1:0]
+   16 ?        S<     0:00 [kworker/1:0H]
+   17 ?        S      0:00 [watchdog/2]
+   18 ?        S      0:00 [migration/2]
+   19 ?        S      0:00 [ksoftirqd/2]
+   20 ?        S      0:00 [kworker/2:0]
+   21 ?        S<     0:00 [kworker/2:0H]
+   22 ?        S      0:00 [watchdog/3]
+   23 ?        S      0:00 [migration/3]
+   24 ?        S      0:00 [ksoftirqd/3]
+   25 ?        R      0:00 [kworker/3:0]
+   26 ?        S<     0:00 [kworker/3:0H]
+   28 ?        S      0:00 [kdevtmpfs]
+   29 ?        S<     0:00 [netns]
+   30 ?        S      0:00 [khungtaskd]
+   31 ?        S<     0:00 [writeback]
+   32 ?        S<     0:00 [kintegrityd]
+   33 ?        S<     0:00 [bioset]
+   34 ?        S<     0:00 [bioset]
+   35 ?        S<     0:00 [bioset]
+   36 ?        S<     0:00 [kblockd]
+   37 ?        S<     0:00 [md]
+   38 ?        S<     0:00 [edac-poller]
+   39 ?        S<     0:00 [watchdogd]
+   40 ?        S      0:00 [kworker/0:1]
+   41 ?        S      0:00 [kworker/u8:1]
+   48 ?        S      0:00 [kswapd0]
+   49 ?        SN     0:00 [ksmd]
+   50 ?        SN     0:00 [khugepaged]
+   51 ?        S<     0:00 [crypto]
+   59 ?        S<     0:00 [kthrotld]
+   60 ?        S<     0:00 [kmpath_rdacd]
+   61 ?        S<     0:00 [kaluad]
+   62 ?        S<     0:00 [kpsmoused]
+   63 ?        S<     0:00 [ipv6_addrconf]
+   64 ?        S      0:00 [kworker/0:2]
+   77 ?        S<     0:00 [deferwq]
+   78 ?        S      0:00 [kworker/1:1]
+  108 ?        S      0:00 [kauditd]
+  110 ?        S      0:00 [kworker/3:1]
+  171 ?        S      0:00 [kworker/1:2]
+  588 ?        S<     0:00 [ata_sff]
+  607 ?        S      0:00 [scsi_eh_0]
+  611 ?        S<     0:00 [scsi_tmf_0]
+  619 ?        S      0:00 [scsi_eh_1]
+  621 ?        S<     0:00 [scsi_tmf_1]
+  698 ?        S      0:00 [kworker/u8:2]
+ 1038 ?        S      0:00 [kworker/2:1]
+ 1051 ?        S<     0:00 [bioset]
+ 1058 ?        S<     0:00 [xfsalloc]
+ 1059 ?        S<     0:00 [xfs_mru_cache]
+ 1063 ?        S<     0:00 [xfs-buf/sda1]
+ 1065 ?        S<     0:00 [xfs-data/sda1]
+ 1066 ?        S<     0:00 [xfs-conv/sda1]
+ 1067 ?        S<     0:00 [xfs-cil/sda1]
+ 1069 ?        S<     0:00 [xfs-reclaim/sda]
+ 1070 ?        S<     0:00 [xfs-log/sda1]
+ 1071 ?        S<     0:00 [xfs-eofblocks/s]
+ 1074 ?        S      0:00 [xfsaild/sda1]
+ 1077 ?        S<     0:00 [kworker/0:1H]
+ 1078 ?        S<     0:00 [kworker/2:1H]
+ 1131 ?        Ss     0:00 /usr/lib/systemd/systemd-journald
+ 1142 ?        S      0:00 [kworker/3:2]
+ 1166 ?        Ss     0:00 /usr/lib/systemd/systemd-udevd
+ 1175 ?        S      0:00 [kworker/2:2]
+ 1185 ?        S<sl   0:00 /sbin/auditd
+ 1190 ?        S<     0:00 [rpciod]
+ 1191 ?        S<     0:00 [xprtiod]
+ 1337 ?        Ssl    0:00 /usr/lib/polkit-1/polkitd --no-debug
+ 1341 ?        Ss     0:00 /usr/lib/systemd/systemd-logind
+ 1342 ?        Ssl    0:00 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation
+ 1385 ?        Ss     0:00 /sbin/rpcbind -w
+ 1504 ?        S<     0:00 [kworker/3:1H]
+ 1639 ?        Ss     0:00 /usr/sbin/irqbalance --foreground
+ 1698 ?        S      0:00 /usr/sbin/chronyd
+ 1726 ?        Ssl    0:00 /usr/sbin/gssproxy -D
+ 2044 ?        Ss     0:00 /usr/sbin/crond -n
+ 2048 tty1     Ss+    0:00 /sbin/agetty --noclear tty1 linux
+ 2579 ?        Ss     0:00 /usr/sbin/sshd -D -u0
+ 2581 ?        Ssl    0:00 /usr/bin/python2 -Es /usr/sbin/tuned -l -P
+ 2582 ?        Ssl    0:00 /usr/sbin/rsyslogd -n
+ 2603 ?        S<     0:00 [kworker/1:1H]
+ 2839 ?        Ss     0:00 /usr/libexec/postfix/master -w
+ 2842 ?        S      0:00 pickup -l -t unix -u
+ 2843 ?        S      0:00 qmgr -l -t unix -u
+ 3883 ?        Ssl    0:00 /usr/sbin/NetworkManager --no-daemon
+ 3908 ?        S      0:00 /sbin/dhclient -d -q -sf /usr/libexec/nm-dhcp-helper -pf /var/run/dhclient-eth0.pid -lf /var/lib/NetworkManager/dhclient-5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03-eth0.lease -cf /var/lib/Ne
+ 4442 ?        Ss     0:00 sshd: vagrant [priv]
+ 4445 ?        S      0:00 sshd: vagrant@pts/1
+ 4446 pts/1    Ss     0:00 -bash
+ 4469 pts/1    R+     0:00 ps ax
+```    
+</details>
 
 `procfs` — специальная файловая система. Позволяет получить доступ к информации из ядра о системных процессах. Необходима для выполнения таких команд как `ps`, `w`, `top`. Обычно её монтируют на `/proc`. `procfs` создаёт двухуровневое представление пространств процессов. На верхнем уровне процессы представляют собой каталоги, именованные в соответствии с их `pid`. Также на верхнем уровне располагается ссылка на каталог, соответствующую процессу, выполняющему запрос; она может иметь различное имя в различных ОС (curproc во FreeBSD, self в Linux). 
 
@@ -62,6 +190,6 @@
 `CMD` — команда, запустившая данный процесс «с некоторыми опциями выводит и каталог, откуда процесс был запущен»;  
 
 
-#### Использование
+#### Использование <a name="psax_exec"></a>  
 
 ### 3.2. Реализация lsof <a name="lsof"></a>  
