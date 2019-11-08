@@ -6,8 +6,7 @@
 3. [Выполнение](#exec)  
     - [Реализация ps ax](#psax)  
        — [Краткие сведения](#psax_short)  
-       — [Использование](#psax_exec)  
-    - [Реализация lsof](#lsof)
+       — [Ход выполнения](#psax_exec)  
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -190,6 +189,9 @@
 `CMD` — команда, запустившая данный процесс «с некоторыми опциями выводит и каталог, откуда процесс был запущен»;  
 
 
-#### Использование <a name="psax_exec"></a>  
+#### Ход выполнения <a name="psax_exec"></a>  
 
-### 3.2. Реализация lsof <a name="lsof"></a>  
+Сценарий [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ps.sh) практически полностью (кроме времени выполнения) повторяет работу команды `ps ax`. Для демонтсрации работы сценария [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ps.sh) необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/Vagrantfile) и выполнить команду:
+```bash
+./ps.sh ax
+```
