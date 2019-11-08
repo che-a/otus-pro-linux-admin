@@ -6,8 +6,7 @@
 3. [Выполнение](#exec)  
     - [Реализация ps ax](#psax)  
        — [Краткие сведения](#psax_short)  
-       — [Использование](#psax_exec)  
-    - [Реализация lsof](#lsof)
+       — [Ход выполнения](#psax_exec)  
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -190,6 +189,114 @@
 `CMD` — команда, запустившая данный процесс «с некоторыми опциями выводит и каталог, откуда процесс был запущен»;  
 
 
-#### Использование <a name="psax_exec"></a>  
+#### Ход выполнения <a name="psax_exec"></a>  
 
-### 3.2. Реализация lsof <a name="lsof"></a>  
+Сценарий [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ps.sh) практически полностью (кроме времени выполнения) повторяет работу команды `ps ax`. Для демонстрации работы сценария [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ps.sh) необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/Vagrantfile) и выполнить команду:
+```bash
+./ps.sh ax
+```
+Используя `tmux` можно наглядно сравнить результаты работы сценария [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ps.sh) и команды `ps ax`, что показано ниже.
+
+<details>
+    <summary>Сравнение работы сценария ps.sh и команды ps ax.</summary>
+
+```console
+[vagrant@centos7 ~]$ ./ps.sh ax                                                                 [39/1581]│[vagrant@centos7 ~]$ ps ax                                                                       [39/507]
+  PID TTY      STAT   TIME COMMAND                                                                       │  PID TTY      STAT   TIME COMMAND                                                                      
+    1 ?        S      0:01 /usr/lib/systemd/systemd --switched-root --system --deserial                  │    1 ?        Ss     0:01 /usr/lib/systemd/systemd --switched-root --system --deserialize 21           
+    2 ?        S      0:00 [kthreadd]                                                                    │    2 ?        S      0:00 [kthreadd]                                                                   
+    3 ?        S      0:00 [ksoftirqd/0]                                                                 │    3 ?        S      0:00 [ksoftirqd/0]                                                                
+    4 ?        S      0:00 [kworker/0:0]                                                                 │    4 ?        S      0:00 [kworker/0:0]                                                                
+    5 ?        S<     0:00 [kworker/0:0H]                                                                │    5 ?        S<     0:00 [kworker/0:0H]                                                               
+    6 ?        S      0:00 [kworker/u4:0]                                                                │    6 ?        S      0:00 [kworker/u4:0]                                                               
+    7 ?        S      0:00 [migration/0]                                                                 │    7 ?        S      0:00 [migration/0]                                                                
+    8 ?        S      0:00 [rcu_bh]                                                                      │    8 ?        S      0:00 [rcu_bh]                                                                     
+    9 ?        R      0:00 [rcu_sched]                                                                   │    9 ?        S      0:00 [rcu_sched]                                                                  
+   10 ?        S<     0:00 [lru-add-drain]                                                               │   10 ?        S<     0:00 [lru-add-drain]                                                              
+   11 ?        S      0:00 [watchdog/0]                                                                  │   11 ?        S      0:00 [watchdog/0]                                                                 
+   12 ?        S      0:00 [watchdog/1]                                                                  │   12 ?        S      0:00 [watchdog/1]                                                                 
+   13 ?        S      0:00 [migration/1]                                                                 │   13 ?        S      0:00 [migration/1]                                                                
+   14 ?        S      0:00 [ksoftirqd/1]                                                                 │   14 ?        S      0:00 [ksoftirqd/1]                                                                
+   15 ?        S      0:00 [kworker/1:0]                                                                 │   15 ?        S      0:00 [kworker/1:0]                                                                
+   16 ?        S<     0:00 [kworker/1:0H]                                                                │   16 ?        S<     0:00 [kworker/1:0H]                                                               
+   18 ?        S      0:00 [kdevtmpfs]                                                                   │   18 ?        S      0:00 [kdevtmpfs]                                                                  
+   19 ?        S<     0:00 [netns]                                                                       │   19 ?        S<     0:00 [netns]                                                                      
+   20 ?        S      0:00 [khungtaskd]                                                                  │   20 ?        S      0:00 [khungtaskd]                                                                 
+   21 ?        S<     0:00 [writeback]                                                                   │   21 ?        S<     0:00 [writeback]                                                                  
+   22 ?        S<     0:00 [kintegrityd]                                                                 │   22 ?        S<     0:00 [kintegrityd]                                                                
+   23 ?        S<     0:00 [bioset]                                                                      │   23 ?        S<     0:00 [bioset]                                                                     
+   24 ?        S<     0:00 [bioset]                                                                      │   24 ?        S<     0:00 [bioset]                                                                     
+   25 ?        S<     0:00 [bioset]                                                                      │   25 ?        S<     0:00 [bioset]                                                                     
+   26 ?        S<     0:00 [kblockd]                                                                     │   26 ?        S<     0:00 [kblockd]                                                                    
+   27 ?        S<     0:00 [md]                                                                          │   27 ?        S<     0:00 [md]                                                                         
+   28 ?        S<     0:00 [edac-poller]                                                                 │   28 ?        S<     0:00 [edac-poller]                                                                
+   29 ?        S<     0:00 [watchdogd]                                                                   │   29 ?        S<     0:00 [watchdogd]                                                                  
+   30 ?        S      0:00 [kworker/0:1]                                                                 │   30 ?        S      0:00 [kworker/0:1]                                                                
+   31 ?        S      0:00 [kworker/u4:1]                                                                │   31 ?        S      0:00 [kworker/u4:1]                                                               
+   38 ?        S      0:00 [kswapd0]                                                                     │   38 ?        S      0:00 [kswapd0]                                                                    
+   39 ?        SN     0:00 [ksmd]                                                                        │   39 ?        SN     0:00 [ksmd]                                                                       
+   40 ?        SN     0:00 [khugepaged]                                                                  │   40 ?        SN     0:00 [khugepaged]                                                                 
+   41 ?        S<     0:00 [crypto]                                                                      │   41 ?        S<     0:00 [crypto]                                                                     
+   49 ?        S<     0:00 [kthrotld]                                                                    │   49 ?        S<     0:00 [kthrotld]                                                                   
+   50 ?        S<     0:00 [kmpath_rdacd]                                                                │   50 ?        S<     0:00 [kmpath_rdacd]                                                               
+   51 ?        S<     0:00 [kaluad]                                                                      │   51 ?        S<     0:00 [kaluad]                                                                     
+   52 ?        S<     0:00 [kpsmoused]                                                                   │   52 ?        S<     0:00 [kpsmoused]                                                                  
+   53 ?        S      0:00 [kworker/0:2]                                                                 │   53 ?        S      0:00 [kworker/0:2]
+   54 ?        S<     0:00 [ipv6_addrconf]                                                               │   54 ?        S<     0:00 [ipv6_addrconf]                                                              
+   55 ?        S      0:00 [kworker/1:1]                                                                 │   55 ?        S      0:00 [kworker/1:1]                                                                
+   68 ?        S<     0:00 [deferwq]                                                                     │   68 ?        S<     0:00 [deferwq]                                                                    
+   97 ?        S      0:00 [kauditd]                                                                     │   97 ?        S      0:00 [kauditd]                                                                    
+  102 ?        S      0:00 [kworker/0:3]                                                                 │  102 ?        S      0:00 [kworker/0:3]
+  541 ?        S<     0:00 [ata_sff]                                                                     │  541 ?        S<     0:00 [ata_sff]
+  572 ?        S      0:00 [scsi_eh_0]                                                                   │  572 ?        S      0:00 [scsi_eh_0]                                                                  
+  580 ?        S<     0:00 [scsi_tmf_0]                                                                  │  580 ?        S<     0:00 [scsi_tmf_0]                                                                 
+  586 ?        S      0:00 [scsi_eh_1]                                                                   │  586 ?        S      0:00 [scsi_eh_1]                                                                  
+  594 ?        S<     0:00 [scsi_tmf_1]                                                                  │  594 ?        S<     0:00 [scsi_tmf_1]                                                                 
+  604 ?        S      0:00 [kworker/u4:2]                                                                │  604 ?        S      0:00 [kworker/u4:2]                                                               
+  611 ?        S      0:00 [kworker/u4:3]                                                                │  611 ?        S      0:00 [kworker/u4:3]                                                               
+  979 ?        S      0:00 [kworker/1:2]                                                                 │  979 ?        R      0:00 [kworker/1:2]                                                                
+  989 ?        S<     0:00 [bioset]                                                                      │  989 ?        S<     0:00 [bioset]                                                                     
+  991 ?        S<     0:00 [xfsalloc]                                                                    │  991 ?        S<     0:00 [xfsalloc]
+  992 ?        S<     0:00 [xfs_mru_cache]                                                               │  992 ?        S<     0:00 [xfs_mru_cache]
+  998 ?        S<     0:00 [xfs-buf/sda1]                                                                │  998 ?        S<     0:00 [xfs-buf/sda1]
+ 1001 ?        S<     0:00 [xfs-data/sda1]                                                               │ 1001 ?        S<     0:00 [xfs-data/sda1]
+ 1007 ?        S<     0:00 [xfs-conv/sda1]                                                               │ 1007 ?        S<     0:00 [xfs-conv/sda1]
+ 1010 ?        S<     0:00 [xfs-cil/sda1]                                                                │ 1010 ?        S<     0:00 [xfs-cil/sda1]
+ 1011 ?        S<     0:00 [xfs-reclaim/sda]                                                             │ 1011 ?        S<     0:00 [xfs-reclaim/sda]
+ 1012 ?        S<     0:00 [xfs-log/sda1]                                                                │ 1012 ?        S<     0:00 [xfs-log/sda1]
+ 1013 ?        S<     0:00 [xfs-eofblocks/s]                                                             │ 1013 ?        S<     0:00 [xfs-eofblocks/s]
+ 1014 ?        S      0:00 [xfsaild/sda1]                                                                │ 1014 ?        S      0:00 [xfsaild/sda1]
+ 1015 ?        S<     0:00 [kworker/0:1H]                                                                │ 1015 ?        S<     0:00 [kworker/0:1H]
+ 1068 ?        S      0:00 /usr/lib/systemd/systemd-journald                                             │ 1068 ?        Ss     0:00 /usr/lib/systemd/systemd-journald                                            
+ 1099 ?        S      0:00 /usr/lib/systemd/systemd-udevd                                                │ 1099 ?        Ss     0:00 /usr/lib/systemd/systemd-udevd                                               
+ 1118 ?        Sl     0:00 /sbin/auditd                                                                  │ 1118 ?        S<sl   0:00 /sbin/auditd
+ 1124 ?        S<     0:00 [rpciod]                                                                      │ 1124 ?        S<     0:00 [rpciod]
+ 1125 ?        S<     0:00 [xprtiod]                                                                     │ 1125 ?        S<     0:00 [xprtiod]
+ 1238 ?        Sl     0:00 /usr/lib/polkit-1/polkitd --no-debug                                          │ 1238 ?        Ssl    0:00 /usr/lib/polkit-1/polkitd --no-debug                                         
+ 1244 ?        S      0:00 /usr/lib/systemd/systemd-logind                                               │ 1244 ?        Ss     0:00 /usr/lib/systemd/systemd-logind                                              
+ 1263 ?        S      0:00 /usr/sbin/irqbalance --foreground                                             │ 1263 ?        Ss     0:00 /usr/sbin/irqbalance --foreground                                            
+ 1267 ?        Sl     0:00 /usr/bin/dbus-daemon --system --address=systemd: --nofork --                  │ 1267 ?        Ssl    0:00 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --system
+ 1280 ?        S<     0:00 [kworker/1:1H]                                                                │ 1280 ?        S<     0:00 [kworker/1:1H]
+ 1308 ?        S      0:00 /sbin/rpcbind -w                                                              │ 1308 ?        Ss     0:00 /sbin/rpcbind -w
+ 1325 ?        Sl     0:00 /usr/sbin/gssproxy -D                                                         │ 1325 ?        Ssl    0:00 /usr/sbin/gssproxy -D
+ 1329 ?        S      0:00 /usr/sbin/chronyd                                                             │ 1329 ?        S      0:00 /usr/sbin/chronyd
+ 1529 ?        S      0:00 /usr/sbin/crond -n                                                            │ 1529 ?        Ss     0:00 /usr/sbin/crond -n
+ 1530 tty1     S      0:00 /sbin/agetty --noclear tty1 linux                                             │ 1530 tty1     Ss+    0:00 /sbin/agetty --noclear tty1 linux                                            
+ 2450 ?        S      0:00 /usr/sbin/sshd -D -u0                                                         │ 2450 ?        Ss     0:00 /usr/sbin/sshd -D -u0
+ 2453 ?        Sl     0:00 /usr/sbin/rsyslogd -n                                                         │ 2453 ?        Ssl    0:00 /usr/sbin/rsyslogd -n
+ 2454 ?        Sl     0:00 /usr/bin/python2 -Es /usr/sbin/tuned -l -P                                    │ 2454 ?        Ssl    0:00 /usr/bin/python2 -Es /usr/sbin/tuned -l -P                                   
+ 2708 ?        S      0:00 /usr/libexec/postfix/master -w                                                │ 2708 ?        Ss     0:00 /usr/libexec/postfix/master -w                                               
+ 2712 ?        S      0:00 pickup -l -t unix -u                                                          │ 2712 ?        S      0:00 pickup -l -t unix -u
+ 2713 ?        S      0:00 qmgr -l -t unix -u                                                            │ 2713 ?        S      0:00 qmgr -l -t unix -u
+ 3750 ?        Sl     0:00 /usr/sbin/NetworkManager --no-daemon                                          │ 3750 ?        Ssl    0:00 /usr/sbin/NetworkManager --no-daemon                                         
+ 3765 ?        S      0:00 /sbin/dhclient -d -q -sf /usr/libexec/nm-dhcp-helper -pf /va                  │ 3765 ?        S      0:00 /sbin/dhclient -d -q -sf /usr/libexec/nm-dhcp-helper -pf /var/run/dhclient-eth
+ 4406 ?        S      0:00 sshd: vagrant [priv]                                                          │ 4406 ?        Ss     0:00 sshd: vagrant [priv]
+ 4409 ?        S      0:00 sshd: vagrant@pts/0                                                           │ 4409 ?        S      0:00 sshd: vagrant@pts/0
+ 4410 pts/0    S      0:00 -bash                                                                         │ 4410 pts/0    Ss+    0:00 -bash
+ 4431 ?        S      0:00 sshd: vagrant [priv]                                                          │ 4431 ?        Ss     0:00 sshd: vagrant [priv]
+ 4434 ?        S      0:00 sshd: vagrant@pts/1                                                           │ 4434 ?        S      0:00 sshd: vagrant@pts/1
+ 4435 pts/1    S      0:00 -bash                                                                         │ 4435 pts/1    Ss     0:00 -bash
+ 4458 pts/0    S      0:00 bash ./ps.sh ax                                                               │ 9324 pts/1    R+     0:00 ps ax
+[vagrant@centos7 ~]$                                                                                     │[vagrant@centos7 ~]$
+```
+</details>
