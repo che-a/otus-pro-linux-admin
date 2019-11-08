@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Реализация работы программы ps ax
+
 PROGNAME=`basename $0`
 #
 # Массив PID заполняем идентификаторами процессов из каталога /proc/
@@ -31,7 +33,7 @@ function get_tty {
     # Данные для выбора взяты из файла /proc/devices
 
     case $DEC_MAJOR in
-        4)      TTY='tty/'$DEC_MINOR
+        4)      TTY='tty'$DEC_MINOR
                 ;;
         128)    TTY='ptm/'$DEC_MINOR
                 ;;
@@ -44,12 +46,21 @@ function get_tty {
 
 function get_stat {
     STAT=`cat /proc/$1/status | grep State | gawk '{print $2}'`
-    local flag_hp=      # high-priority (not nice to other users)
-    local flag_N=       # low-priority (nice to other users)
-    local flag_L=       # has pages locked into memory (for real-time and custom IO)
-    local flag_s=       # is a session leader
-    local flag_l=`cat /proc/$1/status | grep Threads | gawk '{print $2}'`       # is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
-    local flag_plus=    # is in the foreground process group
+    # < high-priority (not nice to other users)
+    # N low-priority  (nice to other users)
+    local flag_priority=
+    # L
+    # has pages locked into memory (for real-time and custom IO)
+    local flag_L=
+    # s
+    # is a session leader
+    local flag_s=
+    # l
+    # is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
+    local flag_l=`cat /proc/$1/status | grep Threads | gawk '{print $2}'`
+    # +
+    # is in the foreground process group
+    local flag_plus=
 
     if [ $flag_l -gt 1 ]; then
         STAT=$STAT"l"

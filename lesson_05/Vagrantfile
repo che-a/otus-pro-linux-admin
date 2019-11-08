@@ -9,11 +9,16 @@ Vagrant.configure("2") do |config|
 
         config.vm.provider "virtualbox" do |srv|
             srv.name = "centos7"
-            srv.cpus = 4
-            srv.memory = "2048"
+            srv.cpus = 2
+            srv.memory = "768"
         end
 
-        #srv.vm.provision "shell", path: "provision.sh"
+        srv.vm.provision "shell", inline: <<-SHELL
+            mkdir -p ~root/.ssh
+            cp ~vagrant/.ssh/auth* ~root/.ssh
+            cp /vagrant/ps.sh /home/vagrant/
+            yum install -y bc nano tmux
+        SHELL
 
     end
 end
