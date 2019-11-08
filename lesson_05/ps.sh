@@ -8,7 +8,8 @@ PROGNAME=`basename $0`
 PIDS=(`ls /proc/ | grep "^[0-9]" | sort -n`)
 TTY=
 STAT=
-TIME=
+TIME_MIN=
+TIME_SEC=
 CMD=
 
 # Функция записывает в переменную TTY название связанного с процессом терминала
@@ -46,15 +47,16 @@ function get_tty {
 
 function get_stat {
     STAT=`cat /proc/$1/status | grep State | gawk '{print $2}'`
-    # < high-priority (not nice to other users)
-    # N low-priority  (nice to other users)
-    local flag_priority=
+
+    # <, high-priority (not nice to other users)
+    # N, low-priority  (nice to other users)
+    local flag_priority=`cat /proc/$1/stat | gawk '{print $18}'`
+    local flag_nice=`cat /proc/$1/stat | gawk '{print $19}'`
+    # s, процесс является лидером сессии
+    local flag_s=
     # L
     # has pages locked into memory (for real-time and custom IO)
     local flag_L=
-    # s
-    # is a session leader
-    local flag_s=
     # l
     # is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
     local flag_l=`cat /proc/$1/status | grep Threads | gawk '{print $2}'`
@@ -62,13 +64,24 @@ function get_stat {
     # is in the foreground process group
     local flag_plus=
 
+
+    if [[ $flag_priority -lt 10 && $flag_nice -lt -10 ]]; then
+        STAT=$STAT'<'
+    elif [[ $flag_priority -gt 20 ]]; then
+        STAT=$STAT'N'
+    fi
+
+
+
     if [ $flag_l -gt 1 ]; then
         STAT=$STAT"l"
     fi
 }
 
 function get_time {
-    TIME='X:XX'
+    local SEC=$( echo 'scale=0;'`cat /proc/$1/stat | gawk '{print $14+$15}'`'/100' | bc )
+    TIME_MIN=$( echo "$SEC/60" | bc )
+    TIME_SEC=$( echo "$SEC - $TIME_MIN*60" | bc )
 }
 
 function get_command {
@@ -94,7 +107,7 @@ function ps_ax {
 
             # Команда printf некорректно выводит заданное число символов строки,
             # которые содержат пробелы
-            printf "%5d %-8s %-6s %4s %s \n" $PID $TTY $STAT $TIME "$CMD"
+            printf "%5d %-8s %-5s %2s:%02d %s \n" $PID $TTY $STAT $TIME_MIN $TIME_SEC "$CMD"
         fi
     done
 }
@@ -105,13 +118,10 @@ function print_usage {
 }
 
 case $1 in
-    -ax)                ps_ax
+    ax)                ps_ax
                         ;;
 
     -h | --help)        print_usage
-                        ;;
-
-    -v)                 echo "Админитсратор Linux"
                         ;;
 
     *)                  print_usage >&2
