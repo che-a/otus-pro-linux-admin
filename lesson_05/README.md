@@ -300,3 +300,6 @@
 [vagrant@centos7 ~]$                                                                                     │[vagrant@centos7 ~]$
 ```
 </details>
+
+Дополнение:  
+Т.к. в файле `/proc/[pid]/stat` время указывается в тактах, то для получения его в секундах необходимо разделить на `sysconf (_SC_CLK_TCK)` (как указано в доккументации `man proc`). Программа [ticks.c](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ticks.c) выполняет задачу получения значения `sysconf (_SC_CLK_TCK)`, которое обычно равно 100.
