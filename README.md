@@ -7,8 +7,8 @@
 
 Кроме того, у данного репозитория имеется своя [Wiki](https://github.com/che-a/OTUS_LinuxAdministration/wiki).
 
-## Список заданий
 ### Модуль 1. Архитектура Linux
+---
 
 **1. Занятие 1. С  чего начинается Linux**  
 *Задание:* [Сборка ядра](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/)  
@@ -32,3 +32,4 @@
 *Задание:* [Работа с загрузчиком](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_07/)
 
 ### Модуль 2. Управление, безопасность и мониторинг
+***
