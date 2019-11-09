@@ -1,0 +1,40 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "centos/7"
+
+    config.vm.define "les06-server" do |server|
+        server.vm.hostname = "les06-server"
+        server.vm.network "private_network", ip: "192.168.1.100", virtualbox__intnet: "local-net"
+
+        config.vm.provider "virtualbox" do |server|
+            server.name = "les06-server"
+            server.cpus = 2
+            server.memory = "1024"
+        end
+
+        #server.vm.provision "shell", inline: <<-SHELL
+        #    mkdir -p ~root/.ssh
+        #    cp ~vagrant/.ssh/auth* ~root/.ssh
+        #    yum install -y bc nano tmux
+        #SHELL
+    end
+
+    config.vm.define "les06-client" do |client|
+        client.vm.hostname = "les06-client"
+        client.vm.network "private_network", ip: "192.168.1.200", virtualbox__intnet: "local-net"
+
+        config.vm.provider "virtualbox" do |client|
+            client.name = "les06-client"
+            client.cpus = 1
+            client.memory = "768"
+        end
+
+        #client.vm.provision "shell", inline: <<-SHELL
+        #    mkdir -p ~root/.ssh
+        #    cp ~vagrant/.ssh/auth* ~root/.ssh
+        #    yum install -y bc nano tmux
+        #SHELL
+    end
+end
