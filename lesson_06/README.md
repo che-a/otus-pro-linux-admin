@@ -40,6 +40,45 @@
 +1 - сделан еще и `Docker`-образ.   
 
 ## 3. Краткие сведения <a name="info"></a>  
+#### Способы распространения ПО в Linux
+- `make && make install`;  
+- `rpm`, `yum`;  
+- `Docker`.
+
+#### RPM  
+- `rpm -q {name}` — проверить установлен ли пакет `{name}`;  
+- `rpm -qi[p] {name}/{pkg}` — показать мета-информацию о пакете;  
+- `rpm -qp --queryformat %{VERSION}-%{RELEASE} {pkg}` — формат вывода информации;  
+- `rpm -e {name}` — удалить пакет;  
+- `rpm -i {pkg}` — установить пакет;  
+- `rpm -ql[p] {name}/{pkg}` — вывести список файлов пакета;  
+- `rpm -q[p] --scripts` — показать скриптлеты;  
+- `rpm -q[p]R` — показать от каких пакетов зависит этот;  
+- `rpm -q[p] --provides {name}` — показать ресурсы предоставляемые пакетом;  
+- `rpm -qf {file}` — показать какому пакету принадлежит {file};  
+- `rpm2cpio {pkg} | cpio -idmv` — распаковать содержимое пакета.  
+
+#### YUM
+- `search` — поиск пакета;  
+- `install` — установка пакета(ов);  
+- `update` — обновление (до версии);  
+- `downgrade` — откат до до версии;  
+- `check-update` — проверка обновлений;  
+- `remove` — удаление пакета;  
+- `info` — информация о пакете;  
+- `provides` — найти из какого пакета файл;  
+- `shell` — CLI.  
+
+#### YUM. Полезные команды
+- `yum updateinfo list security all`  
+- `yum updateinfo list security installed`  
+- `yum -y update --security`  
+- `yum update-minimal --security -y`  
+- `yum update --cve <CVE>`  
+- `yum updateinfo list cves`  
+- `yum updateinfo list`  
+- `yum  info-sec`  
+
 
 ## 4. Выполнение <a name="exec"></a>  
 ### 4.1. Создание rpm-пакета <a name="rpm"></a>  
