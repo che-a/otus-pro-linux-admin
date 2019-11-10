@@ -7,6 +7,7 @@ Vagrant.configure("2") do |config|
         subconfig.vm.box = "centos/7"
         subconfig.vm.hostname = "master"
         subconfig.vm.network "private_network", ip: "192.168.1.100"
+        subconfig.vm.network "forwarded_port", guest: 80, host: 8080
 
         subconfig.vm.provider "virtualbox" do |vb|
             vb.name = "les06-master"
@@ -19,8 +20,8 @@ Vagrant.configure("2") do |config|
             echo -e "192.168.1.200\tslavet\tslave" >> /etc/hosts
             yum install -y epel-release
             yum install -y mc nano tree wget
-            yum install -y redhat-lsb-core rpmdevtools rpm-build createrepo \
-                yum-utils
+            yum install -y gcc redhat-lsb-core rpmdevtools rpm-build \
+                createrepo yum-utils
 
             cp /vagrant/{master,slave}.sh /root/
         SHELL
