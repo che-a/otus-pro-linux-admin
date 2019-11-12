@@ -1,26 +1,9 @@
 #!/usr/bin/env bash
 
-#NGINX='nginx-1.16.1-1.el7.ngx'
-#NGINX_SRPM=$NGINX'.src.rpm'
-#NGINX_RPM=$NGINX'.x86_64.rpm'
-
 #BASE_DIR='/root'
 #RPMBUILD_DIR=$BASE_DIR'/rpmbuild'
 #NGINX_DIR='/usr/share/nginx/html/repo/'
-#OPENSSL=
 
-#mkdir -p $RPMBUILD_DIR/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
-
-#wget https://nginx.org/packages/centos/7/SRPMS/$NGINX_SRPM -O $BASE_DIR/$NGINX_SRPM
-#echo "=== rpm -i ==="
-#rpm -i $BASE_DIR/$NGINX_SRPM
-
-#wget https://www.openssl.org/source/latest.tar.gz
-#tar -xvf $BASE_DIR/latest.tar.gz
-#OPENSSL=`ls |grep openssl`
-
-#echo '=== yum-builddep ==='
-#yum-builddep -y $RPMBUILD_DIR/SPECS/nginx.spec
 
 # Правка SPEC
 #sed -i '116i --with-openssl=/root/'$OPENSSL' \\' $RPMBUILD_DIR/SPECS/nginx.spec
@@ -68,28 +51,24 @@ function sys_prepare {
 #        echo "127.0.0.1 $REPO" >> /etc/hosts
 #    done
 
-    # yum install -y epel-release
-    yum install -y mc nano
-    #yum install -y gcc redhat-lsb-core rpmdevtools rpm-build createrepo yum-utils
+    yum install -y mc nano wget
+    yum install -y rpmdevtools
+    #yum install -y gcc redhat-lsb-core rpm-build createrepo yum-utils
 }
+
 function customize_apache {
     local CFG_DIR='/etc/httpd'
     local SA_DIR=$CFG_DIR'/sites-available'
     local SE_DIR=$CFG_DIR'/sites-enabled'
     local CONFD_DIR=$CFG_DIR'/conf.d'
-
     local MAIN_CFG_FILE=$CFG_DIR'/conf/httpd.conf'
-
     local DOC_DIR='/var/www'
-
     local PORT='80'
 
-    # Первичные действия
     yum install -y httpd
     mkdir $SA_DIR $SE_DIR
 
     # Настройка главного файла конфигурации
-
     echo 'IncludeOptional sites-enabled/*.conf' >> $MAIN_CFG_FILE
     #sed -i 's/Listen 80/Listen '$PORT'/' $MAIN_CFG_FILE
     rm $CONFD_DIR"/welcome.conf"
@@ -98,9 +77,6 @@ function customize_apache {
     for REPO in "${REPOS[@]}"; do
         mkdir -p "$DOC_DIR/$REPO/"{html,log}
         echo "REPOSITORY: $REPO" > "$DOC_DIR/$REPO/html/header.html"
-        # === DEBUG ===
-        # touch "$DOC_DIR/$REPO/html/$REPO."{1..9}".rpm"
-        # mkdir "$DOC_DIR/$REPO/html/subdir-0"{1..9}
 
         # Создание файлов конфигурации виртуальных хостов
         (
@@ -131,6 +107,31 @@ function customize_apache {
 function create_repo {
     echo "Run function create_repo!"
 }
+
+function build_rpm_nginx {
+    # Сборка nginx с поддержкой openssl
+
+    local NGINX='nginx-1.16.1-1.el7.ngx'
+    local NGINX_SRPM=$NGINX'.src.rpm'
+    local NGINX_RPM=$NGINX'.x86_64.rpm'
+    local NGINX_PATH_SRC='https://nginx.org/packages/centos/7/SRPMS'/$NGINX_SRPM
+    local OPENSSL=
+
+    # Создание дерева каталогов (rpmbuild) для сборки RPM-пакета:
+    rpmdev-setuptree
+    wget $NGINX_PATH_SRC    # Скачивание SRPM-пакета nginx и
+    rpm -i $NGINX_SRPM      # распаковка его в каталог rpmbuild
+
+    wget https://www.openssl.org/source/latest.tar.gz
+    tar -xvf latest.tar.gz
+    OPENSSL=`ls | grep openssl`
+
+    # Установка зависимых пакетов, которые необходимы для сборки
+    yum-builddep -y rpmbuild/SPECS/nginx.spec
+
+
+}
+
 function  add_rpm_to_repo {
     echo "Run function add_rpm_to_repo!"
 }
@@ -139,4 +140,5 @@ function  add_rpm_to_repo {
 sys_prepare
 customize_apache
 create_repo
+build_rpm_nginx
 add_rpm_to_repo
