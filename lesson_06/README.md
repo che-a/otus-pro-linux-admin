@@ -92,7 +92,7 @@
 
 #### Краткие сведения <a name="rpm_short"></a>  
 #### Ход выполнения <a name="rpm_exec"></a>  
-
+`yumdownloader --source vim`
 
 ### 4.2. Создание репозитория <a name="repo"></a>  
 
