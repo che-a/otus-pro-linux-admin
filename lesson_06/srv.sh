@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
-#BASE_DIR='/root'
-#RPMBUILD_DIR=$BASE_DIR'/rpmbuild'
 #NGINX_DIR='/usr/share/nginx/html/repo/'
-
-
-
-#rpmbuild -bb $RPMBUILD_DIR/SPECS/nginx.spec
 
 #yum localinstall -y "$RPMBUILD_DIR/RPMS/x86_64/$NGINX_RPM" \
 #    && systemctl start nginx \
@@ -34,8 +28,8 @@
 #_EOF_
 
 DOMAIN='.otus'
-REPO_1='rulez.les06-repo'$DOMAIN
-REPO_2='trash.les06-repo'$DOMAIN
+REPO_1='alfa.les06-repo'$DOMAIN
+REPO_2='beta.les06-repo'$DOMAIN
 REPOS=($REPO_1 $REPO_2)
 
 #
@@ -47,9 +41,8 @@ function sys_prepare {
 #        echo "127.0.0.1 $REPO" >> /etc/hosts
 #    done
 
-    yum install -y mc nano wget
-    yum install -y createrepo rpmdevtools rpm-build
-    #yum install -y gcc redhat-lsb-core  yum-utils
+    yum install -y gcc make mc nano tree wget
+    yum install -y createrepo redhat-lsb-core rpmdevtools rpm-build yum-utils
 }
 
 function customize_apache {
@@ -100,10 +93,6 @@ function customize_apache {
     systemctl start httpd && systemctl enable httpd
 }
 
-function create_repo {
-    echo "Run function create_repo!"
-}
-
 function build_rpm_nginx {
     # Сборка nginx с поддержкой openssl
 
@@ -112,24 +101,31 @@ function build_rpm_nginx {
     local NGINX_RPM=$NGINX'.x86_64.rpm'
     local NGINX_PATH_SRC='https://nginx.org/packages/centos/7/SRPMS'/$NGINX_SRPM
     local OPENSSL=
+    local BASE_DIR='/root'
+    local RPMBUILD_DIR=$BASE_DIR'/rpmbuild'
 
     # Создание дерева каталогов (rpmbuild) для сборки RPM-пакета:
     rpmdev-setuptree
-    wget $NGINX_PATH_SRC    # Скачивание SRPM-пакета nginx и
-    rpm -i $NGINX_SRPM      # распаковка его в каталог rpmbuild
+    wget $NGINX_PATH_SRC -O $BASE_DIR/$NGINX_SRPM   # Скачивание SRPM-пакета nginx и
+    rpm -i $BASE_DIR/$NGINX_SRPM                    # распаковка его в каталог rpmbuild
 
-    wget https://www.openssl.org/source/latest.tar.gz
-    tar -xvf latest.tar.gz
-    OPENSSL=`ls | grep openssl`
+    wget https://www.openssl.org/source/latest.tar.gz -O $BASE_DIR/latest.tar.gz
+    tar -xvf $BASE_DIR/latest.tar.gz -C $BASE_DIR
+    OPENSSL=`ls $BASE_DIR | grep openssl`
 
     # Установка зависимых пакетов, которые необходимы для сборки
-    yum-builddep -y rpmbuild/SPECS/nginx.spec
+    yum-builddep -y $RPMBUILD_DIR/SPECS/nginx.spec
 
     # Правка nginx.spec
-    sed -i '116i --with-openssl=/root/'$OPENSSL' \\' rpmbuild/SPECS/nginx.spec
+    sed -i '116i --with-openssl='$BASE_DIR/$OPENSSL' \\' $RPMBUILD_DIR/SPECS/nginx.spec
 
     # Сборка RPM-пакета
-    rpmbuild -bb rpmbuild/SPECS/nginx.spec
+    rpmbuild -bb $RPMBUILD_DIR/SPECS/nginx.spec
+    cp $RPMBUILD_DIR/RPMS/x86_64/$NGINX_RPM /var/www/$REPO_1/html/
+}
+
+function create_repo {
+    echo "Run function create_repo!"
 }
 
 function  add_rpm_to_repo {
@@ -139,6 +135,6 @@ function  add_rpm_to_repo {
 # ==============================================================================
 sys_prepare
 customize_apache
-create_repo
 build_rpm_nginx
-add_rpm_to_repo
+# create_repo
+# add_rpm_to_repo

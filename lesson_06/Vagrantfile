@@ -16,8 +16,7 @@ Vagrant.configure("2") do |config|
         end
 
         subconfig.vm.provision "shell", inline: <<-SHELL
-            cp /vagrant/srv.sh /home/vagrant
-            ./srv.sh
+            cp /vagrant/srv.sh /home/vagrant && ./srv.sh
         SHELL
     end
 
