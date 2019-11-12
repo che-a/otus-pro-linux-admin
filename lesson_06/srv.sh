@@ -19,14 +19,6 @@
 #createrepo $NGINX_DIR
 #sed -i '11i autoindex on;' /etc/nginx/conf.d/default.conf
 
-#cat >> /etc/yum.repos.d/otus.repo << _EOF_
-#[otus]
-#name=otus-linux
-#baseurl=http://master/repo
-#gpgcheck=0
-#enabled=1
-#_EOF_
-
 DOMAIN='.otus'
 REPO_1='alfa.les06-repo'$DOMAIN
 REPO_2='beta.les06-repo'$DOMAIN
@@ -37,9 +29,9 @@ REPOS=($REPO_1 $REPO_2)
 #
 
 function sys_prepare {
-#    for REPO in "${REPOS[@]}"; do
-#        echo "127.0.0.1 $REPO" >> /etc/hosts
-#    done
+    for REPO in "${REPOS[@]}"; do
+        echo "127.0.0.1 $REPO" >> "/etc/hosts"
+    done
 
     yum install -y gcc make mc nano tree wget
     yum install -y createrepo redhat-lsb-core rpmdevtools rpm-build yum-utils
@@ -125,7 +117,9 @@ function build_rpm_nginx {
 }
 
 function create_repo {
-    echo "Run function create_repo!"
+
+    createrepo /var/www/$REPO_1/html/
+    createrepo /var/www/$REPO_2/html/
 }
 
 function  add_rpm_to_repo {
@@ -136,5 +130,5 @@ function  add_rpm_to_repo {
 sys_prepare
 customize_apache
 build_rpm_nginx
-# create_repo
+create_repo
 # add_rpm_to_repo

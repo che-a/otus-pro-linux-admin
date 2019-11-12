@@ -20,21 +20,21 @@ Vagrant.configure("2") do |config|
         SHELL
     end
 
-#    config.vm.define "slave" do |subconfig|
-#        subconfig.vm.box = "centos/7"
-#        subconfig.vm.hostname = "slave"
-#        subconfig.vm.network "private_network", ip: "192.168.1.200"
+    config.vm.define "ws.otus" do |subconfig|
+        subconfig.vm.box = "centos/7"
+        subconfig.vm.hostname = "ws.otus"
+        subconfig.vm.network "private_network", ip: "192.168.1.20"
+        subconfig.vm.network "forwarded_port", guest: 80, host: 8081
 
-#        subconfig.vm.provider "virtualbox" do |vb|
-#            vb.name = "les06-slave"
-#            vb.cpus = 1
-#            vb.memory = "1024"
-#        end
+        subconfig.vm.provider "virtualbox" do |vb|
+            vb.name = "les06-ws.otus"
+            vb.cpus = 1
+            vb.memory = "768"
+        end
 
-#        subconfig.vm.provision "shell", inline: <<-SHELL
-#            cp /vagrant/ws.sh /home/vagrant
-#            ./ws.sh
-#        SHELL
-#    end
+        subconfig.vm.provision "shell", inline: <<-SHELL
+            cp /vagrant/ws.sh /home/vagrant && ./ws.sh
+        SHELL
+    end
 
 end
