@@ -16,8 +16,8 @@ Vagrant.configure("2") do |config|
         end
 
         subconfig.vm.provision "shell", inline: <<-SHELL
-            cp /vagrant/master.sh /home/vagrant
-            ./master.sh
+            cp /vagrant/srv.sh /home/vagrant
+            ./srv.sh
         SHELL
     end
 
@@ -33,8 +33,8 @@ Vagrant.configure("2") do |config|
 #        end
 
 #        subconfig.vm.provision "shell", inline: <<-SHELL
-#            cp /vagrant/slave.sh /home/vagrant
-#            ./slave.sh
+#            cp /vagrant/ws.sh /home/vagrant
+#            ./ws.sh
 #        SHELL
 #    end
 

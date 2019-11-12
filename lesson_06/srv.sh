@@ -5,8 +5,6 @@
 #NGINX_DIR='/usr/share/nginx/html/repo/'
 
 
-# Правка SPEC
-#sed -i '116i --with-openssl=/root/'$OPENSSL' \\' $RPMBUILD_DIR/SPECS/nginx.spec
 
 #rpmbuild -bb $RPMBUILD_DIR/SPECS/nginx.spec
 
@@ -35,8 +33,6 @@
 #enabled=1
 #_EOF_
 
-#reboot
-
 DOMAIN='.otus'
 REPO_1='rulez.les06-repo'$DOMAIN
 REPO_2='trash.les06-repo'$DOMAIN
@@ -52,8 +48,8 @@ function sys_prepare {
 #    done
 
     yum install -y mc nano wget
-    yum install -y rpmdevtools
-    #yum install -y gcc redhat-lsb-core rpm-build createrepo yum-utils
+    yum install -y createrepo rpmdevtools rpm-build
+    #yum install -y gcc redhat-lsb-core  yum-utils
 }
 
 function customize_apache {
@@ -129,7 +125,11 @@ function build_rpm_nginx {
     # Установка зависимых пакетов, которые необходимы для сборки
     yum-builddep -y rpmbuild/SPECS/nginx.spec
 
+    # Правка nginx.spec
+    sed -i '116i --with-openssl=/root/'$OPENSSL' \\' rpmbuild/SPECS/nginx.spec
 
+    # Сборка RPM-пакета
+    rpmbuild -bb rpmbuild/SPECS/nginx.spec
 }
 
 function  add_rpm_to_repo {
