@@ -61,7 +61,10 @@
 #
 
 function sys_prepare {
-    echo -e "192.168.1.200\tslave\tslave" >> /etc/hosts
+    echo "127.0.0.1 hello.repo.otus rulez.repo.otus trash.repo.otus" >> /etc/hosts
+    echo "192.168.1.100  hello.repo.otus" >> /etc/hosts
+    echo "192.168.1.100  rulez.repo.otus" >> /etc/hosts
+    echo "192.168.1.100  trash.repo.otus" >> /etc/hosts
 
     # yum install -y epel-release
     yum install -y mc nano
@@ -75,40 +78,45 @@ function customize_apache {
 
     local MAIN_CFG_FILE=$CFG_DIR'/conf/httpd.conf'
 
-    local DOC_DIR='/var/www/html'
-    local REPO_1='repo.rulez.otus'
-    local REPO_2='repo.trash.otus'
-    local REPOS=($REPO_1 $REPO_2)
+    local DOC_DIR='/var/www'
 
-    local PORT='25000'
+    local REPO_1='hello.repo.otus'
+    local REPO_2='rulez.repo.otus'
+    local REPO_3='trash.repo.otus'
+    local REPOS=($REPO_1 $REPO_2 $REPO_3)
+
+    local PORT='80'
 
     # Первичные действия
     yum install -y httpd
-    mkdir "{$SA_DIR,$SE_DIR}"
+    mkdir $SA_DIR $SE_DIR
 
     # Настройка главного файла конфигурации
 
     echo 'IncludeOptional sites-enabled/*.conf' >> $MAIN_CFG_FILE
-    sed -i 's/Listen 80/Listen '$PORT'/' $MAIN_CFG_FILE
+    #sed -i 's/Listen 80/Listen '$PORT'/' $MAIN_CFG_FILE
 
     # Создание репозиториев
     for REPO in "${REPOS[@]}"; do
-        mkdir -p "$DOC_DIR/$REPO/log/"
+        mkdir -p "$DOC_DIR/$REPO/"{html,log}
+        echo "Репозиторий: $REPO" > "$DOC_DIR/$REPO/html/index.html"
         # Создание файлов конфигурации виртуальных хостов
         (
             echo '<VirtualHost *:'$PORT'>'
             echo '    ServerName www.'$REPO
             echo '    ServerAlias '$REPO
-            echo '    DocumentRoot '$DOC_DIR/$REPO
-            echo '    ErrorLog '$DOC_DIR/$REPO'/log/error.log'
-            echo '    CustomLog '$DOC_DIR/$REPO'/log/requests.log combined'
+            echo "    DocumentRoot $DOC_DIR/$REPO/html"
+            echo "    ErrorLog $DOC_DIR/$REPO/log/error.log"
+            echo "    CustomLog $DOC_DIR/$REPO/log/requests.log combined"
             echo '</VirtualHost>'
         ) > $SA_DIR"/"$REPO".conf"
         # Включение созданных сайтов
         ln -s "$SA_DIR/$REPO.conf" "$SE_DIR/$REPO.conf"
-        chown -R www-data:www-data "$DOC_DIR/$REPO"
+        chown -R vagrant:vagrant "$DOC_DIR/$REPO/html"
+        chmod -R 755 $DOC_DIR
     done
 
+    setsebool -P httpd_unified 1
     systemctl start httpd && systemctl enable httpd
 }
 
