@@ -54,17 +54,19 @@
 
 #reboot
 
-
+DOMAIN='.otus'
+REPO_1='rulez.les06-repo'$DOMAIN
+REPO_2='trash.les06-repo'$DOMAIN
+REPOS=($REPO_1 $REPO_2)
 
 #
 # ==============================================================================
 #
 
 function sys_prepare {
-    echo "127.0.0.1 hello.repo.otus rulez.repo.otus trash.repo.otus" >> /etc/hosts
-    echo "192.168.1.100  hello.repo.otus" >> /etc/hosts
-    echo "192.168.1.100  rulez.repo.otus" >> /etc/hosts
-    echo "192.168.1.100  trash.repo.otus" >> /etc/hosts
+#    for REPO in "${REPOS[@]}"; do
+#        echo "127.0.0.1 $REPO" >> /etc/hosts
+#    done
 
     # yum install -y epel-release
     yum install -y mc nano
@@ -80,11 +82,6 @@ function customize_apache {
 
     local DOC_DIR='/var/www'
 
-    local REPO_1='hello.repo.otus'
-    local REPO_2='rulez.repo.otus'
-    local REPO_3='trash.repo.otus'
-    local REPOS=($REPO_1 $REPO_2 $REPO_3)
-
     local PORT='80'
 
     # Первичные действия
@@ -95,22 +92,33 @@ function customize_apache {
 
     echo 'IncludeOptional sites-enabled/*.conf' >> $MAIN_CFG_FILE
     #sed -i 's/Listen 80/Listen '$PORT'/' $MAIN_CFG_FILE
+    rm $CONFD_DIR"/welcome.conf"
 
     # Создание репозиториев
     for REPO in "${REPOS[@]}"; do
         mkdir -p "$DOC_DIR/$REPO/"{html,log}
-        echo "Репозиторий: $REPO" > "$DOC_DIR/$REPO/html/index.html"
+        echo "REPOSITORY: $REPO" > "$DOC_DIR/$REPO/html/header.html"
+        # === DEBUG ===
+        # touch "$DOC_DIR/$REPO/html/$REPO."{1..9}".rpm"
+        # mkdir "$DOC_DIR/$REPO/html/subdir-0"{1..9}
+
         # Создание файлов конфигурации виртуальных хостов
         (
             echo '<VirtualHost *:'$PORT'>'
             echo '    ServerName www.'$REPO
             echo '    ServerAlias '$REPO
             echo "    DocumentRoot $DOC_DIR/$REPO/html"
+            echo "    <Directory $DOC_DIR/$REPO/html>"
+            echo '        Options Indexes Includes FollowSymLinks'
+            echo '        IndexOptions FancyIndexing FoldersFirst IconsAreLinks NameWidth=60'
+            echo '        IndexIgnore header.html'
+            echo '        HeaderName header.html'
+            echo '    </Directory>'
             echo "    ErrorLog $DOC_DIR/$REPO/log/error.log"
             echo "    CustomLog $DOC_DIR/$REPO/log/requests.log combined"
             echo '</VirtualHost>'
         ) > $SA_DIR"/"$REPO".conf"
-        # Включение созданных сайтов
+        # Включение созданных репозиториев
         ln -s "$SA_DIR/$REPO.conf" "$SE_DIR/$REPO.conf"
         chown -R vagrant:vagrant "$DOC_DIR/$REPO/html"
         chmod -R 755 $DOC_DIR
