@@ -1,4 +1,4 @@
-[![Packages](https://img.shields.io/badge/-CentOS%207-blue)](https://wiki.centos.org/ru/Download)
+[![Packages](https://img.shields.io/badge/CentOS-7-orange)](https://wiki.centos.org/ru/Download)
 
 
 # OTUS_LinuxAdministrator
