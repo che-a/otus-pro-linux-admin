@@ -55,6 +55,7 @@ function install_nginx
             Домашнее задание №6<br/>
             Управление пакетами. Дистрибьюция софта
         </h2>
+        <footer>nginx</footer>
     </body>
 </html>
 _EOF_
