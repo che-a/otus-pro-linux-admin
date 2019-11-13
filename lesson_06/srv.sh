@@ -58,7 +58,6 @@ function customize_apache
             echo '        Options Indexes Includes FollowSymLinks'
             echo '        IndexOptions FancyIndexing FoldersFirst IconsAreLinks NameWidth=60'
             echo '        IndexIgnore header.html'
-            echo '        IndexIgnore repodata'
             echo '        HeaderName header.html'
             echo '    </Directory>'
             echo "    ErrorLog $DOC_DIR/$REPO/log/error.log"
