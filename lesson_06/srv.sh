@@ -1,51 +1,40 @@
 #!/usr/bin/env bash
 
-#NGINX_DIR='/usr/share/nginx/html/repo/'
+DOMAIN='otus'
+REPO_1_NAME='repo1'
+REPO_2_NAME='repo2'
+REPO_3_NAME='repo3'
+REPO_1=$REPO_1_NAME'.'$DOMAIN
+REPO_2=$REPO_2_NAME'.'$DOMAIN
+REPO_3=$REPO_3_NAME'.'$DOMAIN
+# Массивы применяются здесь с целью предоставления возможности легкого изменения
+# количества репозиториев путем правки только блока определения переменных в
+# начале сценария
+REPO_NAMES=($REPO_1_NAME $REPO_2_NAME $REPO_3_NAME)
+REPOS=($REPO_1 $REPO_2 $REPO_3)
 
-#yum localinstall -y "$RPMBUILD_DIR/RPMS/x86_64/$NGINX_RPM" \
-#    && systemctl start nginx \
-#    && systemctl status nginx \
-#    && systemctl enable nginx
+CFG_DIR='/etc/httpd'
+SA_DIR=$CFG_DIR'/sites-available'
+SE_DIR=$CFG_DIR'/sites-enabled'
+CONFD_DIR=$CFG_DIR'/conf.d'
+MAIN_CFG_FILE=$CFG_DIR'/conf/httpd.conf'
+DOC_DIR='/var/www'
+PORT='80'
 
-#
-# Создание своего репозитория
-#
-
-#mkdir -p $NGINX_DIR
-#cp $RPMBUILD_DIR/RPMS/x86_64/$NGINX_RPM $NGINX_DIR
-#wget http://www.percona.com/downloads/percona-release/redhat/0.1-6/percona-release-0.1-6.noarch.rpm \
-#    -O /usr/share/nginx/html/repo/percona-release-0.1-6.noarch.rpm
-
-#createrepo $NGINX_DIR
-#sed -i '11i autoindex on;' /etc/nginx/conf.d/default.conf
-
-DOMAIN='.otus'
-REPO_1='alfa.les06-repo'$DOMAIN
-REPO_2='beta.les06-repo'$DOMAIN
-REPOS=($REPO_1 $REPO_2)
-
-#
-# ==============================================================================
-#
-
-function sys_prepare {
+function sys_prepare
+{
+    local STR='127.0.0.1 '
     for REPO in "${REPOS[@]}"; do
-        echo "127.0.0.1 $REPO" >> "/etc/hosts"
+        STR=$STR$REPO' '
     done
+    echo $STR >> "/etc/hosts"
 
     yum install -y gcc make mc nano tree wget
     yum install -y createrepo redhat-lsb-core rpmdevtools rpm-build yum-utils
 }
 
-function customize_apache {
-    local CFG_DIR='/etc/httpd'
-    local SA_DIR=$CFG_DIR'/sites-available'
-    local SE_DIR=$CFG_DIR'/sites-enabled'
-    local CONFD_DIR=$CFG_DIR'/conf.d'
-    local MAIN_CFG_FILE=$CFG_DIR'/conf/httpd.conf'
-    local DOC_DIR='/var/www'
-    local PORT='80'
-
+function customize_apache
+{
     yum install -y httpd
     mkdir $SA_DIR $SE_DIR
 
@@ -85,7 +74,8 @@ function customize_apache {
     systemctl start httpd && systemctl enable httpd
 }
 
-function build_rpm_nginx {
+function build_rpm_nginx
+{
     # Сборка nginx с поддержкой openssl
 
     local NGINX='nginx-1.16.1-1.el7.ngx'
@@ -113,22 +103,18 @@ function build_rpm_nginx {
 
     # Сборка RPM-пакета
     rpmbuild -bb $RPMBUILD_DIR/SPECS/nginx.spec
-    cp $RPMBUILD_DIR/RPMS/x86_64/$NGINX_RPM /var/www/$REPO_1/html/
+    cp $RPMBUILD_DIR'/RPMS/x86_64/'$NGINX_RPM $DOC_DIR'/'$REPO_1'/html/'
 }
 
-function create_repo {
-
-    createrepo /var/www/$REPO_1/html/
-    createrepo /var/www/$REPO_2/html/
+function create_repos
+{
+    for REPO in "${REPOS[@]}"; do
+        createrepo $DOC_DIR'/'$REPO'/html/'
+    done
 }
 
-function  add_rpm_to_repo {
-    echo "Run function add_rpm_to_repo!"
-}
 
-# ==============================================================================
 sys_prepare
 customize_apache
 build_rpm_nginx
-create_repo
-# add_rpm_to_repo
+create_repos
