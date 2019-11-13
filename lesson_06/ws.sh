@@ -37,6 +37,31 @@ function install_repos
     done
 }
 
+function install_nginx
+{
+    yum install -y nginx
+
+    cat > /usr/share/nginx/html/index.html << _EOF_
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <title>OTUS Linux</title>
+    </head>
+    <body>
+        <h1>OTUS. Администратор Linux</h1>
+        <hr/>
+        <h2>
+            Домашнее задание №6<br/>
+            Управление пакетами. Дистрибьюция софта
+        </h2>
+    </body>
+</html>
+_EOF_
+
+    systemctl start nginx && systemctl enable nginx
+}
 
 sys_prepare
 install_repos
+install_nginx
