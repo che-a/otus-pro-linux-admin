@@ -4,13 +4,9 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-    - 4.1. [Создание rpm-пакета](#rpm)  
-       — [Краткие сведения](#rpm_short)  
-       — [Ход выполнения](#rpm_exec)  
-    - 4.2. [Создание репозитория](#repo)  
-       — [Краткие сведения](#repo_short)  
-       — [Ход выполнения](#repo_exec)  
-
+    - [Описание стенда](#rpm)  
+    - [Демонстрация работы стенда](#repo)  
+      
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -87,14 +83,54 @@
 - [RPM Packaging Guide](https://rpm-packaging-guide.github.io/)  
 
 
-## 4. Выполнение <a name="exec"></a>  
-### 4.1. Создание rpm-пакета <a name="rpm"></a>  
+## 4. Выполнение <a name="exec"></a> 
+### Описание стенда <a name="rpm"></a>  
 
-#### Краткие сведения <a name="rpm_short"></a>  
-#### Ход выполнения <a name="rpm_exec"></a>  
-`yumdownloader --source vim`
+Суть выполненного задания состоит в автоматизированном развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/Vagrantfile) тестового окружения в составе двух подключенных к одной сети виртуальных машин. На `srv.otus` распологаются локальные репозитории, а на `ws.otus` происходит установка пакетов из них.  
 
-### 4.2. Создание репозитория <a name="repo"></a>  
+Сценарии [srv.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/srv.sh) и [ws.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/ws.sh) являются файлами провижининга для `srv.otus` и `ws.otus` соответственно.  
 
-#### Краткие сведения <a name="repo_short"></a>  
-#### Ход выполнения <a name="repo_exec"></a>  
+На `srv.otus`:  
+- расположено три репозитория `repo1.otus`, `repo2.otus` и `repo3.otus`;  
+- развернут веб-сервер `Apache` для просмотра листинга каталога каждого репозитория;  
+- в одном из репозиториев располагается собранный из исходных кодов с дополнительными параметрами `RPM`-пакет веб-сервера `Nginx`.  
+
+На `ws.otus`:  
+- подключены три вышеуказанных репозитория;  
+- установлен и запущен вышеуказанный веб-сервер `Nginx`.  
+
+
+### Демонстрация работы стенда <a name="repo"></a>  
+
+Для просмотра листинга каталогов необходимо у себя на локальной машине добавить в файл `hosts` следующую строку:
+```console
+127.0.0.1   repo1.otus repo2.otus repo3.otus
+```
+и после этого переходить в браузере по следующим адресам:  
+```
+http://repo1.otus:8080/
+http://repo2.otus:8080/
+http://repo3.otus:8080/
+```
+Удостовериться в работоспособности собранного из исходных кодов веб-сервера `Nginx` можно по адресу:  
+```
+http://localhost:8080/
+```
+
+```bash
+yum repolist enabled | grep repo[1-3]
+```
+```console
+Failed to set locale, defaulting to C
+repo1                     OTUS Linux - Repo 1                                 1
+repo2                     OTUS Linux - Repo 2                                 1
+repo3                     OTUS Linux - Repo 3                                 0
+```
+```bash
+yum list | grep repo[1-3]
+```
+```console
+Failed to set locale, defaulting to C
+nginx.x86_64                                1:1.16.1-1.el7.ngx         @repo1   
+percona-release.noarch                      1.0-13                     @repo2   
+```
