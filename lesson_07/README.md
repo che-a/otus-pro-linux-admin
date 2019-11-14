@@ -69,9 +69,12 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 
 ## 4. Выполнение <a name="exec"></a>  
 
-### Вход в систему без пароля  <a name="nopass"></a>  
 
-![alt text](screenshots/screen1-repo1.otus.png "Листинг каталога репозитория")​
+![alt text](screenshots/les07-01.png "Листинг каталога репозитория")  
+![alt text](screenshots/les07-02.png "Листинг каталога репозитория")  
+
+
+### Вход в систему без пароля  <a name="nopass"></a>  
 
 ### LVM, переименование VG  <a name="lvm"></a>  
 
