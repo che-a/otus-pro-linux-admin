@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+    config.vm.define "les07" do |subconfig|
+        subconfig.vm.box = "centos/7"
+        subconfig.vm.hostname = "les07"
+
+        subconfig.vm.provider "virtualbox" do |vb|
+            vb.name = "che-les07"
+            vb.cpus = 1
+            vb.memory = "768"
+        end
+
+#        subconfig.vm.provision "shell", inline: <<-SHELL
+#           cp /vagrant/srv.sh /home/vagrant && ./srv.sh
+#           reboot
+#        SHELL
+    end
+
+
+
+end
