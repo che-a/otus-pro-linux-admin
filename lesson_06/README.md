@@ -4,8 +4,6 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-    - [Описание стенда](#rpm)  
-    - [Демонстрация работы стенда](#repo)  
       
 
 ## 1. Описание занятия <a name="description"></a>
@@ -84,11 +82,8 @@
 
 
 ## 4. Выполнение <a name="exec"></a> 
-### Описание стенда <a name="rpm"></a>  
 
-Суть выполненного задания состоит в автоматизированном развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/Vagrantfile) тестового окружения в составе двух подключенных к одной сети виртуальных машин. На `srv.otus` распологаются локальные репозитории, а на `ws.otus` происходит установка пакетов из них.  
-
-Сценарии [srv.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/srv.sh) и [ws.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/ws.sh) являются файлами провижининга для `srv.otus` и `ws.otus` соответственно.  
+Суть выполненного задания состоит в автоматизированном развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/Vagrantfile) тестового окружения в составе двух подключенных к одной сети виртуальных машин. Сценарии [srv.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/srv.sh) и [ws.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/ws.sh) являются файлами провижининга для `srv.otus` и `ws.otus` соответственно.  
 
 На `srv.otus`:  
 - расположено три репозитория `repo1.otus`, `repo2.otus` и `repo3.otus`;  
@@ -98,9 +93,6 @@
 На `ws.otus`:  
 - подключены три вышеуказанных репозитория;  
 - установлен и запущен вышеуказанный веб-сервер `Nginx`.  
-
-
-### Демонстрация работы стенда <a name="repo"></a>  
 
 Для просмотра листинга каталогов необходимо у себя на локальной машине добавить в файл `hosts` следующую строку:
 ```console
@@ -117,6 +109,7 @@ http://repo3.otus:8080/
 http://localhost:8080/
 ```
 
+Просмотр состояния подключенных репозиториев на `ws.otus`:  
 ```bash
 yum repolist enabled | grep repo[1-3]
 ```
