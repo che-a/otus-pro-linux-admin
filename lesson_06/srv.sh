@@ -106,6 +106,12 @@ function build_rpm_nginx
     cp $RPMBUILD_DIR'/RPMS/x86_64/'$NGINX_RPM $DOC_DIR'/'$REPO_1'/html/'
 }
 
+function get_percona_repo
+{
+    wget https://www.percona.com/redir/downloads/percona-release/redhat/1.0-13/percona-release-1.0-13.noarch.rpm \
+        -O $DOC_DIR/$REPO_2"/html/percona-release-1.0-13.noarch.rpm"
+}
+
 function create_repos
 {
     for REPO in "${REPOS[@]}"; do
@@ -117,4 +123,5 @@ function create_repos
 sys_prepare
 customize_apache
 build_rpm_nginx
+get_percona_repo
 create_repos
