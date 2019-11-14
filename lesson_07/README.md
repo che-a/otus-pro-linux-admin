@@ -88,6 +88,8 @@ mount -o remount,rw /
 mount | grep root
 ```
 
+[Red Hat Documentation](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
+
 ### LVM, переименование VG  <a name="lvm"></a>  
 
 ### Добавление модуля в initrd  <a name="initrd"></a>  
