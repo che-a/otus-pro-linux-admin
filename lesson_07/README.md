@@ -107,6 +107,8 @@ exit
 
 
 #### Сброс пароля root с помощью rd.break
+> Успешно продемострровать выполнение этого пункта домашнего задания используя Vagrant не получилось из-за усеченных образов CentOS, которые он использует, поэтому была проведа ручная установка CentOS 7 на VirtualBox из образа [CentOS-7-x86_64-Minimal-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso).
+
 Сброс пароля `root` с помощью `rd.break` использует `rd.break` для прерывания процесса загрузки, прежде чем управление будет передано из `initramfs` в `systemd`. Недостаток этого метода заключается в том, что он требует больше шагов и включает в себя необходимость редактировать меню `GRUB2` и настраивать `SELinux`.  
 
 - После старта системы необходимо в меню `GRUB2` выбрать ядро для загрузки и нажать `e`;  
@@ -114,10 +116,54 @@ exit
 `rd.break enforcing=0`.  
 Добавление параметра `inforcing = 0` позволяет исключить трудоемкий процесс перемаркировки `SELinux`. `Initramfs` остановится перед передачей управления ядру Linux, что позволит работать с корневой файловой системой.  
 ![alt text](screenshots/les07-21.png)  
+
 - перезагрузить систему с измененными параметрами сочетанием клавиш `CTRL`+`X`, после чего появится приглашение `Initramfs`.  
 ![alt text](screenshots/les07-22.png)  
+<<<<<<< HEAD
 
 
+=======
+    
+- Пермонтирование файловой системы с возможностью записи:  
+```bash
+mount -o remount,rw /sysroot
+```
+- Изменение корневой файловой системы:  
+```bash
+chroot /sysroot
+```
+- Изменение пароля суперпользователя:  
+```bash
+passwd
+```
+```console
+Changing password for user root.
+New password:
+Retype new password:
+passwd: all authentication tokens updated succesfully.
+```
+- Пермонтирование файловой системы в режим только для чтения:
+```bash
+mount -o remount,ro /
+```
+```bash
+exit
+exit
+```
+- введите следующую команду, чтобы восстановить контекст безопасности SELinux файла / etc / shadow:
+```bash
+restorecon /etc/shadow
+```
+```bash
+setenforce 1
+```
+```bash
+getenforce
+```
+```console
+Enforcing
+```
+>>>>>>> 0d3c2bb00032cd914f997048612a03d704c11044
 
 Официальная документация Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
 
