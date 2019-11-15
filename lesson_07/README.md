@@ -80,24 +80,32 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 <details>
     <summary>Скриншоты этапа загрузки с установочного диска</summary>
 
-![alt text](screenshots/les07-10.png "Листинг каталога репозитория")  
-![alt text](screenshots/les07-11.png "Листинг каталога репозитория")  
-![alt text](screenshots/les07-12.png "Листинг каталога репозитория")  
-![alt text](screenshots/les07-13.png "Листинг каталога репозитория")  
+![alt text](screenshots/les07-10.png)  
+![alt text](screenshots/les07-11.png)  
+![alt text](screenshots/les07-12.png)  
+![alt text](screenshots/les07-13.png)  
 
 </details>
 
-Change the file system root as follows:
+Следующим шагом будет изменение корня файловой системы:
+```bash
+chroot /mnt/sysimage
+```
+после чего изменяется пароль супрепользователя:
+```bash
+passwd
+```
+и настраивается `SELinux`:
+```bash
+rm -f /.autorelabel
+```
+```bash
+exit
+exit
+```
+![alt text](screenshots/les07-14.png "Монтирование корневого раздела")  
 
-sh-4.2# chroot /mnt/sysimage
 
-Enter the passwd command and follow the instructions displayed on the command line to change the root password.
-Remove the autorelable file to prevent a time consuming SELinux relabel of the disk:
-
-sh-4.2# rm -f /.autorelabel
-
-Enter the exit command to exit the chroot environment.
-Enter the exit command again to resume the initialization and finish the system boot. 
 
 #### Сброс пароля root с помощью rd.break
 Сброс пароля `root` с помощью `rd.break` использует `rd.break` для прерывания процесса загрузки, прежде чем управление будет передано из `initramfs` в `systemd`. Недостаток этого метода заключается в том, что он требует больше шагов и включает в себя необходимость редактировать меню `GRUB2` и настраивать `SELinux`.
