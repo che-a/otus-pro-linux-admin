@@ -5,8 +5,8 @@
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
     - 4.1 [Вход в систему без пароля](#nopass)  
-        - [Сброс пароля root с помощью установочного диска](#bootcd)  
-        - [Сброс пароля root с помощью rd.break](#rdbreak)  
+        - 4.1.1 [Сброс пароля root с помощью установочного диска](#bootcd)  
+        - 4.1.2 [Сброс пароля root с помощью rd.break](#rdbreak)  
     - 4.2 [LVM, переименование VG](#lvm)
     - 4.3 [Добавление модуля в initrd](#initrd)       
 
@@ -76,7 +76,7 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 Это задание выполненно на основе официальной документации Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
 
 
-#### Сброс пароля root с помощью установочного диска <a name="bootcd"></a>  
+#### 4.1.1 Сброс пароля root с помощью установочного диска <a name="bootcd"></a>  
 Этот способ является предпочтительным и избавляет от необходимости редактировать меню `GRUB2` при загрузке.  
 
 
@@ -114,7 +114,7 @@ exit
 
 </details>
 
-#### Сброс пароля root с помощью rd.break <a name="rdbreak"></a>  
+#### 4.1.2 Сброс пароля root с помощью rd.break <a name="rdbreak"></a>  
 > Успешно продемострровать выполнение этого пункта домашнего задания используя Vagrant не получилось из-за усеченных образов CentOS, которые он использует, поэтому была проведа ручная установка CentOS 7 на VirtualBox из образа [CentOS-7-x86_64-Minimal-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso).
 
 Сброс пароля `root` с помощью `rd.break` использует `rd.break` для прерывания процесса загрузки, прежде чем управление будет передано из `initramfs` в `systemd`. Недостаток этого метода заключается в том, что он требует больше шагов и включает в себя необходимость редактировать меню `GRUB2` и настраивать `SELinux`.  
