@@ -119,11 +119,7 @@ exit
 
 - перезагрузить систему с измененными параметрами сочетанием клавиш `CTRL`+`X`, после чего появится приглашение `Initramfs`.  
 ![alt text](screenshots/les07-22.png)  
-<<<<<<< HEAD
 
-
-=======
-    
 - Пермонтирование файловой системы с возможностью записи:  
 ```bash
 mount -o remount,rw /sysroot
@@ -163,7 +159,6 @@ getenforce
 ```console
 Enforcing
 ```
->>>>>>> 0d3c2bb00032cd914f997048612a03d704c11044
 
 Официальная документация Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
 
