@@ -4,11 +4,11 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-    - [Вход в систему без пароля](#nopass)  
+    - 4.1 [Вход в систему без пароля](#nopass)  
         - [Сброс пароля root с помощью установочного диска](#bootcd)  
         - [Сброс пароля root с помощью rd.break](#rdbreak)  
-    - [LVM, переименование VG](#lvm)
-    - [Добавление модуля в initrd](#initrd)       
+    - 4.2 [LVM, переименование VG](#lvm)
+    - 4.3 [Добавление модуля в initrd](#initrd)       
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -71,7 +71,7 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 
 ## 4. Выполнение <a name="exec"></a>  
 
-### Вход в систему без пароля  <a name="nopass"></a>  
+### 4.1 Вход в систему без пароля  <a name="nopass"></a>  
 #### Сброс пароля root с помощью установочного диска <a name="bootcd"></a>  
 Этот способ является предпочтительным и избавляет от необходимости редактировать меню `GRUB2` при загрузке.  
 
@@ -164,7 +164,7 @@ Enforcing
 
 Официальная документация Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
 
-### LVM, переименование VG  <a name="lvm"></a>  
+### 4.2 LVM, переименование VG  <a name="lvm"></a>  
 
 Текущее состояние томов в системе:  
 ```bash
@@ -191,6 +191,6 @@ vgrename VolGroup00 CheLes07Root
 
 
 
-### Добавление модуля в initrd  <a name="initrd"></a>  
+### 4.3 Добавление модуля в initrd  <a name="initrd"></a>  
 
 ![alt text](screenshots/les07-30.png)  
