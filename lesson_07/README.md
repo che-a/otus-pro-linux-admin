@@ -123,4 +123,29 @@ exit
 
 ### LVM, переименование VG  <a name="lvm"></a>  
 
+Текущее состояние томов в системе:  
+```bash
+pvs; echo; vgs; echo; lvs
+```
+```console
+  PV         VG         Fmt  Attr PSize   PFree
+  /dev/sda3  VolGroup00 lvm2 a--  <38,97g    0 
+
+  VG         #PV #LV #SN Attr   VSize   VFree
+  VolGroup00   1   2   0 wz--n- <38,97g    0 
+
+  LV       VG         Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  LogVol00 VolGroup00 -wi-ao---- <37,47g                                                    
+  LogVol01 VolGroup00 -wi-ao----   1,50g                                                    
+```
+Переименование  группы томов:
+```bash
+vgrename VolGroup00 CheLes07Root
+```
+```console
+  Volume group "VolGroup00" successfully renamed to "CheLes07Root"
+```
+
+
+
 ### Добавление модуля в initrd  <a name="initrd"></a>  
