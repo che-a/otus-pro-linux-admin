@@ -116,7 +116,7 @@ exit
 ![alt text](screenshots/les07-21.png)  
 - перезагрузить систему с измененными параметрами сочетанием клавиш `CTRL`+`X`, после чего появится приглашение `Initramfs`.  
 ![alt text](screenshots/les07-22.png)  
-    
+
 
 
 Официальная документация Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
@@ -129,10 +129,10 @@ pvs; echo; vgs; echo; lvs
 ```
 ```console
   PV         VG         Fmt  Attr PSize   PFree
-  /dev/sda3  VolGroup00 lvm2 a--  <38,97g    0 
+  /dev/sda3  VolGroup00 lvm2 a--  <38,97g    0
 
   VG         #PV #LV #SN Attr   VSize   VFree
-  VolGroup00   1   2   0 wz--n- <38,97g    0 
+  VolGroup00   1   2   0 wz--n- <38,97g    0
 
   LV       VG         Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
   LogVol00 VolGroup00 -wi-ao---- <37,47g                                                    
@@ -149,3 +149,5 @@ vgrename VolGroup00 CheLes07Root
 
 
 ### Добавление модуля в initrd  <a name="initrd"></a>  
+
+![alt text](screenshots/les07-30.png)  
