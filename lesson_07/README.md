@@ -73,13 +73,12 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 #### Сброс пароля root с помощью установочного диска
 Сброс пароля root с помощью установочного диска избавляет от необходимости редактировать меню `GRUB2` при загрузке. Этот способ является предпочтительным.  
 
-- Сперва необходимо загрузиться с установочного диска, например, [CentOS-7-x86_64-NetInstall-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso) .  
-- В предлагаемом меню последовательно выбрать пункты &laquo;Choose Troubleshooting&raquo; и &laquo;Choose Rescue a Red Hat Enterprise Linux System&laquo;.  
-Choose Continue which is the default option. At this point you will be promoted for a passphrase if an encrypted file system is found.
-Press OK to acknowledge the information displayed until the shell prompt appears.
+- Сперва необходимо загрузиться с установочного диска, например, [CentOS-7-x86_64-NetInstall-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso) ;  
+- далее в предлагаемом меню нужно последовательно выбрать пункты &laquo;Choose Troubleshooting&raquo; и &laquo;Choose Rescue a CentOS System&raquo;;  
+- после подтверждения выбора пункта &laquo;Continue&raquo; появится доступ в командную оболочку.  
 
 <details>
-    <summary></summary>
+    <summary>Скриншоты этапа загрузки с установочного диска</summary>
 
 ![alt text](screenshots/les07-10.png "Листинг каталога репозитория")  
 ![alt text](screenshots/les07-11.png "Листинг каталога репозитория")  
