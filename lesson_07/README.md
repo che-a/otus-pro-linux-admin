@@ -8,7 +8,8 @@
         - 4.1.1 [Сброс пароля root с помощью установочного диска](#bootcd)  
         - 4.1.2 [Сброс пароля root с помощью rd.break](#rdbreak)  
     - 4.2 [LVM, переименование VG](#lvm)
-    - 4.3 [Добавление модуля в initrd](#initrd)       
+    - 4.3 [Добавление модуля в initrd](#initrd)   
+    - 4.4 [Загрузка с LVM](#bootlvm)
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -71,6 +72,9 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 
 ## 4. Выполнение <a name="exec"></a>  
 
+
+
+
 ### 4.1 Вход в систему без пароля  <a name="nopass"></a>  
 
 Это задание выполненно на основе официальной документации Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
@@ -115,7 +119,7 @@ exit
 </details>
 
 #### 4.1.2 Сброс пароля root с помощью rd.break <a name="rdbreak"></a>  
-> Успешно продемострровать выполнение этого пункта домашнего задания используя Vagrant не получилось из-за усеченных образов CentOS, которые он использует, поэтому была проведа ручная установка CentOS 7 на VirtualBox из образа [CentOS-7-x86_64-Minimal-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso).
+> Успешно продемострровать выполнение этого пункта домашнего задания используя Vagrant не получилось, поэтому была проведа ручная установка CentOS 7 на VirtualBox из образа [CentOS-7-x86_64-Minimal-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso).
 
 Сброс пароля `root` с помощью `rd.break` использует `rd.break` для прерывания процесса загрузки, прежде чем управление будет передано из `initramfs` в `systemd`. Недостаток этого метода заключается в том, что он требует больше шагов и включает в себя необходимость редактировать меню `GRUB2` и настраивать `SELinux`.  
 
@@ -201,7 +205,7 @@ vgs
 
 ### 4.3 Добавление модуля в initrd  <a name="initrd"></a>  
 
-Для добавления своего модуля в `initrd` необходимо после запуска виртуального окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/Vagrantfile) запустить сценарий [add_module.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/add_module.sh):
+Для добавления своего модуля в `initrd` необходимо после развертывания виртуального окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/Vagrantfile) запустить сценарий [add_module.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/add_module.sh):
 ```bash
 sudo -s
 ./add_module.sh
@@ -209,3 +213,29 @@ sudo -s
 После этого система перезагрузится и в процессе ее запуска можно будет наблюдать пингвина в консоли в течение 10 секунд. 
 
 ![alt text](screenshots/les07-30.png)  
+
+
+### 4.4 Загрузка с LVM  <a name="bootlvm"></a>  
+
+Исходное состояние:
+```bash
+lsblk
+```
+```console
+NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                         8:0    0   40G  0 disk 
+|-sda1                      8:1    0    1M  0 part 
+|-sda2                      8:2    0    1G  0 part /boot
+`-sda3                      8:3    0   39G  0 part 
+  |-CheLes07Root-LogVol00 253:0    0 37.5G  0 lvm  /
+  `-CheLes07Root-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+```
+```bash
+df -h -x tmpfs -x devtmpfs
+```
+```console
+Filesystem                         Size  Used Avail Use% Mounted on
+/dev/mapper/CheLes07Root-LogVol00   38G  739M   37G   2% /
+/dev/sda2                         1014M   61M  954M   6% /boot
+
+```
