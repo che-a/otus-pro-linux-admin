@@ -37,7 +37,7 @@
 `PV` необходимо инициализировать с параметром `--bootloaderareasize 1m`.  
 
 Описать действия, описать разницу между методами получения шелла в процессе загрузки.  
-Где получится - используем script, где не получается - словами или копипастой описываем действия. 
+Где получится - используем script, где не получается - словами или копипастой описываем действия.
 
 ## 3. Справочная информация <a name="info"></a>  
 
@@ -69,26 +69,38 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 
 ## 4. Выполнение <a name="exec"></a>  
 
-
-
 ### Вход в систему без пароля  <a name="nopass"></a>  
 
 ![alt text](screenshots/les07-01.png "Листинг каталога репозитория")  
 ![alt text](screenshots/les07-02.png "Листинг каталога репозитория")  
 
-#### Способ 1. init=/bin/sh
-В конце строки начинающейся с linux16 добавляем init=/bin/sh и нажимаем сtrl-x для загрузки в систему.  
+#### Сброс пароля root с помощью установочного диска
+Сброс пароля root с помощью установочного диска избавляет от необходимости редактировать меню GRUB 2 при загрузке. Этот способ является предпочтительным.
 
-В целом на этом все, Вы попали в систему. Но есть один нюанс. Рутовая файловая система при этом монтируется в режиме Read-Only. Если вы хотите перемонтировать ее в режим Read-Write можно воспользоваться командой:
-```bash
-mount -o remount,rw /
-```
-После чего можно убедиться записав данные в любой файл или прочитав вывод команды:
-```bash
-mount | grep root
-```
+Start the system and when BIOS information is displayed, select the option for a boot menu and select to boot from the installation disk.
+Choose Troubleshooting.
+Choose Rescue a Red Hat Enterprise Linux System.
+Choose Continue which is the default option. At this point you will be promoted for a passphrase if an encrypted file system is found.
+Press OK to acknowledge the information displayed until the shell prompt appears.
+Change the file system root as follows:
 
-[Red Hat Documentation](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
+sh-4.2# chroot /mnt/sysimage
+
+Enter the passwd command and follow the instructions displayed on the command line to change the root password.
+Remove the autorelable file to prevent a time consuming SELinux relabel of the disk:
+
+sh-4.2# rm -f /.autorelabel
+
+Enter the exit command to exit the chroot environment.
+Enter the exit command again to resume the initialization and finish the system boot. 
+
+#### Сброс пароля root с помощью rd.break
+Сброс пароля `root` с помощью `rd.break` использует `rd.break` для прерывания процесса загрузки, прежде чем управление будет передано из `initramfs` в `systemd`. Недостаток этого метода заключается в том, что он требует больше шагов и включает в себя необходимость редактировать меню `GRUB2` и настраивать `SELinux`.
+
+
+
+
+Официальная документация Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
 
 ### LVM, переименование VG  <a name="lvm"></a>  
 
