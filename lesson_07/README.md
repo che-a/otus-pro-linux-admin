@@ -75,25 +75,27 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 #### Сброс пароля root с помощью установочного диска <a name="bootcd"></a>  
 Этот способ является предпочтительным и избавляет от необходимости редактировать меню `GRUB2` при загрузке.  
 
-- Сперва необходимо загрузиться с установочного диска, например, [CentOS-7-x86_64-NetInstall-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso) ;  
-- далее в предлагаемом меню нужно последовательно выбрать пункты &laquo;Choose Troubleshooting&raquo; и &laquo;Choose Rescue a CentOS System&raquo;;  
-- после подтверждения выбора пункта &laquo;Continue&raquo; появится доступ в командную оболочку.  
 
 <details>
-    <summary>Скриншоты этапа загрузки с установочного диска</summary>
+    <summary>Последовательность действий:</summary>
 
+1) Необходимо загрузиться с установочного диска, например, [CentOS-7-x86_64-NetInstall-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso) ;  
+
+2) в предлагаемом меню нужно последовательно выбрать пункты &laquo;Choose Troubleshooting&raquo; и &laquo;Choose Rescue a CentOS System&raquo; ;  
 ![alt text](screenshots/les07-10.png)  
 ![alt text](screenshots/les07-11.png)  
+
+3) после подтверждения выбора пункта &laquo;Continue&raquo; появится доступ в командную оболочку.  
 ![alt text](screenshots/les07-12.png)  
 ![alt text](screenshots/les07-13.png)  
 
-</details>
-
-Следующим шагом будет изменение корня файловой системы:
+4) Следующим шагом будет изменение корня файловой системы:
 ```bash
 chroot /mnt/sysimage
 ```
-после чего изменяется пароль супрепользователя:
+![alt text](screenshots/les07-14.png)  
+
+5) после чего изменяется пароль супрепользователя:
 ```bash
 passwd
 ```
@@ -105,8 +107,8 @@ rm -f /.autorelabel
 exit
 exit
 ```
-![alt text](screenshots/les07-14.png "Монтирование корневого раздела")  
 
+</details>
 
 #### Сброс пароля root с помощью rd.break <a name="rdbreak"></a>  
 > Успешно продемострровать выполнение этого пункта домашнего задания используя Vagrant не получилось из-за усеченных образов CentOS, которые он использует, поэтому была проведа ручная установка CentOS 7 на VirtualBox из образа [CentOS-7-x86_64-Minimal-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso).
