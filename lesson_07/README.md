@@ -70,18 +70,24 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 ## 4. Выполнение <a name="exec"></a>  
 
 ### Вход в систему без пароля  <a name="nopass"></a>  
-
-![alt text](screenshots/les07-01.png "Листинг каталога репозитория")  
-![alt text](screenshots/les07-02.png "Листинг каталога репозитория")  
-
 #### Сброс пароля root с помощью установочного диска
-Сброс пароля root с помощью установочного диска избавляет от необходимости редактировать меню GRUB 2 при загрузке. Этот способ является предпочтительным.
+Сброс пароля root с помощью установочного диска избавляет от необходимости редактировать меню `GRUB2` при загрузке. Этот способ является предпочтительным.  
 
-Start the system and when BIOS information is displayed, select the option for a boot menu and select to boot from the installation disk.
-Choose Troubleshooting.
-Choose Rescue a Red Hat Enterprise Linux System.
+- Сперва необходимо загрузиться с установочного диска, например, [CentOS-7-x86_64-NetInstall-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso) .  
+- В предлагаемом меню последовательно выбрать пункты &laquo;Choose Troubleshooting&raquo; и &laquo;Choose Rescue a Red Hat Enterprise Linux System&laquo;.  
 Choose Continue which is the default option. At this point you will be promoted for a passphrase if an encrypted file system is found.
 Press OK to acknowledge the information displayed until the shell prompt appears.
+
+<details>
+    <summary></summary>
+
+![alt text](screenshots/les07-10.png "Листинг каталога репозитория")  
+![alt text](screenshots/les07-11.png "Листинг каталога репозитория")  
+![alt text](screenshots/les07-12.png "Листинг каталога репозитория")  
+![alt text](screenshots/les07-13.png "Листинг каталога репозитория")  
+
+</details>
+
 Change the file system root as follows:
 
 sh-4.2# chroot /mnt/sysimage
