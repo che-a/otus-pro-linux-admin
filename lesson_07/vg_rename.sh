@@ -3,7 +3,7 @@
 VG_OLD=`vgdisplay | grep "VG Name" | gawk '{print $3}'`
 VG_NEW='CheLes07Root'
 
-REPORT_FILE='/home/vagrant/vg_rename.log'
+REPORT_FILE='/home/vagrant/report.log'
 UNIT_FILE='/etc/systemd/system/vg_rename.service'
 
 
@@ -30,30 +30,23 @@ _EOF_
 function report
 {
     (
-        pvs; echo
+        echo "========== $1 =========="
         vgs; echo
-        lvs; echo
     ) >> $REPORT_FILE
 }
 
 
 if [ -s $REPORT_FILE ]; then
     systemctl disable vg_rename.service
-    echo "========== AFTER RENAMING VG ==========" >> $REPORT_FILE
-    report
+
+    report 'AFTER RENAMING VG'
 else
     make_systemd_service
-    echo "========== BEFORE RENAMING VG ==========" > $REPORT_FILE
-    report
+    report 'BEFORE RENAMING VG'
     vgrename $VG_OLD $VG_NEW
 
     sed -i "s/$VG_OLD/$VG_NEW/g" /etc/fstab
-    #sed -i "s/$VG_OLD/$VG_NEW/g" /etc/default/grub
     sed -i "s/$VG_OLD/$VG_NEW/g" /boot/grub2/grub.cfg
 
-    #mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
     dracut -f -v
-
-    echo "Reboot virtual machine ..."
-    reboot
 fi
