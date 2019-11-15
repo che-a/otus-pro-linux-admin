@@ -113,10 +113,10 @@ exit
 - Из строки, которая начинается параметром `linux16` (`linuxefi` для UEFI-систем ), удалить параемтры `rhgb` и `quiet` и в конце строки дописать параметр  
 `rd.break enforcing=0`.  
 Добавление параметра `inforcing = 0` позволяет исключить трудоемкий процесс перемаркировки `SELinux`. `Initramfs` остановится перед передачей управления ядру Linux, что позволит работать с корневой файловой системой.  
-- перезагрузить систему с измененными параметрами сочетанием клавиш `CTRL`+`X`.  
 ![alt text](screenshots/les07-21.png)  
+- перезагрузить систему с измененными параметрами сочетанием клавиш `CTRL`+`X`, после чего появится приглашение `Initramfs`.  
+![alt text](screenshots/les07-22.png)  
     
-
 
 
 Официальная документация Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
