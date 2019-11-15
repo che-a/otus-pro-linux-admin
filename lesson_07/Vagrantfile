@@ -15,12 +15,8 @@ Vagrant.configure("2") do |config|
         end
 
         subconfig.vm.provision "shell", inline: <<-SHELL
-            yum install -y nano
-            cp /vagrant/{add_module}.sh /home/vagrant
-
-            /home/vagrant/add_module.sh
-
-            echo "Reboot virtual machine ..."
+            yum install -y mc nano
+            cp /vagrant/{add_module,vg_rename,boot_lvm}.sh /home/vagrant
         SHELL
 
     end
