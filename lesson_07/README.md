@@ -9,7 +9,6 @@
         - 4.1.2 [Сброс пароля root с помощью rd.break](#rdbreak)  
     - 4.2 [LVM, переименование VG](#lvm)
     - 4.3 [Добавление модуля в initrd](#initrd)   
-    - 4.4 [Загрузка с LVM](#bootlvm)
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -214,28 +213,3 @@ sudo -s
 
 ![alt text](screenshots/les07-30.png)  
 
-
-### 4.4 Загрузка с LVM  <a name="bootlvm"></a>  
-
-Исходное состояние:
-```bash
-lsblk
-```
-```console
-NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                         8:0    0   40G  0 disk 
-|-sda1                      8:1    0    1M  0 part 
-|-sda2                      8:2    0    1G  0 part /boot
-`-sda3                      8:3    0   39G  0 part 
-  |-CheLes07Root-LogVol00 253:0    0 37.5G  0 lvm  /
-  `-CheLes07Root-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
-```
-```bash
-df -h -x tmpfs -x devtmpfs
-```
-```console
-Filesystem                         Size  Used Avail Use% Mounted on
-/dev/mapper/CheLes07Root-LogVol00   38G  739M   37G   2% /
-/dev/sda2                         1014M   61M  954M   6% /boot
-
-```
