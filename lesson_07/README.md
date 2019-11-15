@@ -114,10 +114,49 @@ exit
 `rd.break enforcing=0`.  
 Добавление параметра `inforcing = 0` позволяет исключить трудоемкий процесс перемаркировки `SELinux`. `Initramfs` остановится перед передачей управления ядру Linux, что позволит работать с корневой файловой системой.  
 ![alt text](screenshots/les07-21.png)  
+
 - перезагрузить систему с измененными параметрами сочетанием клавиш `CTRL`+`X`, после чего появится приглашение `Initramfs`.  
 ![alt text](screenshots/les07-22.png)  
     
-
+- Пермонтирование файловой системы с возможностью записи:  
+```bash
+mount -o remount,rw /sysroot
+```
+- Изменение корневой файловой системы:  
+```bash
+chroot /sysroot
+```
+- Изменение пароля суперпользователя:  
+```bash
+passwd
+```
+```console
+Changing password for user root.
+New password:
+Retype new password:
+passwd: all authentication tokens updated succesfully.
+```
+- Пермонтирование файловой системы в режим только для чтения:
+```bash
+mount -o remount,ro /
+```
+```bash
+exit
+exit
+```
+- введите следующую команду, чтобы восстановить контекст безопасности SELinux файла / etc / shadow:
+```bash
+restorecon /etc/shadow
+```
+```bash
+setenforce 1
+```
+```bash
+getenforce
+```
+```console
+Enforcing
+```
 
 Официальная документация Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
 
