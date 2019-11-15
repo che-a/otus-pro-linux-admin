@@ -173,29 +173,30 @@ Enforcing
     
 ### 4.2 LVM, переименование VG  <a name="lvm"></a>  
 
-Текущее состояние томов в системе:  
+Для переименования группы томов, в которой находится том с корневой файловой системой, необходимо выполнить следующие шаги:  
+- посмотреть текущее состояние системы:
 ```bash
-pvs; echo; vgs; echo; lvs
+sudo -s
+vgs
 ```
 ```console
-  PV         VG         Fmt  Attr PSize   PFree
-  /dev/sda3  VolGroup00 lvm2 a--  <38,97g    0
-
   VG         #PV #LV #SN Attr   VSize   VFree
-  VolGroup00   1   2   0 wz--n- <38,97g    0
-
-  LV       VG         Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-  LogVol00 VolGroup00 -wi-ao---- <37,47g                                                    
-  LogVol01 VolGroup00 -wi-ao----   1,50g                                                    
+  VolGroup00   1   2   0 wz--n- <38.97g    0  
 ```
-Переименование  группы томов:
+
+- запустить сценарий [vg_rename.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/vg_rename.sh) и дождаться перезагрузки системы;  
 ```bash
-vgrename VolGroup00 CheLes07Root
+./vg_rename.sh
+```
+- после перезгразки проверить состояние системы:  
+```bash
+sudo -s
+vgs
 ```
 ```console
-  Volume group "VolGroup00" successfully renamed to "CheLes07Root"
+  VG         #PV #LV #SN Attr   VSize   VFree
+  CheLes07Root   1   2   0 wz--n- <38.97g    0
 ```
-
 
 
 ### 4.3 Добавление модуля в initrd  <a name="initrd"></a>  
