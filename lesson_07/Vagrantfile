@@ -16,17 +16,11 @@ Vagrant.configure("2") do |config|
 
         subconfig.vm.provision "shell", inline: <<-SHELL
             yum install -y nano
-            cp /vagrant/vg_rename.sh /home/vagrant && /home/vagrant/vg_rename.sh
+            cp /vagrant/{add_module}.sh /home/vagrant
 
-            mkdir /usr/lib/dracut/modules.d/01test
-            cp /vagrant/{module-setup,test}.sh /usr/lib/dracut/modules.d/01test
-            dracut -f -v
-
-            sed -i "s/rhgb/ /" /boot/grub2/grub.cfg
-            sed -i "s/quiet/ /" /boot/grub2/grub.cfg
+            /home/vagrant/add_module.sh
 
             echo "Reboot virtual machine ..."
-            reboot
         SHELL
 
     end
