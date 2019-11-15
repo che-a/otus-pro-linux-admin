@@ -72,30 +72,34 @@ BOOT_IMAGE=/boot/vmlinuz-3.10.0-957.12.2.el7.x86_64 root=UUID=8ac075e3-1124-4bb6
 ## 4. Выполнение <a name="exec"></a>  
 
 ### 4.1 Вход в систему без пароля  <a name="nopass"></a>  
+
+Это задание выполненно на основе официальной документации Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
+
+
 #### Сброс пароля root с помощью установочного диска <a name="bootcd"></a>  
 Этот способ является предпочтительным и избавляет от необходимости редактировать меню `GRUB2` при загрузке.  
 
 
 <details>
-    <summary>Последовательность действий:</summary>
+    <summary>Последовательность действий (со скриншотами):</summary>
 
-1) Необходимо загрузиться с установочного диска, например, [CentOS-7-x86_64-NetInstall-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso) ;  
+- Необходимо загрузиться с установочного диска, например, [CentOS-7-x86_64-NetInstall-1908.iso](https://mirror.yandex.ru/centos/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso) ;  
 
-2) в предлагаемом меню нужно последовательно выбрать пункты &laquo;Choose Troubleshooting&raquo; и &laquo;Choose Rescue a CentOS System&raquo; ;  
+- в предлагаемом меню нужно последовательно выбрать пункты &laquo;Choose Troubleshooting&raquo; и &laquo;Choose Rescue a CentOS System&raquo; ;  
 ![alt text](screenshots/les07-10.png)  
 ![alt text](screenshots/les07-11.png)  
 
-3) после подтверждения выбора пункта &laquo;Continue&raquo; появится доступ в командную оболочку.  
+- после подтверждения выбора пункта &laquo;Continue&raquo; появится доступ в командную оболочку.  
 ![alt text](screenshots/les07-12.png)  
 ![alt text](screenshots/les07-13.png)  
 
-4) Следующим шагом будет изменение корня файловой системы:
+- Следующим шагом будет изменение корня файловой системы:
 ```bash
 chroot /mnt/sysimage
 ```
 ![alt text](screenshots/les07-14.png)  
 
-5) после чего изменяется пароль супрепользователя:
+- после чего изменяется пароль супрепользователя:
 ```bash
 passwd
 ```
@@ -115,7 +119,12 @@ exit
 
 Сброс пароля `root` с помощью `rd.break` использует `rd.break` для прерывания процесса загрузки, прежде чем управление будет передано из `initramfs` в `systemd`. Недостаток этого метода заключается в том, что он требует больше шагов и включает в себя необходимость редактировать меню `GRUB2` и настраивать `SELinux`.  
 
+<details>
+    <summary>Последовательность действий (со скриншотами):</summary>
+
 - После старта системы необходимо в меню `GRUB2` выбрать ядро для загрузки и нажать `e`;  
+![alt text](screenshots/les07-20.png)  
+
 - Из строки, которая начинается параметром `linux16` (`linuxefi` для UEFI-систем ), удалить параемтры `rhgb` и `quiet` и в конце строки дописать параметр  
 `rd.break enforcing=0`.  
 Добавление параметра `inforcing = 0` позволяет исключить трудоемкий процесс перемаркировки `SELinux`. `Initramfs` остановится перед передачей управления ядру Linux, что позволит работать с корневой файловой системой.  
@@ -124,7 +133,7 @@ exit
 - перезагрузить систему с измененными параметрами сочетанием клавиш `CTRL`+`X`, после чего появится приглашение `Initramfs`.  
 ![alt text](screenshots/les07-22.png)  
 
-- Пермонтирование файловой системы с возможностью записи:  
+- Перемонтирование файловой системы с возможностью записи:  
 ```bash
 mount -o remount,rw /sysroot
 ```
@@ -150,22 +159,18 @@ mount -o remount,ro /
 exit
 exit
 ```
-- введите следующую команду, чтобы восстановить контекст безопасности SELinux файла / etc / shadow:
+- восстановление контекста безопасности SELinux файла /etc/shadow:
 ```bash
 restorecon /etc/shadow
-```
-```bash
 setenforce 1
-```
-```bash
 getenforce
 ```
 ```console
 Enforcing
 ```
 
-Официальная документация Red HAT: [26.10.4. Changing and Resetting the Root Password](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#sec-Changing_and_Resetting_the_Root_Password)
-
+</details>
+    
 ### 4.2 LVM, переименование VG  <a name="lvm"></a>  
 
 Текущее состояние томов в системе:  
