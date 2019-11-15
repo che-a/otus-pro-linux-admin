@@ -200,4 +200,11 @@ vgrename VolGroup00 CheLes07Root
 
 ### 4.3 Добавление модуля в initrd  <a name="initrd"></a>  
 
+Для добавления своего модуля в `initrd` необходимо после запуска виртуального окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/Vagrantfile) запустить сценарий [add_module.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/add_module.sh):
+```bash
+sudo -s
+./add_module.sh
+```
+После этого система перезагрузится и в процессе ее запуска можно будет наблюдать пингвина в консоли в течение 10 секунд. 
+
 ![alt text](screenshots/les07-30.png)  
