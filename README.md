@@ -34,5 +34,8 @@
 **7. Занятие 7. Загрузка системы**  
 *Задание:* [Работа с загрузчиком](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_07/)
 
+**8. Занятие 8. Инициализация системы. Systemd и SysV**  
+*Задание:* [Systemd](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_08/)
+
 ### Модуль 2. Управление, безопасность и мониторинг
 ***
