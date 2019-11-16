@@ -5,7 +5,7 @@ RANDOM_NUM=
 WORD='ALERT!!!'
 
 while true; do
-    RANDOM_NUM=`shuf -i 1-10 -n 1`
+    RANDOM_NUM=`shuf -i 1-7 -n 1`
     DATE_TIME=`date "+%d/%b/%Y:%T %z"`
 
     if [ $RANDOM_NUM -eq 5 ]; then
@@ -13,7 +13,6 @@ while true; do
     else
         echo $DATE_TIME' - Some event happened' >> $LOG_FILE
     fi
-
 
     sleep $RANDOM_NUM
 done

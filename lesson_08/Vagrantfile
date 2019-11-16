@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
         subconfig.vm.provision "shell", path: "script.sh"
 #        subconfig.vm.provision "shell", inline: <<-SHELL
 #            cp /vagrant/script.sh /home/vagrant
-        SHELL
+#        SHELL
 
     end
 
