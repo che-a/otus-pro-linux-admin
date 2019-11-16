@@ -4,9 +4,9 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-    - 4.1 [Вход в систему без пароля](#nopass)  
-    - 4.2 [LVM, переименование VG](#lvm)
-    - 4.3 [Добавление модуля в initrd](#initrd)   
+    - 4.1 [Задание 1](#task1)  
+    - 4.2 [Задание 2](#task2)
+    - 4.3 [Задание 3](#task3)   
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -35,6 +35,8 @@ Systemd
 ## 3. Справочная информация <a name="info"></a>  
 #### System V
 
+<details>
+    <summary></summary>
 `who -r` - Уровень запуска,  
 
 `/etc/rc.local` - выполняется после того, как отработают все init-скрипты;  
@@ -86,13 +88,16 @@ systemd-analyze blame
            240ms systemd-udevd.service
            190ms systemd-tmpfiles-setup.service
 ```
+
+</details>
+
 ## 4. Выполнение <a name="exec"></a>  
 
-### 4.1 Вход в систему без пароля  <a name="nopass"></a>  
+### 4.1 Задание 1 <a name="task1"></a>  
 
 
-### 4.2 LVM, переименование VG  <a name="lvm"></a>  
+### 4.2 Задание 2 <a name="task2"></a>  
 
 
-### 4.3 Добавление модуля в initrd  <a name="initrd"></a>  
+### 4.3 Задание 3 <a name="task3"></a>  
 
