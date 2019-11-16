@@ -33,10 +33,12 @@ Systemd
 Задание необходимо сделать с использованием Vagrantfile и proviosioner shell (или ansible, на Ваше усмотрение) 
 
 ## 3. Справочная информация <a name="info"></a>  
-#### System V
 
 <details>
     <summary></summary>
+
+#### System V
+
 `who -r` - Уровень запуска,  
 
 `/etc/rc.local` - выполняется после того, как отработают все init-скрипты;  
