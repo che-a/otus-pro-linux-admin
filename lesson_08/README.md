@@ -38,8 +38,8 @@ Systemd
 `who -r` - Уровень запуска,  
 
 `/etc/rc.local` - выполняется после того, как отработают все init-скрипты;  
-`/etc/inittab` - 
-`service sshd status` -
+`/etc/inittab` -   
+`service sshd status` -  
 
 #### systemd
 
