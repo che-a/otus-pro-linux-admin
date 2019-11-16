@@ -1,12 +1,7 @@
 [Unit]
-Description=Log generator for Lesson 08
-After=network.target
+Description=Log generator for watcher
 
 [Service]
-Type=simple
-ExecStart=/opt/generator.sh
-Restart=always
-User=vagrant
-
-[Install]
-WantedBy=multi-user.target
+Type=oneshot
+EnvironmentFile=/etc/sysconfig/generator
+ExecStart=/opt/generator.sh $WORD $LOG

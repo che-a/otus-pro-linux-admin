@@ -1,0 +1,7 @@
+[Unit]
+Description=My watcher service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/sysconfig/generator
+ExecStart=/opt/watcher.sh $WORD $LOG

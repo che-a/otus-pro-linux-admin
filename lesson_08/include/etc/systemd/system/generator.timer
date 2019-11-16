@@ -1,0 +1,9 @@
+[Unit]
+Description=Run generator script every 30 seconds
+
+[Timer]
+OnUnitActiveSec=30
+Unit=generator.service
+
+[Install]
+WantedBy=multi-user.target
