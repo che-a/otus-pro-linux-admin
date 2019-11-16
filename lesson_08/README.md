@@ -33,8 +33,21 @@ Systemd
 Задание необходимо сделать с использованием Vagrantfile и proviosioner shell (или ansible, на Ваше усмотрение) 
 
 ## 3. Справочная информация <a name="info"></a>  
-#### Начальная файловая система
+#### System V
 
+`who -r` - Уровень запуска,  
+
+
+#### systemd
+
+`systemctl list-units` - список активных модулей;  
+`systemctl list-units --all` - список всех модулей;  
+`systemctl list-units --full` - список активных модулей с отображением их полных имен;  
+
+`systemctl reload unit` - перезагружает только конфигурацию модуля `unit`;  
+`systemctl deamon-reload` - перезагружает конфигурацию всех модулей.  
+
+`journalctl _SYSTEMD_UNIT=` - полный журнал модуля;  
 
 ## 4. Выполнение <a name="exec"></a>  
 
