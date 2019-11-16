@@ -40,6 +40,10 @@ Systemd
 
 #### systemd
 
+`/usr/lib/systemd/system` - каталог системных модулей;  
+`/etc/systemd/system` - каталог системной конфигурации;  
+
+`systemctl list-jobs` - список текущих заданий;  
 `systemctl list-units` - список активных модулей;  
 `systemctl list-units --all` - список всех модулей;  
 `systemctl list-units --full` - список активных модулей с отображением их полных имен;  
