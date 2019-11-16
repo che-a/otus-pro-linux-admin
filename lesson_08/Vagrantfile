@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+    config.vm.define "les08" do |subconfig|
+        subconfig.vm.box = "centos/7"
+        subconfig.vm.hostname = "les08"
+
+        subconfig.vm.provider "virtualbox" do |vb|
+            vb.name = "che-les08"
+            vb.cpus = 1
+            vb.memory = "768"
+        end
+
+        subconfig.vm.provision "shell", path: "script.sh"
+#        subconfig.vm.provision "shell", inline: <<-SHELL
+#            cp /vagrant/script.sh /home/vagrant
+        SHELL
+
+    end
+
+end
