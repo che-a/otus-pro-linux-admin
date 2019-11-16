@@ -10,7 +10,6 @@ function files_prepare
     /bin/cp -rf /vagrant/include/* /
     chmod +x /opt/{generator,watcher}.sh
     touch /var/log/generator.log
-    #chown vagrant:vagrant /var/log/generator.log
 
     systemctl daemon-reload
     systemctl enable generator.service
