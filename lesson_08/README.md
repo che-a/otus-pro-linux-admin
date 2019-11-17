@@ -160,7 +160,50 @@ Nov 17 20:11:48 localhost root: Sun Nov 17 20:11:48 UTC 2019: I found 9 word(s),
 ```
 
 ### Задача 2 <a name="task2"></a>  
-
+Собственно, состояние получившегося`systemd`-модуля [spawn-fcgi](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/etc/systemd/system/spawn-fcgi.service):
+```bash
+systemctl status spawn-fcgi.service
+```
+```console
+● spawn-fcgi.service - Spawn-fcgi startup service by Otus
+   Loaded: loaded (/etc/systemd/system/spawn-fcgi.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sun 2019-11-17 20:07:58 UTC; 27min ago
+ Main PID: 4639 (php-cgi)
+   CGroup: /system.slice/spawn-fcgi.service
+           ├─4639 /usr/bin/php-cgi
+           ├─4657 /usr/bin/php-cgi
+           ├─4658 /usr/bin/php-cgi
+           ├─4659 /usr/bin/php-cgi
+           ├─4660 /usr/bin/php-cgi
+           ├─4661 /usr/bin/php-cgi
+           ├─4662 /usr/bin/php-cgi
+           ├─4663 /usr/bin/php-cgi
+           ├─4664 /usr/bin/php-cgi
+           ├─4665 /usr/bin/php-cgi
+           ├─4666 /usr/bin/php-cgi
+           ├─4667 /usr/bin/php-cgi
+           ├─4668 /usr/bin/php-cgi
+           ├─4669 /usr/bin/php-cgi
+           ├─4670 /usr/bin/php-cgi
+           ├─4671 /usr/bin/php-cgi
+           ├─4672 /usr/bin/php-cgi
+           ├─4673 /usr/bin/php-cgi
+           ├─4674 /usr/bin/php-cgi
+           ├─4675 /usr/bin/php-cgi
+           ├─4676 /usr/bin/php-cgi
+           ├─4677 /usr/bin/php-cgi
+           ├─4678 /usr/bin/php-cgi
+           ├─4679 /usr/bin/php-cgi
+           ├─4680 /usr/bin/php-cgi
+           ├─4681 /usr/bin/php-cgi
+           ├─4682 /usr/bin/php-cgi
+           ├─4683 /usr/bin/php-cgi
+           ├─4684 /usr/bin/php-cgi
+           ├─4685 /usr/bin/php-cgi
+           ├─4686 /usr/bin/php-cgi
+           ├─4687 /usr/bin/php-cgi
+           └─4688 /usr/bin/php-cgi
+```
 
 ### Задача 3 <a name="task3"></a>  
 
