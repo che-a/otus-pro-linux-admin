@@ -206,4 +206,56 @@ systemctl status spawn-fcgi.service
 ```
 
 ### Задача 3 <a name="task3"></a>  
+Результат одновременной работы двух экзмепляров веб-сервера `Apache` с разными файлами конфигурации у каждого:
+```bash
+systemctl status httpd@inst1.service httpd@inst2.service
+```
+```console
+● httpd@inst1.service - The Apache HTTP Server
+   Loaded: loaded (/etc/systemd/system/httpd@.service; disabled; vendor preset: disabled)
+   Active: active (running) since Sun 2019-11-17 20:07:59 UTC; 31min ago
+     Docs: man:httpd(8)
+           man:apachectl(8)
+ Main PID: 4690 (httpd)
+   Status: "Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec"
+   CGroup: /system.slice/system-httpd.slice/httpd@inst1.service
+           ├─4690 /usr/sbin/httpd -f conf/httpd-inst1.conf -DFOREGROUND
+           ├─4691 /usr/sbin/httpd -f conf/httpd-inst1.conf -DFOREGROUND
+           ├─4692 /usr/sbin/httpd -f conf/httpd-inst1.conf -DFOREGROUND
+           ├─4694 /usr/sbin/httpd -f conf/httpd-inst1.conf -DFOREGROUND
+           ├─4695 /usr/sbin/httpd -f conf/httpd-inst1.conf -DFOREGROUND
+           ├─4696 /usr/sbin/httpd -f conf/httpd-inst1.conf -DFOREGROUND
+           └─4697 /usr/sbin/httpd -f conf/httpd-inst1.conf -DFOREGROUND
 
+Nov 17 20:07:58 les08 systemd[1]: Starting The Apache HTTP Server...
+Nov 17 20:07:59 les08 httpd[4690]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1. Set the 'ServerName' directive globally to suppress this message
+Nov 17 20:07:59 les08 systemd[1]: Started The Apache HTTP Server.
+
+● httpd@inst2.service - The Apache HTTP Server
+   Loaded: loaded (/etc/systemd/system/httpd@.service; disabled; vendor preset: disabled)
+   Active: active (running) since Sun 2019-11-17 20:07:59 UTC; 31min ago
+     Docs: man:httpd(8)
+           man:apachectl(8)
+ Main PID: 4698 (httpd)
+   Status: "Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec"
+   CGroup: /system.slice/system-httpd.slice/httpd@inst2.service
+           ├─4698 /usr/sbin/httpd -f conf/httpd-inst2.conf -DFOREGROUND
+           ├─4699 /usr/sbin/httpd -f conf/httpd-inst2.conf -DFOREGROUND
+           ├─4700 /usr/sbin/httpd -f conf/httpd-inst2.conf -DFOREGROUND
+           ├─4701 /usr/sbin/httpd -f conf/httpd-inst2.conf -DFOREGROUND
+           ├─4702 /usr/sbin/httpd -f conf/httpd-inst2.conf -DFOREGROUND
+           ├─4703 /usr/sbin/httpd -f conf/httpd-inst2.conf -DFOREGROUND
+           └─4704 /usr/sbin/httpd -f conf/httpd-inst2.conf -DFOREGROUND
+
+Nov 17 20:07:59 les08 systemd[1]: Starting The Apache HTTP Server...
+Nov 17 20:07:59 les08 httpd[4698]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1. Set the 'ServerName' directive globally to suppress this message
+Nov 17 20:07:59 les08 systemd[1]: Started The Apache HTTP Server.
+```
+Просмотр открытых портов:
+```bash
+ss -tnulp | grep httpd
+```
+```console
+tcp    LISTEN     0      128      :::8080                 :::*                   users:(("httpd",pid=4704,fd=4),("httpd",pid=4703,fd=4),("httpd",pid=4702,fd=4),("httpd",pid=4701,fd=4),("httpd",pid=4700,fd=4),("httpd",pid=4699,fd=4),("httpd",pid=4698,fd=4))
+tcp    LISTEN     0      128      :::80                   :::*                   users:(("httpd",pid=4697,fd=4),("httpd",pid=4696,fd=4),("httpd",pid=4695,fd=4),("httpd",pid=4694,fd=4),("httpd",pid=4692,fd=4),("httpd",pid=4691,fd=4),("httpd",pid=4690,fd=4))
+```
