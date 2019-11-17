@@ -4,9 +4,9 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-    - 4.1 [Задание 1](#task1)  
-    - 4.2 [Задание 2](#task2)
-    - 4.3 [Задание 3](#task3)   
+    - [Задача 1](#task1)  
+    - [Задача 2](#task2)
+    - [Задача 3](#task3)   
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -97,12 +97,70 @@ systemd-analyze blame
 
 ## 4. Выполнение <a name="exec"></a>  
 Для демонстрации выполнения этого домашнего задания необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/Vagrantfile). С целью не создавать монстроподобные сценарии провижининга, которые в себе содержат команды по созданию и редактированию множества файлов, все необходимые конфигурационные файлы собраны в каталог [include](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/lesson_08/include), откуда они рекурсивно копируются в файловую систему виртуальной машины при работе сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/script.sh).
+```console
+include/
+├── etc
+│   ├── sysconfig
+│   │   ├── generator
+│   │   ├── httpd-inst1
+│   │   ├── httpd-inst2
+│   │   └── watcher
+│   └── systemd
+│       └── system
+│           ├── generator.service
+│           ├── generator.timer
+│           ├── httpd@.service
+│           ├── spawn-fcgi.service
+│           ├── watcher.service
+│           └── watcher.timer
+└── opt
+    ├── generator.sh
+    └── watcher.sh
+```
 
-### 4.1 Задание 1 <a name="task1"></a>  
+
+### Задача 1 <a name="task1"></a>  
+Сценарий [generator.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/opt/generator.sh) запускается с определенными параметрами через `systemd`-модуль [generator.service](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/etc/systemd/system/generator.service) `systemd`-таймером [generator.timer](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/etc/systemd/system/generator.timer) и записывает ключевое слово в свой лог. Аналогичным образом действует сценарий [watcher.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/opt/watcher.sh), который каждые 30 секунд подсчитывает количество ключевых слов в логе генератора и посылает сообщение с этой информацией в системный лог.
+
+```bash
+sudo tail -f /var/log/generator.log  
+```
+```console
+Sun Nov 17 20:07:41 UTC 2019 - ALERT! Need to do homework faster !!!
+Sun Nov 17 20:08:18 UTC 2019 - ALERT! Need to do homework faster !!!
+Sun Nov 17 20:08:48 UTC 2019 - ALERT! Need to do homework faster !!!
+Sun Nov 17 20:09:18 UTC 2019 - ALERT! Need to do homework faster !!!
+Sun Nov 17 20:09:48 UTC 2019 - ALERT! Need to do homework faster !!!
+Sun Nov 17 20:10:18 UTC 2019 - ALERT! Need to do homework faster !!!
+Sun Nov 17 20:10:48 UTC 2019 - ALERT! Need to do homework faster !!!
+Sun Nov 17 20:11:18 UTC 2019 - ALERT! Need to do homework faster !!!
+Sun Nov 17 20:11:48 UTC 2019 - ALERT! Need to do homework faster !!!
+```
+
+```bash
+sudo tail -f /var/log/messages 
+```
+```console
+Nov 17 20:10:18 localhost systemd: Started Log generator for watcher.
+Nov 17 20:10:18 localhost root: Sun Nov 17 20:10:18 UTC 2019: I found 5 word(s), Che!
+Nov 17 20:10:34 localhost systemd: Created slice User Slice of vagrant.
+Nov 17 20:10:34 localhost systemd-logind: New session 4 of user vagrant.
+Nov 17 20:10:34 localhost systemd: Started Session 4 of user vagrant.
+Nov 17 20:10:48 localhost systemd: Started Log generator for watcher.
+Nov 17 20:10:48 localhost systemd: Started My watcher service.
+Nov 17 20:10:48 localhost root: Sun Nov 17 20:10:48 UTC 2019: I found 6 word(s), Che!
+Nov 17 20:11:04 localhost systemd: Started Session 5 of user vagrant.
+Nov 17 20:11:04 localhost systemd-logind: New session 5 of user vagrant.
+Nov 17 20:11:18 localhost systemd: Started Log generator for watcher.
+Nov 17 20:11:18 localhost systemd: Started My watcher service.
+Nov 17 20:11:18 localhost root: Sun Nov 17 20:11:18 UTC 2019: I found 7 word(s), Che!
+Nov 17 20:11:48 localhost systemd: Started Log generator for watcher.
+Nov 17 20:11:48 localhost systemd: Started My watcher service.
+Nov 17 20:11:48 localhost root: Sun Nov 17 20:11:48 UTC 2019: I found 9 word(s), Che!
+```
+
+### Задача 2 <a name="task2"></a>  
 
 
-### 4.2 Задание 2 <a name="task2"></a>  
-
-
-### 4.3 Задание 3 <a name="task3"></a>  
+### Задача 3 <a name="task3"></a>  
 
