@@ -34,7 +34,8 @@ function task3
         /etc/httpd/conf/httpd-inst2.conf
 
     systemctl daemon-reload
-    systemctl start httpd@inst{1,2}
+    systemctl start httpd@inst1
+    systemctl start httpd@inst2
 }
 
 yum install -y mc nano tree
