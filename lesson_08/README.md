@@ -206,7 +206,7 @@ systemctl status spawn-fcgi.service
 ```
 
 ### Задача 3 <a name="task3"></a>  
-Результат одновременной работы двух экзмепляров веб-сервера `Apache` с разными файлами конфигурации у каждого:
+Результат одновременной работы двух экземпляров веб-сервера `Apache` с разными файлами конфигурации у каждого:
 ```bash
 systemctl status httpd@inst1.service httpd@inst2.service
 ```
