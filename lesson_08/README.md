@@ -96,6 +96,7 @@ systemd-analyze blame
 </details>
 
 ## 4. Выполнение <a name="exec"></a>  
+Для демонстрации выполнения этого домашнего задания необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/Vagrantfile). С целью не создавать монстроподобные сценарии провижининга, которые в себе содержат команды по созданию и редактированию множества файлов, все необходимые конфигурационные файлы собраны в каталог [include](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/lesson_08/include), откуда они рекурсивно копируются в файловую систему виртуальной машины при работе сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/script.sh).
 
 ### 4.1 Задание 1 <a name="task1"></a>  
 
