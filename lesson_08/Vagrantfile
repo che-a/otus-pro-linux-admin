@@ -6,6 +6,8 @@ Vagrant.configure("2") do |config|
     config.vm.define "les08" do |subconfig|
         subconfig.vm.box = "centos/7"
         subconfig.vm.hostname = "les08"
+        subconfig.vm.network "forwarded_port", guest: 8081, host: 8081
+        subconfig.vm.network "forwarded_port", guest: 8082, host: 8082
 
         subconfig.vm.provider "virtualbox" do |vb|
             vb.name = "che-les08"
