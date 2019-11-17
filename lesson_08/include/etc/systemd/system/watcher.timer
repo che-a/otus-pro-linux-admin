@@ -2,8 +2,9 @@
 Description=Run watcher script every 30 seconds
 
 [Timer]
+OnBootSec=20
 OnUnitActiveSec=30
 Unit=watcher.service
 
 [Install]
-WantedBy=multi-user.targe
+WantedBy=multi-user.target

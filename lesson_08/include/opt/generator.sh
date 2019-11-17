@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 WORD=$1
-LOG_FILE=$2
+LOG=$2
+DATE=`date`
 
-DATE_TIME=`date "+%d/%b/%Y:%T %z"`
-echo $DATE_TIME' - '$WORD'! Need to do homework faster !!!' >> $LOG_FILE
+echo $DATE' - '$WORD'! Need to do homework faster !!!' >> $LOG

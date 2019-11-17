@@ -2,6 +2,6 @@
 Description=Log generator for watcher
 
 [Service]
-Type=oneshot
+Type=simple
 EnvironmentFile=/etc/sysconfig/generator
 ExecStart=/opt/generator.sh $WORD $LOG

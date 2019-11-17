@@ -2,6 +2,7 @@
 Description=Run generator script every 30 seconds
 
 [Timer]
+OnBootSec=30
 OnUnitActiveSec=30
 Unit=generator.service
 
