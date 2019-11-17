@@ -1,3 +1,4 @@
 .vagrant
 *.vdi
 *temp
+atlassian-jira-software*
