@@ -1,0 +1,57 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+    config.vm.define "ansible.otus" do |subconfig|
+        subconfig.vm.box = "centos/7"
+        subconfig.vm.hostname = "ansible.otus"
+        subconfig.vm.network "private_network", ip: "192.168.1.10"
+        subconfig.vm.network "forwarded_port", guest: 80, host: 8080
+
+        subconfig.vm.provider "virtualbox" do |vb|
+            vb.name = "che-les09-ansible.otus"
+            vb.cpus = 1
+            vb.memory = "512"
+        end
+
+        subconfig.vm.provision "shell", inline: <<-SHELL
+            #cp /vagrant/srv.sh /home/vagrant && ./srv.sh
+        SHELL
+    end
+
+    config.vm.define "centos.otus" do |subconfig|
+        subconfig.vm.box = "centos/7"
+        subconfig.vm.hostname = "centos.otus"
+        subconfig.vm.network "private_network", ip: "192.168.1.20"
+        subconfig.vm.network "forwarded_port", guest: 80, host: 8081
+
+        subconfig.vm.provider "virtualbox" do |vb|
+            vb.name = "che-les09-centos.otus"
+            vb.cpus = 1
+            vb.memory = "512"
+        end
+
+        subconfig.vm.provision "shell", inline: <<-SHELL
+            cp /vagrant/ws.sh /home/vagrant && ./ws.sh
+        SHELL
+    end
+
+    config.vm.define "debian.otus" do |subconfig|
+        subconfig.vm.box = "debian/buster64"
+        subconfig.vm.hostname = "debian.otus"
+        subconfig.vm.network "private_network", ip: "192.168.1.30"
+        subconfig.vm.network "forwarded_port", guest: 80, host: 8082
+
+        subconfig.vm.provider "virtualbox" do |vb|
+            vb.name = "che-les09-debian.otus"
+            vb.cpus = 1
+            vb.memory = "512"
+        end
+
+        subconfig.vm.provision "shell", inline: <<-SHELL
+            #cp /vagrant/ws.sh /home/vagrant && ./ws.sh
+        SHELL
+    end
+
+end
