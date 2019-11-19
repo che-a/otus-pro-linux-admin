@@ -40,10 +40,28 @@
 
 Часто инвентарный файл размещают в каталоге inventories, который создают в корне каталога с playbook. Это дает возможность хранить информацию про хосты вместе с остальной информацией в системе контроля версий.
 
-`ansible-doc модуль` 
-`ansible-galaxy`
-`ansible-inventory --graph`
-`ansible-inventory --list`
+`ansible-doc модуль`  
+`ansible-galaxy`  
+`ansible-inventory --graph`  
+`ansible-inventory --list`  
+
+Если нужны переменные окружения и пайпы, то необходимо использовать модуль `shell`.  
+```bash
+ansible srv -m shell -a "cat /proc/cpuinfo | grep -i │ name"
+```
+```console
+srv1 | CHANGED | rc=0 >> 
+model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
+
+srv2 | CHANGED | rc=0 >>
+model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
+
+srv3 | CHANGED | rc=0 >>
+model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
+
+srv4 | CHANGED | rc=0 >>
+model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
+```
 
 ```bash
 ```
