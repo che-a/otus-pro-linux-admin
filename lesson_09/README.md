@@ -63,6 +63,10 @@ srv4 | CHANGED | rc=0 >>
 model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
 ```
 
+`ansible -m setup srv` - просомтр информации о хостах.   
+`ansible-lint playbook.yml` - отдельная программа для проверки корректности синтаксиса `playbook`-файла.  
+
+
 ```bash
 ```
 ```console
