@@ -1,0 +1,9 @@
+[srv]
+srv1
+srv2
+
+[centos]
+srv1
+
+[debian]
+srv2
