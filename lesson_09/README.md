@@ -4,7 +4,7 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-    - [Задача 1](#task1)  
+    - [Описание лабораторного стенда](#stand)  
     - [Задача 2](#task2)   
 
 ## 1. Описание занятия <a name="description"></a>
@@ -33,7 +33,9 @@
 Ставим 6 если написана роль.  
 
 ## 3. Справочная информация <a name="info"></a>  
-    
+
+
+
 `Инвентарный файл` — это файл, в котором описываются устройства, к которым `Ansible` будет подключаться. По умолчанию он находится в `/etc/ansible/hosts`.
 
 Но можно создавать свой инвентарный файл и использовать его. Для этого нужно, либо указать его при запуске ansible, используя опцию -i <путь>, либо указать файл в конфигурационном файле Ansible.
@@ -93,16 +95,27 @@ model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
 - `timeout` — таймаут подключения по `SSH`;  
 - `log_path` — путь к файлу логов.  
 
+#### Ссылки на полезные ресурсы
+[Ansible Documentation](https://docs.ansible.com/ansible/latest/index.html) — официальная документация по `Ansible`;  
+[Galaxy](https://galaxy.ansible.com/) — готовые модули;  
+[ansible.cfg](https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg) — пример конфигурации файла `ansible.cfg` от разработчиков;  
 
 
 ## 4. Выполнение <a name="exec"></a>  
+### Описание лабораторного стенда <a name="stand"></a>  
+
+
+
+
+
+
 Для демонстрации выполнения этого домашнего задания необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/Vagrantfile). С целью не создавать монстроподобные сценарии провижининга, которые в себе содержат команды по созданию и редактированию множества файлов, все необходимые конфигурационные файлы собраны в каталог [include](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/lesson_08/include), откуда они рекурсивно копируются в файловую систему виртуальной машины при работе сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/script.sh).
 ```console
 
 ```
 
 
-### Задача 1 <a name="task1"></a>  
+
 
 
 ```bash
