@@ -1,0 +1,21 @@
+---
+- hosts: srv
+  become: yes
+
+  vars_files:
+  - secret
+
+  tasks:
+
+  - name: Install package nginx
+    apt:
+      name=nginx
+      update_cache=yes
+    sudo: yes
+
+  - name: Starting service nginx
+    service:
+      name=nginx
+      state=started
+    sudo: yes
+    
