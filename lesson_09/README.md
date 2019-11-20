@@ -3,6 +3,7 @@
 1. [Описание занятия](#description)  
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
+    - [Ссылки на полезные ресурсы](#links)
 4. [Выполнение](#exec)  
     - [Описание лабораторного стенда](#stand)  
     - [Задача 2](#task2)   
@@ -42,8 +43,9 @@
 
 Часто инвентарный файл размещают в каталоге inventories, который создают в корне каталога с playbook. Это дает возможность хранить информацию про хосты вместе с остальной информацией в системе контроля версий.
 
-`ansible-doc модуль`  
-`ansible-galaxy`  
+`ansible-doc --list` — список доступных модулей;  
+`ansible-galaxy init roles/модуль`— уставновить `модуль`;  
+
 `ansible-inventory --graph`  
 `ansible-inventory --list`  
 
@@ -95,7 +97,7 @@ model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
 - `timeout` — таймаут подключения по `SSH`;  
 - `log_path` — путь к файлу логов.  
 
-#### Ссылки на полезные ресурсы
+#### Ссылки на полезные ресурсы <a name="links"></a>
 [Ansible Documentation](https://docs.ansible.com/ansible/latest/index.html) — официальная документация по `Ansible`;  
 [Galaxy](https://galaxy.ansible.com/) — готовые модули;  
 [ansible.cfg](https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg) — пример конфигурации файла `ansible.cfg` от разработчиков;  
