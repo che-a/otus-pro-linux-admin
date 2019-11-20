@@ -24,7 +24,7 @@ case $HOSTNAME in
             runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV2"
 
             cp /vagrant/ansible-project /home/vagrant
-            chown -R vagrant:vagrant /home/vagrant/ansible-project
+            chown -R vagrant:vagrant /home/vagrant/ansible-project/
             ;;
 
     $SRV1)  sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' \
