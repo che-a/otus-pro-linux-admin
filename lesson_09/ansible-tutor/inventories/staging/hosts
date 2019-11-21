@@ -1,0 +1,17 @@
+[web]
+centos
+stretch
+
+[redhat]
+centos
+
+[debian]
+stretch
+
+[redhat:vars]
+owner=leonid
+ansible_host=192.168.1.21
+
+[debian:vars]
+owner=anton
+ansible_host=192.168.1.22

@@ -9,7 +9,7 @@ KEY_PUB=$KEY'.pub'
 case $HOSTNAME in
     $ANSIBLE_SERVER)
             yum install -y epel-release
-            yum install -y ansible sshpass mc nano tmux tree wget
+            yum install -y ansible ansible-lint sshpass mc nano tmux tree wget
             # Возможность использования имен серверов вместо IP-адресов
             echo "192.168.1.21  $SRV1" >> /etc/hosts
             echo "192.168.1.22  $SRV2" >> /etc/hosts
@@ -25,6 +25,8 @@ case $HOSTNAME in
 
             cp -r /vagrant/ansible-project/ /home/vagrant/
             chown -R vagrant:vagrant /home/vagrant/ansible-project
+            cp -r /vagrant/ansible-tutor/ /home/vagrant/
+            chown -R vagrant:vagrant /home/vagrant/ansible-tutor
             ;;
 
     $SRV1)  sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' \
