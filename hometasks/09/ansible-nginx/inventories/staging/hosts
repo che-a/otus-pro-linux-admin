@@ -1,0 +1,15 @@
+[srv]
+srv1
+srv2
+
+[centos]
+srv1
+
+[debian]
+srv2
+
+[centos:vars]
+ansible_host=192.168.1.21
+
+[debian:vars]
+ansible_host=192.168.1.22
