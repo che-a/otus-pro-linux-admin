@@ -5,11 +5,13 @@
         <title>{{ ansible_os_family }}</title>
     </head>
     <body>
-<------><h2>OTUS. Linux</h2>
+        <h2>OTUS. Linux</h2>
         <hr />
 
-<------><h3>Jinja2</h3>
+        <h3>Jinja2</h3>
         <div> {{ ansible_os_family }} </div>
+        <div> {{ ansible_distribution }} </div>
         <div> {{ ansible_host }} </div>
+        <div> {{ listen_port_http }} </div>
     </body>
 </html>

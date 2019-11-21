@@ -4,11 +4,10 @@
     name: epel-release
     state: present
 
-- name: Install NGINX package
+- name: Install NGINX package using yum
   yum:
     name: nginx
     state: present
-  notify: restart nginx
 
 - name: Replace standard HTML file
   template:
