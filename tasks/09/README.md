@@ -211,8 +211,8 @@ srv1 | CHANGED | rc=0 >>
 tcp    LISTEN     0      128       *:8080                  *:*                   users:(("nginx",pid=5761,fd=6),("nginx",pid=5760,fd=6))
 ```
 #### Использование языка шаблонов Jinja2
-- `http://localhost:8081/` — проверка работы `nginx` на `srv1`;  
-- `http://localhost:8082/` — проверка работы `nginx` на `srv2`; 
+- `http://localhost:8081/`, [ссылка](http://localhost:8081/) — проверка работы `nginx` на `srv1`;  
+- `http://localhost:8082/`, [ссылка](http://localhost:8082/) — проверка работы `nginx` на `srv2`; 
 
 ####  systemd
 
