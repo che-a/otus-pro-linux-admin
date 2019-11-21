@@ -116,12 +116,13 @@ model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
 ## 4. Выполнение <a name="exec"></a>  
 
 ### Описание лабораторного стенда <a name="stand"></a>  
-Лабораторный стенд разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/hometasks/09/Vagrantfile) с последующим провижинингом из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/hometasks/09/provision.sh) и состоит из трех виртуальных машин:  
+Лабораторный стенд разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/09/Vagrantfile) с последующим провижинингом из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/09/provision.sh) и состоит из трех виртуальных машин:  
 - `ansible`, подготовленный для оркестрации остальных виртуальных машин сервер `Ansible`;  
 - `srv1`, виртуальная машина с ОС `CentOS 7`;  
 - `srv2`, виртуальная машина с ОС `Debian 10`.  
 
-В стенде настроен `SSH`-додступ по ключам с `ansible` на `srv1` и `srv2`, ввод пароля не требуется, к машинам возможно обращение по имени хоста. Т.о. `Ansible`-сервер готов сразу после своего развертывания, в чем можно убедиться выполнив следующую команду:
+В стенде настроен `SSH`-додступ по ключам с `ansible` на `srv1` и `srv2`, ввод пароля не требуется, к машинам возможно обращение по имени хоста.  
+Т.о. `Ansible`-сервер готов сразу после своего развертывания, в чем можно убедиться выполнив следующую команду:
 ```bash
 cd ansible-nginx/
 ansible srv -m ping
@@ -146,31 +147,72 @@ srv1 | SUCCESS => {
 }
 ```
 
-
-
 ### Результаты <a name="result"></a>  
-
+#### Развертывание nginx
 ```bash
+cd ansible-nginx/
+ansible-playbook playbooks/install_nginx.yml
 ```
 ```console
 
+PLAY [Install NGINX] **********************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************************************************
+ok: [srv2]
+ok: [srv1]
+
+TASK [nginx : Install EPEL repository] ****************************************************************************************************************************************************************************
+skipping: [srv2]
+changed: [srv1]
+
+TASK [nginx : Install NGINX package using yum] ********************************************************************************************************************************************************************
+skipping: [srv2]
+changed: [srv1]
+
+TASK [nginx : Replace standard HTML file] *************************************************************************************************************************************************************************
+skipping: [srv2]
+changed: [srv1]
+
+TASK [nginx : Install NGINX package using apt] ********************************************************************************************************************************************************************
+skipping: [srv1]
+[WARNING]: Updating cache and auto-installing missing dependency: python-apt
+
+changed: [srv2]
+
+TASK [nginx : Replace standard HTML file] *************************************************************************************************************************************************************************
+skipping: [srv1]
+changed: [srv2]
+
+TASK [nginx : Replace standard nginx.conf file] *******************************************************************************************************************************************************************
+changed: [srv2]
+changed: [srv1]
+
+RUNNING HANDLER [nginx : restart nginx] ***************************************************************************************************************************************************************************
+changed: [srv2]
+changed: [srv1]
+
+PLAY RECAP ********************************************************************************************************************************************************************************************************
+srv1                       : ok=6    changed=5    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+srv2                       : ok=5    changed=4    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
+
 ```
-  
+#### Работа nginx на нестандартном порту
 ```bash
+ansible srv -m shell -a "ss -tnulp | grep nginx" -b
 ```
 ```console
+[WARNING]: Platform linux on host srv2 is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could change this. See
+https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
 
+srv2 | CHANGED | rc=0 >>
+tcp     LISTEN   0        128              0.0.0.0:8080          0.0.0.0:*       users:(("nginx",pid=3010,fd=6),("nginx",pid=3009,fd=6))                        
+
+srv1 | CHANGED | rc=0 >>
+tcp    LISTEN     0      128       *:8080                  *:*                   users:(("nginx",pid=5761,fd=6),("nginx",pid=5760,fd=6))
 ```
-
-```bash
-
-```
-```console
-
-```
-```console
-
-```
+#### Использование языка шаблонов Jinja2
+- `http://localhost:8081/` — проверка работы `nginx` на `srv1`;  
+- `http://localhost:8082/` — проверка работы `nginx` на `srv2`; 
 
 
 
