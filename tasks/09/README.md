@@ -35,8 +35,9 @@
 
 ## 3. Справочная информация <a name="info"></a>  
 
-
-
+<details>
+    <summary></summary>
+    
 `Инвентарный файл` — это файл, в котором описываются устройства, к которым `Ansible` будет подключаться. По умолчанию он находится в `/etc/ansible/hosts`.
 
 Но можно создавать свой инвентарный файл и использовать его. Для этого нужно, либо указать его при запуске ansible, используя опцию -i <путь>, либо указать файл в конфигурационном файле Ansible.
@@ -49,7 +50,6 @@
 `ansible-inventory --graph`  
 `ansible-inventory --list`  
 
-
 `ansible centos -m yum -a "name=tree state=present" -b` — установить пакет `tree`;  
 `ansible all -m file -a "path=/etc/otus state=touch" -b` — создать файл `/etc/otus`;  
 `ansible -m setup all` — всевозможная информация о хостах;  
@@ -59,38 +59,10 @@
 `ansible-playbook playbook.yml --list-tasks` — список задач;  
 `ansible-galaxy init roles/nginx` — создание своей роли;  
 
-Если нужны переменные окружения и пайпы, то необходимо использовать модуль `shell`.  
-```bash
-ansible srv -m shell -a "cat /proc/cpuinfo | grep -i │ name"
-```
-```console
-srv1 | CHANGED | rc=0 >> 
-model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
-
-srv2 | CHANGED | rc=0 >>
-model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
-
-srv3 | CHANGED | rc=0 >>
-model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
-
-srv4 | CHANGED | rc=0 >>
-model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
-```
-
 `ansible -m setup srv` - просомтр информации о хостах.   
 `ansible-lint playbook.yml` - отдельная программа для проверки корректности синтаксиса `playbook`-файла.  
 
-
-```bash
-```
-```console
-```
-```bash
-```
-```
-
-```
-
+Если нужны переменные окружения и пайпы, то необходимо использовать модуль `shell`.  
 
 Для настройки `Ansible` используется файл конфигурации `ansible.cfg`, который может находиться в следующих местах:  
 - `./ansible.cfg` — текущий каталог;  
@@ -106,6 +78,8 @@ model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
 - `host_key_checking` — включить/отключить проверку `SSH`–ключа на удаленном хосте;  
 - `timeout` — таймаут подключения по `SSH`;  
 - `log_path` — путь к файлу логов.  
+
+</details>
 
 #### Ссылки на полезные ресурсы <a name="links"></a>
 [Ansible Documentation](https://docs.ansible.com/ansible/latest/index.html) — официальная документация по `Ansible`;  
