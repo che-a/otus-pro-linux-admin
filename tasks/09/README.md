@@ -89,7 +89,7 @@
 - `srv1`, виртуальная машина с ОС `CentOS 7`;  
 - `srv2`, виртуальная машина с ОС `Debian 10`.  
 
-В стенде настроен `SSH`-додступ по ключам с `ansible` на `srv1` и `srv2`, ввод пароля не требуется, к машинам возможно обращение по имени хоста.  
+Для `ansible` настроен `SSH`-додступ по ключам к `srv1` и `srv2`, ввод пароля не требуется, к машинам возможно обращение по имени хоста.  
 Т.о. `Ansible`-сервер готов сразу после своего развертывания, в чем можно убедиться выполнив следующую команду:
 ```bash
 cd ansible-nginx/
@@ -196,7 +196,7 @@ srv1                       : ok=6    changed=5    unreachable=0    failed=0    s
 srv2                       : ok=5    changed=4    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
 
 ```
-#### Работа nginx на нестандартном порту
+#### Работа nginx на нестандартном порте
 ```bash
 ansible srv -m shell -a "ss -tnulp | grep nginx" -b
 ```
@@ -217,7 +217,7 @@ tcp    LISTEN     0      128       *:8080                  *:*                  
 ####  systemd
 
 ```bash
-ansible srv -a "systemctl status nginx.service" -b 
+ansible srv -a "systemctl status nginx.service" 
 ```
 ```console
 [WARNING]: Platform linux on host srv2 is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could change this. See
@@ -226,36 +226,27 @@ https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.
 srv2 | CHANGED | rc=0 >>
 ? nginx.service - A high performance web server and a reverse proxy server
    Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
-   Active: active (running) since Thu 2019-11-21 22:13:15 GMT; 22min ago
+   Active: active (running) since Thu 2019-11-21 22:39:29 GMT; 13min ago
      Docs: man:nginx(8)
-  Process: 3007 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
-  Process: 3008 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
- Main PID: 3009 (nginx)
+  Process: 328 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+  Process: 332 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+ Main PID: 333 (nginx)
     Tasks: 2 (limit: 545)
-   Memory: 1.8M
+   Memory: 3.3M
    CGroup: /system.slice/nginx.service
-           ??3009 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
-           ??3010 nginx: worker process
-
-Nov 21 22:13:15 srv2 systemd[1]: Starting A high performance web server and a reverse proxy server...
-Nov 21 22:13:15 srv2 systemd[1]: nginx.service: Failed to parse PID from file /run/nginx.pid: Invalid argument
-Nov 21 22:13:15 srv2 systemd[1]: Started A high performance web server and a reverse proxy server.
+           ??333 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+           ??334 nginx: worker process
 
 srv1 | CHANGED | rc=0 >>
 * nginx.service - The nginx HTTP and reverse proxy server
    Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: disabled)
-   Active: active (running) since Thu 2019-11-21 22:13:15 UTC; 22min ago
-  Process: 5758 ExecStart=/usr/sbin/nginx (code=exited, status=0/SUCCESS)
-  Process: 5755 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)
-  Process: 5754 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)
- Main PID: 5760 (nginx)
+   Active: active (running) since Thu 2019-11-21 22:39:29 UTC; 13min ago
+  Process: 2336 ExecStart=/usr/sbin/nginx (code=exited, status=0/SUCCESS)
+  Process: 2324 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)
+  Process: 2319 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)
+ Main PID: 2338 (nginx)
    CGroup: /system.slice/nginx.service
-           |-5760 nginx: master process /usr/sbin/ngin
-           `-5761 nginx: worker proces
+           |-2338 nginx: master process /usr/sbin/ngin
+           `-2339 nginx: worker proces
 
-Nov 21 22:13:15 srv1 systemd[1]: Starting The nginx HTTP and reverse proxy server...
-Nov 21 22:13:15 srv1 nginx[5755]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-Nov 21 22:13:15 srv1 nginx[5755]: nginx: configuration file /etc/nginx/nginx.conf test is successful
-Nov 21 22:13:15 srv1 systemd[1]: Failed to read PID from file /run/nginx.pid: Invalid argument
-Nov 21 22:13:15 srv1 systemd[1]: Started The nginx HTTP and reverse proxy server.
 ```
