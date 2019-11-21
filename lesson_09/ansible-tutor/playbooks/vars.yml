@@ -1,0 +1,55 @@
+---
+- name: Work with vars
+  hosts: all
+  become: yes
+
+  vars:
+    message1: 'Hello,'
+    message2: 'World!'
+    nginx_package: nginx
+
+    yum_packages:
+      - bind-utils
+      - telnet
+      - tree
+      - htop
+
+    yum_pack: []
+    backup_dir: postgres/backup
+
+  tasks:
+
+    - debug:
+        msg: "{{ message1 }} {{ message2 }}"
+
+    - debug:
+        msg: "Owner of this host is {{ owner }}"
+
+    - debug:
+        var: ansible_os_family
+
+    - name: Something is being done here
+      set_fact:
+        full_hello: "{{ message1 }} {{ message2 }}"
+
+    - name: Create backup directory
+      file:
+        path: /opt/{{ backup_dir }}
+        state: directory
+      tags:
+        - backup_dir
+
+    - debug:
+        var: full_hello
+
+    - name: uptime
+      shell: uptime
+      register: result
+
+    - debug:
+        var: result.stdout
+
+    - name: Install common packages
+      yum:
+        name: "{{ yum_packages }}"
+        state: present

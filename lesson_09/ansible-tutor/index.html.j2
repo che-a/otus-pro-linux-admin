@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <title>{{ ansible_os_family }}</title>
+    </head>
+    <body>
+        <div>
+            # This file is generated from Ansible
+            # {{ ansible_managed }}
+        </div>
+
+        <h2>Hello from {{ ansible_os_family }}</h2>
+
+        <div>
+            {% for host in groups['web'] %}
+            {{ hostvars[host]['ansible_host'] }}:5432:postgres:dbbackup:gfhjkm
+            {% endfor %}
+        </div>
+    </body>
+</html>

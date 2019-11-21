@@ -1,26 +1,58 @@
 ---
 - name: Install nginx on staging servers
-  hosts: centos
-  gather_facts: yes
+  hosts: web
   become: yes
 
   tasks:
 
-    - name: Install EPEL repository
-      yum:
-        name: epel-release
-        state: present
+    - block: # for RedHat
 
-    - name: Install NGINX package
-      yum:
-        name: nginx
-        state: present
-      notify: restart nginx
+      - name: Install EPEL repository
+        yum:
+          name: epel-release
+          state: present
+
+      - name: Install packages
+        yum:
+          name: "{{ item.name }}"
+          state: "{{ item.state }}"
+        loop:
+          - { name: tree, state: absent }
+          - { name: htop, state: present }
+        tags:
+          - loop
+
+      - name: Install NGINX package
+        yum:
+          name: nginx
+          state: present
+        notify: restart nginx
+
+      - name: Change standard HTML file
+        template:
+          src: ../index.html.j2
+          dest: /usr/share/nginx/html/index.html
+
+      when: ansible_os_family == 'RedHat'
+
+    - block: # Debian
+
+      - name: Install nginx package
+        apt:
+          name: nginx
+          state: present
+
+      - name: Change standard HTML file
+        template:
+          src: ../index.html.j2
+          dest: /var/www/html/index.nginx-debian.html
+
+      when: ansible_os_family == 'Debian'
 
   handlers:
 
-  - name: restart nginx
-    systemd:
-      name: nginx
-      state: restarted
-      enabled: yes 
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
