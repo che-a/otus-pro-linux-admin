@@ -1,0 +1,11 @@
+---
+- name: Install nginx package
+  apt:
+    name: nginx
+    state: present
+
+- name: Change standard HTML file
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.nginx-debian.html
+  notify: restart nginx

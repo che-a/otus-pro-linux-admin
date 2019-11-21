@@ -1,0 +1,26 @@
+---
+- name: Install EPEL repository
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install packages
+  yum:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  loop:
+    - { name: tree, state: absent }
+    - { name: htop, state: present }
+  tags:
+    - loop
+
+- name: Install NGINX package
+  yum:
+    name: nginx
+    state: present
+  notify: restart nginx
+
+- name: Change standard HTML file
+  template:
+    src: index.html.j2
+    dest: /usr/share/nginx/html/index.html
