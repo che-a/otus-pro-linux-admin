@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
             box.vm.box = boxconfig[:box_name]
             box.vm.host_name = boxname.to_s
             box.vm.network "private_network", ip: boxconfig[:ip_addr]
-            box.vm.network "forwarded_port", guest: 80, host: boxconfig[:port]
+            box.vm.network "forwarded_port", guest: 8080, host: boxconfig[:port]
 
             box.vm.provider :virtualbox do |vb|
                 vb.cpus = boxconfig[:cpu]

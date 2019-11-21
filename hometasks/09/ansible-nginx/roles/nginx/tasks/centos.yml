@@ -10,7 +10,7 @@
     state: present
   notify: restart nginx
 
-- name: Change standard HTML file
+- name: Replace standard HTML file
   template:
     src: index.html.j2
     dest: /usr/share/nginx/html/index.html
