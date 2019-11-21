@@ -49,6 +49,13 @@
 `ansible-inventory --graph`  
 `ansible-inventory --list`  
 
+
+`ansible centos -m yum -a "name=tree state=present" -b` — установить пакет `tree`;  
+`ansible all -m file -a "path=/etc/otus state=touch" -b` — создать файл `/etc/otus`;  
+`ansible -m setup all` — всевозможная информация о хостах;  
+`ansible-playbook playbooks/nginx.yml --list-hosts` — список хостов, с которым будет работать `playbook`;  
+`ansible centos -m yum -a "name=nginx state=absent" -b` — удаление пакета;  
+
 Если нужны переменные окружения и пайпы, то необходимо использовать модуль `shell`.  
 ```bash
 ansible srv -m shell -a "cat /proc/cpuinfo | grep -i │ name"
