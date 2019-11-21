@@ -55,6 +55,9 @@
 `ansible -m setup all` — всевозможная информация о хостах;  
 `ansible-playbook playbooks/nginx.yml --list-hosts` — список хостов, с которым будет работать `playbook`;  
 `ansible centos -m yum -a "name=nginx state=absent" -b` — удаление пакета;  
+`ansible-playbook playbook.yml --list-tags` — список тегов;  
+`ansible-playbook playbook.yml --list-tasks` — список задач;  
+`ansible-galaxy init roles/nginx` — создание своей роли;  
 
 Если нужны переменные окружения и пайпы, то необходимо использовать модуль `shell`.  
 ```bash
