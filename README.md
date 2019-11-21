@@ -40,4 +40,4 @@
 ### Модуль 2. Управление, безопасность и мониторинг
 ***
 **9. Занятие 9. Автоматизация администрирования. Ansible**  
-*Задание:* [Первые шаги с Ansible](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/hometasks/09)
+*Задание:* [Первые шаги с Ansible](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/09)
