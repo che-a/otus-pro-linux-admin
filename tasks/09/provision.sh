@@ -25,8 +25,8 @@ case $HOSTNAME in
 
             cp -r /vagrant/ansible-nginx/ /home/vagrant/
             chown -R vagrant:vagrant /home/vagrant/ansible-nginx
-            cp -r /vagrant/ansible-tutor/ /home/vagrant/
-            chown -R vagrant:vagrant /home/vagrant/ansible-tutor
+            #cp -r /vagrant/ansible-tutor/ /home/vagrant/
+            #chown -R vagrant:vagrant /home/vagrant/ansible-tutor
             ;;
 
     $SRV1)  sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' \
