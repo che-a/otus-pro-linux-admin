@@ -214,7 +214,7 @@ tcp    LISTEN     0      128       *:8080                  *:*                  
 - `http://localhost:8081/`, [ссылка](http://localhost:8081/) — проверка работы `nginx` на `srv1`;  
 - `http://localhost:8082/`, [ссылка](http://localhost:8082/) — проверка работы `nginx` на `srv2`; 
 
-####  systemd
+####  Состояние systemd
 
 ```bash
 ansible srv -a "systemctl status nginx.service" 
