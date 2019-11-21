@@ -41,3 +41,6 @@
 ***
 **9. Занятие 9. Автоматизация администрирования. Ansible**  
 *Задание:* [Первые шаги с Ansible](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/09)
+
+**10. Занятие 10. Пользователи и группы. Авторизация и аутентификация**  
+*Задание:* [PAM](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/10)
