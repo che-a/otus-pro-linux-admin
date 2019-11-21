@@ -21,7 +21,7 @@
 ## 2. Домашнее задание  <a name="homework"></a>
 ### Постановка задачи 
 Подготовить стенд на `Vagrant` как минимум с одним сервером. На этом сервере, используя `Ansible`, необходимо развернуть `nginx` со следующими условиями:
-- необходимо использовать модуль `yum/apt`;  
+- необходимо использовать модуль `yum` / `apt`;  
 - конфигурационные файлы должны быть взяты из шаблона `jinja2` с перемененными;  
 - после установки `nginx` должен быть в режиме `enabled` в `systemd`;  
 - должен быть использован `notify` для старта `nginx` после установки;  
@@ -114,27 +114,46 @@ model name      : Intel(R) Xeon(R) CPU           E5450  @ 3.00GHz
 
 
 ## 4. Выполнение <a name="exec"></a>  
+
 ### Описание лабораторного стенда <a name="stand"></a>  
+Лабораторный стенд разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/hometasks/09/Vagrantfile) с последующим провижинингом из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/hometasks/09/provision.sh) и состоит из трех виртуальных машин:  
+- `ansible`, подготовленный для оркестрации остальных виртуальных машин сервер `Ansible`;  
+- `srv1`, виртуальная машина с ОС `CentOS 7`;  
+- `srv2`, виртуальная машина с ОС `Debian 10`.  
 
-
-
-
-
-
-Для демонстрации выполнения этого домашнего задания необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/Vagrantfile). С целью не создавать монстроподобные сценарии провижининга, которые в себе содержат команды по созданию и редактированию множества файлов, все необходимые конфигурационные файлы собраны в каталог [include](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/lesson_08/include), откуда они рекурсивно копируются в файловую систему виртуальной машины при работе сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/script.sh).
-```console
-
-```
-
-
-
-
-
+В стенде настроен `SSH`-додступ по ключам с `ansible` на `srv1` и `srv2`, ввод пароля не требуется, к машинам возможно обращение по имени хоста. Т.о. `Ansible`-сервер готов сразу после своего развертывания, в чем можно убедиться выполнив следующую команду:
 ```bash
+ansible srv -m ping
 ```
+```console
+[WARNING]: Platform linux on host srv2 is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could change this. See
+https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
+
+srv2 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    }, 
+    "changed": false, 
+    "ping": "pong"
+}
+srv1 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    }, 
+    "changed": false, 
+    "ping": "pong"
+}
+```
+
+
 ```console
 
 ```
+
+
+
+
+
 
 ```bash
 ```
