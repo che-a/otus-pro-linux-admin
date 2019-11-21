@@ -23,7 +23,7 @@ case $HOSTNAME in
             runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV1"
             runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV2"
 
-            cp -r /vagrant/ansible-project/ /home/vagrant/
+            cp -r /vagrant/ansible-nginx/ /home/vagrant/
             chown -R vagrant:vagrant /home/vagrant/ansible-nginx
             cp -r /vagrant/ansible-tutor/ /home/vagrant/
             chown -R vagrant:vagrant /home/vagrant/ansible-tutor
