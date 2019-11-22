@@ -2,7 +2,7 @@
 
 
 # OTUS_LinuxAdministrator
-В этом репозитории находятся выполненные мною задания по курсу ["Администратор Linux"](https://otus.ru/lessons/linux/?int_source=courses_catalog&int_term=operations) на платформе [OTUS](https://otus.ru/).
+В этом репозитории находятся выполненные мною задания по курсу [&laquo;Администратор Linux&raquo;](https://otus.ru/lessons/linux/?int_source=courses_catalog&int_term=operations) на платформе [OTUS](https://otus.ru/).
 
 К каждому домашнему заданию прилагается свой `README.md`-файл с детальным описанием условия задачи и хода ее выполнения. Для некоторых занятий домашние задания не предусмотрены.
 
