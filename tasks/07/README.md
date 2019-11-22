@@ -173,7 +173,7 @@ Enforcing
 ```
 
 </details>
-    
+
 ### 4.2 LVM, переименование VG  <a name="lvm"></a>  
 
 Для переименования группы томов, в которой находится том с корневой файловой системой, необходимо выполнить следующие шаги:  
@@ -187,7 +187,7 @@ vgs
   VolGroup00   1   2   0 wz--n- <38.97g    0  
 ```
 
-- запустить сценарий [vg_rename.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/vg_rename.sh) и дождаться перезагрузки системы;  
+- запустить сценарий [vg_rename.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/07/vg_rename.sh) и дождаться перезагрузки системы;  
 ```bash
 ./vg_rename.sh
 ```
@@ -204,12 +204,11 @@ vgs
 
 ### 4.3 Добавление модуля в initrd  <a name="initrd"></a>  
 
-Для добавления своего модуля в `initrd` необходимо после развертывания виртуального окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/Vagrantfile) запустить сценарий [add_module.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_07/add_module.sh):
+Для добавления своего модуля в `initrd` необходимо после развертывания виртуального окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/07/Vagrantfile) запустить сценарий [add_module.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/07/add_module.sh):
 ```bash
 sudo -s
 ./add_module.sh
 ```
-После этого система перезагрузится и в процессе ее запуска можно будет наблюдать пингвина в консоли в течение 10 секунд. 
+После этого система перезагрузится и в процессе ее запуска можно будет наблюдать пингвина в консоли в течение 10 секунд.
 
 ![alt text](screenshots/les07-30.png)  
-

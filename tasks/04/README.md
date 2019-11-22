@@ -5,7 +5,7 @@
 3. [Выполнение](#exec)  
     - [Демонстрация работы сценария](#demo)  
     - [Структура файла access.log](#access.log)  
- 
+
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -41,10 +41,10 @@
 Трапы и функции, а также sed и find +1 балл.  
 
 ## 3. Выполнение <a name="exec"></a>  
-Суть выполнненого задания заключается в развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/Vagrantfile) тестового окружения с его настройкой из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/provision.sh) и запуском через планировщик заданий `cron` сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/script.sh) , который периодически отправляет отчет с собранной статистикой лог-файла на почтовый адрес.  
+Суть выполнненого задания заключается в развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/04/Vagrantfile) тестового окружения с его настройкой из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/04/provision.sh) и запуском через планировщик заданий `cron` сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/04/script.sh) , который периодически отправляет отчет с собранной статистикой лог-файла на почтовый адрес.  
 
 ### Демонстрация работы сценария <a name="demo"></a>  
-С целью отладки работы сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/script.sh) и демонстрации его действия в тестовом окружении создается демон, имитирующий работу веб-сервера в части формирования лог-файла путем копирования строк с изменением даты и времени из файла-образца [access.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_04/access.log) веб-сервера `nginx`.  
+С целью отладки работы сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/04/script.sh) и демонстрации его действия в тестовом окружении создается демон, имитирующий работу веб-сервера в части формирования лог-файла путем копирования строк с изменением даты и времени из файла-образца [access.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/04/access.log) веб-сервера `nginx`.  
 ```console
 /opt/
 ├── fake_web
@@ -201,5 +201,3 @@ From: vagrant@centos7.localdomain (vagrant)
 `A` — хост/IP-адрес, с которого произведён запрос к серверу;  
 `D` — код состояния HTTP;  
 `E` — количество отданных сервером байт.  
-
-

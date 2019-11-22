@@ -4,7 +4,7 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-      
+
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -41,7 +41,7 @@
 
 #### RPM-пакеты  
 - `src.rpm`, в этих пакетах содержится исходный код программы, патчи и самый главный `spec`-файл, который управляет процессом сборки. Все эти файлы упакованы в `cpio`-архив. Также в пакете присутствует некоторые файлы с информацией.  
-- `%{arch}.rpm`, готовые к установке пакеты, в них содержится `cpio`-архив с файлами, которые после установки разложатся по соответствующим каталогам, файлы информации и установочные скрипты. 
+- `%{arch}.rpm`, готовые к установке пакеты, в них содержится `cpio`-архив с файлами, которые после установки разложатся по соответствующим каталогам, файлы информации и установочные скрипты.
 
 #### RPM  
 - `rpm -q {name}` — проверить установлен ли пакет `{name}`;  
@@ -81,9 +81,9 @@
 - [RPM Packaging Guide](https://rpm-packaging-guide.github.io/)  
 
 
-## 4. Выполнение <a name="exec"></a> 
+## 4. Выполнение <a name="exec"></a>
 
-Суть выполненного задания состоит в автоматизированном развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/Vagrantfile) тестового окружения в составе двух подключенных к одной сети виртуальных машин. Сценарии [srv.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/srv.sh) и [ws.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_06/ws.sh) являются файлами провижининга для `srv.otus` и `ws.otus` соответственно.  
+Суть выполненного задания состоит в автоматизированном развертывании из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/06/Vagrantfile) тестового окружения в составе двух подключенных к одной сети виртуальных машин. Сценарии [srv.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/06/srv.sh) и [ws.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/06/ws.sh) являются файлами провижининга для `srv.otus` и `ws.otus` соответственно.  
 
 На `srv.otus`:  
 - расположено три репозитория `repo1.otus`, `repo2.otus` и `repo3.otus`;  

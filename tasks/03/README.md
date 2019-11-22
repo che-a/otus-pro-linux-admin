@@ -67,7 +67,7 @@
 - перезагрузить систему с примонтированными томами;  
 - удалить временный том.  
 
-Решение этой задачи автоматизировано с помощью сценария [lvm_reduce_move.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/lvm_reduce_move.sh), который необходимо однократно запустить после развертывания тестового окружения:
+Решение этой задачи автоматизировано с помощью сценария [lvm_reduce_move.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/03/lvm_reduce_move.sh), который необходимо однократно запустить после развертывания тестового окружения:
 ```bash
 sudo ./lvm_reduce_move.sh
 ```
@@ -87,16 +87,16 @@ lsblk
 ```
 ```console
 NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                       8:0    0   40G  0 disk 
-├─sda1                    8:1    0    1M  0 part 
+sda                       8:0    0   40G  0 disk
+├─sda1                    8:1    0    1M  0 part
 ├─sda2                    8:2    0    1G  0 part /boot
-└─sda3                    8:3    0   39G  0 part 
+└─sda3                    8:3    0   39G  0 part
   ├─VolGroup00-LogVol00 253:0    0 37.5G  0 lvm  /
   └─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
-sdb                       8:16   0   10G  0 disk 
-sdc                       8:32   0    2G  0 disk 
-sdd                       8:48   0    1G  0 disk 
-sde                       8:64   0    1G  0 disk 
+sdb                       8:16   0   10G  0 disk
+sdc                       8:32   0    2G  0 disk
+sdd                       8:48   0    1G  0 disk
+sde                       8:64   0    1G  0 disk
 ```
 
 Конечное состояние тестового окружения:
@@ -115,31 +115,31 @@ lsblk
 ```
 ```console
 NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                       8:0    0   40G  0 disk 
-├─sda1                    8:1    0    1M  0 part 
+sda                       8:0    0   40G  0 disk
+├─sda1                    8:1    0    1M  0 part
 ├─sda2                    8:2    0    1G  0 part /boot
-└─sda3                    8:3    0   39G  0 part 
+└─sda3                    8:3    0   39G  0 part
   ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
   ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
   └─VolGroup00-lv_home  253:8    0    2G  0 lvm  /home
-sdb                       8:16   0   10G  0 disk 
-sdc                       8:32   0    2G  0 disk 
+sdb                       8:16   0   10G  0 disk
+sdc                       8:32   0    2G  0 disk
 ├─VG01-lv_var_rmeta_0   253:3    0    4M  0 lvm  
 │ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_0  253:4    0  952M  0 lvm  
   └─VG01-lv_var         253:7    0  952M  0 lvm  /var
-sdd                       8:48   0    1G  0 disk 
+sdd                       8:48   0    1G  0 disk
 ├─VG01-lv_var_rmeta_1   253:5    0    4M  0 lvm  
 │ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_1  253:6    0  952M  0 lvm  
   └─VG01-lv_var         253:7    0  952M  0 lvm  /var
-sde                       8:64   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk
 ```
 
 ### LVM. Создание снапшота, восстановление со снапшота <a name="snap"></a>  
 Необходимо сгенерировать файлы в `/home/`, снять снапшот, удалить часть файлов, восстановиться со снапшота.  
 
-Выполнение этой части задания автоматизировано с помощью сценария [lvm_snapshot_home.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/lvm_snapshot_home.sh), но т.к. корректное восстановление тома из снапшота производится только на размонтированный раздел, то указанный сценарий необходимо запустить из консоли тестового окружения под пользователем `root` (использование `su` или `sudo` не подходит), чтобы было возможным размонтирование каталога `/home`. Соответственно, сеансы работы с системой других пользователей должны быть завершены.  
+Выполнение этой части задания автоматизировано с помощью сценария [lvm_snapshot_home.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/03/lvm_snapshot_home.sh), но т.к. корректное восстановление тома из снапшота производится только на размонтированный раздел, то указанный сценарий необходимо запустить из консоли тестового окружения под пользователем `root` (использование `su` или `sudo` не подходит), чтобы было возможным размонтирование каталога `/home`. Соответственно, сеансы работы с системой других пользователей должны быть завершены.  
 ```bash
 w
 ```
@@ -147,7 +147,7 @@ w
  09:40:20 up 29 min,  2 users,  load average: 0.00, 0.01, 0.05
 USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
 root     tty1                      09:25   14:44   0.04s  0.04s -bash
-vagrant  pts/0    10.0.2.2         09:28    4.00s  0.06s  0.20s sshd: vagrant [priv] 
+vagrant  pts/0    10.0.2.2         09:28    4.00s  0.06s  0.20s sshd: vagrant [priv]
 ```
 ```bash
 ./lvm_snapshot_home.sh
@@ -171,25 +171,25 @@ cat report.log
 ********************************************************************************
 ==== lsblk ====
 NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                       8:0    0   40G  0 disk 
-├─sda1                    8:1    0    1M  0 part 
+sda                       8:0    0   40G  0 disk
+├─sda1                    8:1    0    1M  0 part
 ├─sda2                    8:2    0    1G  0 part /boot
-└─sda3                    8:3    0   39G  0 part 
+└─sda3                    8:3    0   39G  0 part
   ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
   ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
   └─VolGroup00-lv_home  253:2    0    2G  0 lvm  /home
-sdb                       8:16   0   10G  0 disk 
-sdc                       8:32   0    2G  0 disk 
+sdb                       8:16   0   10G  0 disk
+sdc                       8:32   0    2G  0 disk
 ├─VG01-lv_var_rmeta_0   253:3    0    4M  0 lvm  
 │ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_0  253:4    0  952M  0 lvm  
   └─VG01-lv_var         253:7    0  952M  0 lvm  /var
-sdd                       8:48   0    1G  0 disk 
+sdd                       8:48   0    1G  0 disk
 ├─VG01-lv_var_rmeta_1   253:5    0    4M  0 lvm  
 │ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_1  253:6    0  952M  0 lvm  
   └─VG01-lv_var         253:7    0  952M  0 lvm  /var
-sde                       8:64   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk
 ==== lvs -v ====
   LV       VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
   lv_var   VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
@@ -206,25 +206,25 @@ drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
 ********************************************************************************
 ==== lsblk ====
 NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                       8:0    0   40G  0 disk 
-├─sda1                    8:1    0    1M  0 part 
+sda                       8:0    0   40G  0 disk
+├─sda1                    8:1    0    1M  0 part
 ├─sda2                    8:2    0    1G  0 part /boot
-└─sda3                    8:3    0   39G  0 part 
+└─sda3                    8:3    0   39G  0 part
   ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
   ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
   └─VolGroup00-lv_home  253:2    0    2G  0 lvm  /home
-sdb                       8:16   0   10G  0 disk 
-sdc                       8:32   0    2G  0 disk 
+sdb                       8:16   0   10G  0 disk
+sdc                       8:32   0    2G  0 disk
 ├─VG01-lv_var_rmeta_0   253:3    0    4M  0 lvm  
 │ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_0  253:4    0  952M  0 lvm  
   └─VG01-lv_var         253:7    0  952M  0 lvm  /var
-sdd                       8:48   0    1G  0 disk 
+sdd                       8:48   0    1G  0 disk
 ├─VG01-lv_var_rmeta_1   253:5    0    4M  0 lvm  
 │ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_1  253:6    0  952M  0 lvm  
   └─VG01-lv_var         253:7    0  952M  0 lvm  /var
-sde                       8:64   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk
 ==== lvs -v ====
   LV       VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
   lv_var   VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
@@ -261,10 +261,10 @@ drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
 ********************************************************************************
 ==== lsblk ====
 NAME                         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                            8:0    0   40G  0 disk 
-├─sda1                         8:1    0    1M  0 part 
+sda                            8:0    0   40G  0 disk
+├─sda1                         8:1    0    1M  0 part
 ├─sda2                         8:2    0    1G  0 part /boot
-└─sda3                         8:3    0   39G  0 part 
+└─sda3                         8:3    0   39G  0 part
   ├─VolGroup00-LogVol00      253:0    0    8G  0 lvm  /
   ├─VolGroup00-LogVol01      253:1    0  1.5G  0 lvm  [SWAP]
   ├─VolGroup00-lv_home-real  253:8    0    2G  0 lvm  
@@ -272,18 +272,18 @@ sda                            8:0    0   40G  0 disk
   │ └─VolGroup00-home_snap   253:10   0    2G  0 lvm  
   └─VolGroup00-home_snap-cow 253:9    0  128M  0 lvm  
     └─VolGroup00-home_snap   253:10   0    2G  0 lvm  
-sdb                            8:16   0   10G  0 disk 
-sdc                            8:32   0    2G  0 disk 
+sdb                            8:16   0   10G  0 disk
+sdc                            8:32   0    2G  0 disk
 ├─VG01-lv_var_rmeta_0        253:3    0    4M  0 lvm  
 │ └─VG01-lv_var              253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_0       253:4    0  952M  0 lvm  
   └─VG01-lv_var              253:7    0  952M  0 lvm  /var
-sdd                            8:48   0    1G  0 disk 
+sdd                            8:48   0    1G  0 disk
 ├─VG01-lv_var_rmeta_1        253:5    0    4M  0 lvm  
 │ └─VG01-lv_var              253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_1       253:6    0  952M  0 lvm  
   └─VG01-lv_var              253:7    0  952M  0 lvm  /var
-sde                            8:64   0    1G  0 disk 
+sde                            8:64   0    1G  0 disk
 ==== lvs -v ====
   LV        VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin  Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
   lv_var    VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                 100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
@@ -321,10 +321,10 @@ drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
 ********************************************************************************
 ==== lsblk ====
 NAME                         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                            8:0    0   40G  0 disk 
-├─sda1                         8:1    0    1M  0 part 
+sda                            8:0    0   40G  0 disk
+├─sda1                         8:1    0    1M  0 part
 ├─sda2                         8:2    0    1G  0 part /boot
-└─sda3                         8:3    0   39G  0 part 
+└─sda3                         8:3    0   39G  0 part
   ├─VolGroup00-LogVol00      253:0    0    8G  0 lvm  /
   ├─VolGroup00-LogVol01      253:1    0  1.5G  0 lvm  [SWAP]
   ├─VolGroup00-lv_home-real  253:8    0    2G  0 lvm  
@@ -332,18 +332,18 @@ sda                            8:0    0   40G  0 disk
   │ └─VolGroup00-home_snap   253:10   0    2G  0 lvm  
   └─VolGroup00-home_snap-cow 253:9    0  128M  0 lvm  
     └─VolGroup00-home_snap   253:10   0    2G  0 lvm  
-sdb                            8:16   0   10G  0 disk 
-sdc                            8:32   0    2G  0 disk 
+sdb                            8:16   0   10G  0 disk
+sdc                            8:32   0    2G  0 disk
 ├─VG01-lv_var_rmeta_0        253:3    0    4M  0 lvm  
 │ └─VG01-lv_var              253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_0       253:4    0  952M  0 lvm  
   └─VG01-lv_var              253:7    0  952M  0 lvm  /var
-sdd                            8:48   0    1G  0 disk 
+sdd                            8:48   0    1G  0 disk
 ├─VG01-lv_var_rmeta_1        253:5    0    4M  0 lvm  
 │ └─VG01-lv_var              253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_1       253:6    0  952M  0 lvm  
   └─VG01-lv_var              253:7    0  952M  0 lvm  /var
-sde                            8:64   0    1G  0 disk 
+sde                            8:64   0    1G  0 disk
 ==== lvs -v ====
   LV        VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin  Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
   lv_var    VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                 100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
@@ -371,25 +371,25 @@ drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
 ********************************************************************************
 ==== lsblk ====
 NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                       8:0    0   40G  0 disk 
-├─sda1                    8:1    0    1M  0 part 
+sda                       8:0    0   40G  0 disk
+├─sda1                    8:1    0    1M  0 part
 ├─sda2                    8:2    0    1G  0 part /boot
-└─sda3                    8:3    0   39G  0 part 
+└─sda3                    8:3    0   39G  0 part
   ├─VolGroup00-LogVol00 253:0    0    8G  0 lvm  /
   ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
   └─VolGroup00-lv_home  253:2    0    2G  0 lvm  /home
-sdb                       8:16   0   10G  0 disk 
-sdc                       8:32   0    2G  0 disk 
+sdb                       8:16   0   10G  0 disk
+sdc                       8:32   0    2G  0 disk
 ├─VG01-lv_var_rmeta_0   253:3    0    4M  0 lvm  
 │ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_0  253:4    0  952M  0 lvm  
   └─VG01-lv_var         253:7    0  952M  0 lvm  /var
-sdd                       8:48   0    1G  0 disk 
+sdd                       8:48   0    1G  0 disk
 ├─VG01-lv_var_rmeta_1   253:5    0    4M  0 lvm  
 │ └─VG01-lv_var         253:7    0  952M  0 lvm  /var
 └─VG01-lv_var_rimage_1  253:6    0  952M  0 lvm  
   └─VG01-lv_var         253:7    0  952M  0 lvm  /var
-sde                       8:64   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk
 ==== lvs -v ====
   LV       VG         #Seg Attr       LSize   Maj Min KMaj KMin Pool Origin Data%  Meta%  Move Cpy%Sync Log Convert LV UUID                                LProfile
   lv_var   VG01          1 rwi-aor--- 952.00m  -1  -1  253    7                                100.00               hcVQrX-4voe-if6k-jW8V-PZO9-pW62-FeHWMF         
@@ -427,7 +427,7 @@ drwx------.  3 vagrant vagrant 152 Sep  5 09:24 vagrant
 ### ZFS. Использование кэша и снапшотов <a name="zfs"></a>  
 Необходимо &laquo;поставить btrfs/zfs - с кешем, снапшотами - разметить здесь каталог `/opt` &raquo;.  
 
-Выполнение этой части задания автоматизировано с помощью сценария [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/zfs.sh). Если в тестовом окружении ранее запускался сценарий [lvm_reduce_move.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/lvm_reduce_move.sh), то необходимо развернуть окружении заново и только после этого запускать [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/zfs.sh), т.к. оба сценария используют для своей работы одни и теже диски.
+Выполнение этой части задания автоматизировано с помощью сценария [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/03/zfs.sh). Если в тестовом окружении ранее запускался сценарий [lvm_reduce_move.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/03/lvm_reduce_move.sh), то необходимо развернуть окружении заново и только после этого запускать [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/03/zfs.sh), т.к. оба сценария используют для своей работы одни и теже диски.
 ```bash
 sudo ./zfs.sh
 ```
@@ -501,7 +501,7 @@ otus_pool/opt    39K  11.5G    26K  /opt
 ```
 #### Снимки состояния (снапшоты)
 
-Во время работы сценария [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_03/zfs.sh) создается один снапшот для пула `otus_pool`, смонтированного как `/opt`:
+Во время работы сценария [zfs.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/03/zfs.sh) создается один снапшот для пула `otus_pool`, смонтированного как `/opt`:
 ```bash
 zfs list -t snapshot
 ```
@@ -509,7 +509,7 @@ zfs list -t snapshot
 NAME                     USED  AVAIL  REFER  MOUNTPOINT
 otus_pool/opt@version1    13K      -    26K  -
 ```
-Следующие команды показаны с целью демонстрации возможности отката до состояния, сдленного в момент создания снапшота: 
+Следующие команды показаны с целью демонстрации возможности отката до состояния, сдленного в момент создания снапшота:
 ```bash
 cat /opt/test.txt
 ```

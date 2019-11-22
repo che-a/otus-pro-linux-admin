@@ -8,7 +8,7 @@
    - [Создание RAID 0/1/5/6/10](#raid)  
    - [Перенос работающей системы на RAID](#transfer)  
    - [Восстановление RAID](#fail)  
-      
+
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
 - перечислить виды RAID массивов и их отличия,  
@@ -42,13 +42,13 @@
 
 ## 3. Выполнение <a name="exec"></a>  
 Суть выполненного мною задания состоит в:  
-- автоматическом развертывании тестового окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/Vagrantfile) с подключенным RAID 0/1/5/6/10, уровень которого задается переменной `RAID_LEVEL` в сценарии [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh);  
+- автоматическом развертывании тестового окружения из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/02/Vagrantfile) с подключенным RAID 0/1/5/6/10, уровень которого задается переменной `RAID_LEVEL` в сценарии [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/02/script.sh);  
 - последующей ручной имитацией сбоя диска в RAID и восстановлением RAID;  
 - автоматическом переносе &laquo;живой&raquo; системы на созданный ранее RAID.  
 
-Файл сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh) содержит подробные комментарии о назначении выполняемых команд, поэтому далее описываются только те действия, которые не включены в указанный скрипт.  
-Сценарий [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh) состоит из нескольких функций, каждая из которых объединяет логически связанные команды, что упрощает отладку.  
-Для отслеживания изменения состояния дисковой подсистемы производится логирование вывода информационных команд в файл [report.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/report.log).
+Файл сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/02/script.sh) содержит подробные комментарии о назначении выполняемых команд, поэтому далее описываются только те действия, которые не включены в указанный скрипт.  
+Сценарий [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/02/script.sh) состоит из нескольких функций, каждая из которых объединяет логически связанные команды, что упрощает отладку.  
+Для отслеживания изменения состояния дисковой подсистемы производится логирование вывода информационных команд в файл [report.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/02/report.log).
 
 ### Сбор информации о дисках  <a name="smartctl"></a>  
 Работа с дисками начинается со сбора информации о них с использованием, например, следующих команд:
@@ -61,20 +61,20 @@ blkid
 ```
 <details>
    <summary>Вывод вышеперечисленных команд:</summary>
-	
+
 ```bash
 lsblk
 ```
 ```console
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda      8:0    0   40G  0 disk 
+sda      8:0    0   40G  0 disk
 └─sda1   8:1    0   40G  0 part /
-sdb      8:16   0    4G  0 disk 
-sdc      8:32   0    4G  0 disk 
-sdd      8:48   0  256M  0 disk 
-sde      8:64   0  256M  0 disk 
-sdf      8:80   0  256M  0 disk 
-sdg      8:96   0  256M  0 disk 
+sdb      8:16   0    4G  0 disk
+sdc      8:32   0    4G  0 disk
+sdd      8:48   0  256M  0 disk
+sde      8:64   0  256M  0 disk
+sdf      8:80   0  256M  0 disk
+sdg      8:96   0  256M  0 disk
 ```
 ```bash
 sudo lshw -short | grep disk
@@ -111,7 +111,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 /dev/sda1        40G   13G   28G  31% /
 ```
 ```bash
-blkid 
+blkid
 ```
 ```console
 /dev/sda1: UUID="8ac075e3-1124-4bb6-bef7-a6811bf8b870" TYPE="xfs"
@@ -270,9 +270,9 @@ Offline data collection status:  (0x82)	Offline data collection activity
 					was completed without error.
 					Auto Offline Data Collection: Enabled.
 Self-test execution status:      (   0)	The previous self-test routine completed
-					without error or no self-test has ever 
+					without error or no self-test has ever
 					been run.
-Total time to complete Offline 
+Total time to complete Offline
 data collection: 		(  430) seconds.
 Offline data collection
 capabilities: 			 (0x5b) SMART execute Offline immediate.
@@ -288,7 +288,7 @@ SMART capabilities:            (0x0003)	Saves SMART data before entering
 					Supports SMART auto save timer.
 Error logging capability:        (0x01)	Error logging supported.
 					General Purpose Logging supported.
-Short self-test routine 
+Short self-test routine
 recommended polling time: 	 (   1) minutes.
 Extended self-test routine
 recommended polling time: 	 (  54) minutes.
@@ -432,7 +432,7 @@ If Selective self-test is pending on power-up, resume after 0 minute delay.
 </details>
 
 ### Создание RAID 0/1/5/6/10 <a name="raid"></a>
-Выбор нужного уровня RAID происходит перед запуском тестового окружения путем редактирования значения переменной `RAID_LEVEL` в файле [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_02/script.sh).  
+Выбор нужного уровня RAID происходит перед запуском тестового окружения путем редактирования значения переменной `RAID_LEVEL` в файле [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/02/script.sh).  
 RAID 0 создается на двух дисках, RAID 1 -- на трех, RAID 5/6/10 -- на четырех.
 
 ### Перенос работающей системы на RAID <a name="transfer"></a>
@@ -441,7 +441,7 @@ RAID 0 создается на двух дисках, RAID 1 -- на трех, R
 sudo -s
 ./finish.sh
 ```
-Далее необходимо перезапустить систему и выбрать в меню загрузки виртуальной машины дополнительный диск. 
+Далее необходимо перезапустить систему и выбрать в меню загрузки виртуальной машины дополнительный диск.
 ```bash
 reboot
 ```
@@ -481,13 +481,13 @@ Filesystem      Size  Used Avail Use% Mounted on
 #### Восстановление RAID 10   
 Итак, имеется собранный из дисков `/dev/sdb`, `/dev/sdc`, `/dev/sdd` и `/dev/sde` RAID 10.
 ```bash
-cat /proc/mdstat 
+cat /proc/mdstat
 ```
 ```console
-Personalities : [raid10] 
+Personalities : [raid10]
 md10 : active raid10 sdd2[2] sdb2[0] sde2[3] sdc2[1]
       4179968 blocks super 1.2 512K chunks 2 near-copies [4/4] [UUUU]
-      
+
 unused devices: <none>
 ```
 ```bash
@@ -505,7 +505,7 @@ mdadm --detail /dev/md10
        Persistence : Superblock is persistent
 
        Update Time : Thu Aug 15 21:37:26 2019
-             State : clean 
+             State : clean
     Active Devices : 4
    Working Devices : 4
     Failed Devices : 0
@@ -549,7 +549,7 @@ mdadm --detail /dev/md10
        Persistence : Superblock is persistent
 
        Update Time : Thu Aug 15 21:47:51 2019
-             State : clean, degraded 
+             State : clean, degraded
     Active Devices : 3
    Working Devices : 3
     Failed Devices : 1
@@ -577,10 +577,10 @@ Consistency Policy : resync
 cat /proc/mdstat
 ```
 ```console
-Personalities : [raid10] 
+Personalities : [raid10]
 md10 : active raid10 sdd2[2] sdb2[0](F) sde2[3] sdc2[1]
       4179968 blocks super 1.2 512K chunks 2 near-copies [4/3] [_UUU]
-      
+
 unused devices: <none>
 ```
 Удаляем «сбойный» диск из массива:
@@ -594,10 +594,10 @@ mdadm: hot removed /dev/sdb2 from /dev/md10
 cat /proc/mdstat
 ```
 ```console
-Personalities : [raid10] 
+Personalities : [raid10]
 md10 : active raid10 sdd2[2] sde2[3] sdc2[1]
       4179968 blocks super 1.2 512K chunks 2 near-copies [4/3] [_UUU]
-      
+
 unused devices: <none>
 ```
 ```bash
@@ -615,7 +615,7 @@ mdadm --detail /dev/md10
        Persistence : Superblock is persistent
 
        Update Time : Thu Aug 15 21:56:26 2019
-             State : clean, degraded 
+             State : clean, degraded
     Active Devices : 3
    Working Devices : 3
     Failed Devices : 0
@@ -644,14 +644,14 @@ mdadm /dev/md10 --add /dev/sdb2
 mdadm: added /dev/sdb2
 ```
 ```bash
-cat /proc/mdstat 
+cat /proc/mdstat
 ```
 ```console
-Personalities : [raid10] 
+Personalities : [raid10]
 md10 : active raid10 sdb2[4] sdd2[2] sde2[3] sdc2[1]
       4179968 blocks super 1.2 512K chunks 2 near-copies [4/3] [_UUU]
       [=========>...........]  recovery = 49.8% (1042816/2089984) finish=0.6min speed=27716K/sec
-      
+
 unused devices: <none>
 ```
 ```bash
@@ -669,7 +669,7 @@ mdadm --detail /dev/md10
        Persistence : Superblock is persistent
 
        Update Time : Thu Aug 15 22:03:04 2019
-             State : clean, degraded, recovering 
+             State : clean, degraded, recovering
     Active Devices : 3
    Working Devices : 4
     Failed Devices : 0

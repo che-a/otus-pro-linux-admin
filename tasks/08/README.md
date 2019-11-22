@@ -23,7 +23,7 @@
 Студент может написать свой systemd-модуль.
 
 ## 2. Домашнее задание  <a name="homework"></a>
-### Постановка задачи 
+### Постановка задачи
 
 Управление автозагрузкой сервисов происходит через systemd. Вместо cron'а тоже используется systemd. И много других возможностей. В ДЗ нужно написать свой systemd-unit.
 1. Написать сервис, который будет раз в 30 секунд мониторить лог на предмет наличия ключевого слова. Файл и слово должны задаваться в `/etc/sysconfig`.  
@@ -32,7 +32,7 @@
 #### Дополнительно
 4. Скачать демо-версию Atlassian Jira и переписать основной скрипт запуска на unit-файл.  
 
-Задание необходимо сделать с использованием Vagrantfile и proviosioner shell (или ansible, на Ваше усмотрение). 
+Задание необходимо сделать с использованием Vagrantfile и proviosioner shell (или ansible, на Ваше усмотрение).
 
 ## 3. Справочная информация <a name="info"></a>  
 
@@ -96,7 +96,7 @@ systemd-analyze blame
 </details>
 
 ## 4. Выполнение <a name="exec"></a>  
-Для демонстрации выполнения этого домашнего задания необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/Vagrantfile). С целью не создавать монстроподобные сценарии провижининга, которые в себе содержат команды по созданию и редактированию множества файлов, все необходимые конфигурационные файлы собраны в каталог [include](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/lesson_08/include), откуда они рекурсивно копируются в файловую систему виртуальной машины при работе сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/script.sh).
+Для демонстрации выполнения этого домашнего задания необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/08/Vagrantfile). С целью не создавать монстроподобные сценарии провижининга, которые в себе содержат команды по созданию и редактированию множества файлов, все необходимые конфигурационные файлы собраны в каталог [include](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/08/include), откуда они рекурсивно копируются в файловую систему виртуальной машины при работе сценария провижининга [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/08/script.sh).
 ```console
 include/
 ├── etc
@@ -120,7 +120,7 @@ include/
 
 
 ### Задача 1 <a name="task1"></a>  
-Сценарий [generator.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/opt/generator.sh) запускается с определенными параметрами через `systemd`-модуль [generator.service](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/etc/systemd/system/generator.service) `systemd`-таймером [generator.timer](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/etc/systemd/system/generator.timer) и записывает ключевое слово в свой лог. Аналогичным образом действует сценарий [watcher.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/opt/watcher.sh), который каждые 30 секунд подсчитывает количество ключевых слов в логе генератора и посылает сообщение с этой информацией в системный лог.
+Сценарий [generator.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/08/include/opt/generator.sh) запускается с определенными параметрами через `systemd`-модуль [generator.service](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/08/include/etc/systemd/system/generator.service) `systemd`-таймером [generator.timer](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/08/include/etc/systemd/system/generator.timer) и записывает ключевое слово в свой лог. Аналогичным образом действует сценарий [watcher.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/08/include/opt/watcher.sh), который каждые 30 секунд подсчитывает количество ключевых слов в логе генератора и посылает сообщение с этой информацией в системный лог.
 
 ```bash
 sudo tail -f /var/log/generator.log  
@@ -138,7 +138,7 @@ Sun Nov 17 20:11:48 UTC 2019 - ALERT! Need to do homework faster !!!
 ```
 
 ```bash
-sudo tail -f /var/log/messages 
+sudo tail -f /var/log/messages
 ```
 ```console
 Nov 17 20:10:18 localhost systemd: Started Log generator for watcher.
@@ -160,7 +160,7 @@ Nov 17 20:11:48 localhost root: Sun Nov 17 20:11:48 UTC 2019: I found 9 word(s),
 ```
 
 ### Задача 2 <a name="task2"></a>  
-Собственно, состояние получившегося`systemd`-модуля [spawn-fcgi](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_08/include/etc/systemd/system/spawn-fcgi.service):
+Собственно, состояние получившегося`systemd`-модуля [spawn-fcgi](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/08/include/etc/systemd/system/spawn-fcgi.service):
 ```bash
 systemctl status spawn-fcgi.service
 ```

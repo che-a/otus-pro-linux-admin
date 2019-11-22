@@ -63,7 +63,7 @@
 
 <details>
     <summary>Пример выполнения команды ps ax:</summary>    
-    
+
 ```console
       PID TTY      STAT   TIME COMMAND
     1 ?        Ss     0:01 /usr/lib/systemd/systemd --switched-root --system --deserialize 21
@@ -174,7 +174,7 @@
 ```    
 </details>
 
-`procfs` — специальная файловая система. Позволяет получить доступ к информации из ядра о системных процессах. Необходима для выполнения таких команд как `ps`, `w`, `top`. Обычно её монтируют на `/proc`. `procfs` создаёт двухуровневое представление пространств процессов. На верхнем уровне процессы представляют собой каталоги, именованные в соответствии с их `pid`. Также на верхнем уровне располагается ссылка на каталог, соответствующую процессу, выполняющему запрос; она может иметь различное имя в различных ОС (curproc во FreeBSD, self в Linux). 
+`procfs` — специальная файловая система. Позволяет получить доступ к информации из ядра о системных процессах. Необходима для выполнения таких команд как `ps`, `w`, `top`. Обычно её монтируют на `/proc`. `procfs` создаёт двухуровневое представление пространств процессов. На верхнем уровне процессы представляют собой каталоги, именованные в соответствии с их `pid`. Также на верхнем уровне располагается ссылка на каталог, соответствующую процессу, выполняющему запрос; она может иметь различное имя в различных ОС (curproc во FreeBSD, self в Linux).
 
 `ps` — программа, выводящая отчёт о работающих процессах.  
 Опции:  
@@ -191,11 +191,11 @@
 
 #### Ход выполнения <a name="psax_exec"></a>  
 
-Сценарий [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ps.sh) практически полностью (кроме времени выполнения) повторяет работу команды `ps ax`. Для демонстрации работы сценария [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ps.sh) необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/Vagrantfile) и выполнить команду:
+Сценарий [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/05/ps.sh) практически полностью (кроме времени выполнения) повторяет работу команды `ps ax`. Для демонстрации работы сценария [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/05/ps.sh) необходимо развернуть тестовое окружение из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/05/Vagrantfile) и выполнить команду:
 ```bash
 ./ps.sh ax
 ```
-Используя `tmux` можно наглядно сравнить результаты работы сценария [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ps.sh) и команды `ps ax`, что показано ниже.
+Используя `tmux` можно наглядно сравнить результаты работы сценария [ps.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/05/ps.sh) и команды `ps ax`, что показано ниже.
 
 <details>
     <summary>Сравнение работы сценария ps.sh и команды ps ax.</summary>
@@ -302,4 +302,4 @@
 </details>
 
 Дополнение:  
-Т.к. в файле `/proc/[pid]/stat` время указывается в тактах, то для получения его в секундах необходимо разделить на `sysconf (_SC_CLK_TCK)` (как указано в доккументации `man proc`). Программа [ticks.c](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_05/ticks.c) выполняет задачу получения значения `sysconf (_SC_CLK_TCK)`, которое обычно равно 100.
+Т.к. в файле `/proc/[pid]/stat` время указывается в тактах, то для получения его в секундах необходимо разделить на `sysconf (_SC_CLK_TCK)` (как указано в доккументации `man proc`). Программа [ticks.c](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/05/ticks.c) выполняет задачу получения значения `sysconf (_SC_CLK_TCK)`, которое обычно равно 100.
