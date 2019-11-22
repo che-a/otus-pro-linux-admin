@@ -26,14 +26,22 @@
 <details>
     <summary></summary>
     
+`/etc/shadow` — системный файл с паролями пользователей;  
+`/etc/login.defs` — файл, в котором можно настроить в т.ч. и `UID` (мин. и макс. значения, обычно `UID` < 1000 назначаются системным пользователям);  
+`/etc/shells` — доступные командные оболочки;  
+`/etc/securetty` — ;  
+`id user` — вывод `id` пользователя `user`;  
+`/etc/group` — группы пользователей;  
+`/etc/gshadow` — на группу можно поставить пароль;  
+`chsh` — команда для смены оболочки;  
+`groups` — показывает текущую группу;   
+`newgrp` — изменить главную группу;  
 
 
 </details>
 
 #### Ссылки на полезные ресурсы <a name="links"></a>
-[Ansible Documentation](https://docs.ansible.com/ansible/latest/index.html) — официальная документация по `Ansible`;  
-[Galaxy](https://galaxy.ansible.com/) — готовые модули;  
-[ansible.cfg](https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg) — пример конфигурации файла `ansible.cfg` от разработчиков;  
+[]() — ;  
 
 
 ## 4. Выполнение <a name="exec"></a>  
