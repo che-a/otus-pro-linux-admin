@@ -14,8 +14,8 @@
 ---
 
 **1. Занятие 1. С  чего начинается Linux**  
-*Задание:* [Сборка ядра](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_01/)  
- 
+*Задание:* [Сборка ядра](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/tasks/01/)  
+
 **2. Занятие 2. Дисковая подсистема**  
 *Задание:* [Работа с mdadm](https://github.com/che-a/OTUS_LinuxAdministration/blob/master/lesson_02/)  
 

@@ -30,11 +30,11 @@
 
 ## Выполнение задания
 #### Файлы для преподавателя  
-Результирующий файл конфигурации — [config-4.19.61](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/config-4.19.61)  
-Список доустановленных пакетов — [yum.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/yum.log)
+Результирующий файл конфигурации — [config-4.19.61](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/01/config-4.19.61)  
+Список доустановленных пакетов — [yum.log](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/01/yum.log)
 
 #### Ход выполнения
-Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/lesson_01/script.sh), который подготавливает систему (инициирует обновление и установку необходимых пакетов), а также генерирует внутри виртуальной машины bash-скрипт, который собирает и устанавливает новое ядро.
+Развертывание тестового окружения происходит из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/01/Vagrantfile) с последующим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/01/script.sh), который подготавливает систему (инициирует обновление и установку необходимых пакетов), а также генерирует внутри виртуальной машины bash-скрипт, который собирает и устанавливает новое ядро.
 ```console
 # Обновление системы и установка утилит
 yum update -y
