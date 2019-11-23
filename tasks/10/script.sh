@@ -16,17 +16,13 @@ function print_usage {
 
 function customize_users
 {
-    local ADMIN_USER=$1 # Этот пользователь будет включен в разрешенную группу
-
     # Добавление новых пользователей с заданием им паролей
     for NEW_USER in "${NEW_USERS[@]}"; do
         useradd $NEW_USER
         echo "linux" | passwd $NEW_USER --stdin
     done
 
-    groupadd $ADMIN_GROUP
-
-    #
+    groupadd $HARD_WORKERS_GROUP
     for HARD_WORKER in "${HARD_WORKERS[@]}"; do
         usermod -G $HARD_WORKERS_GROUP $HARD_WORKER
     done
@@ -40,8 +36,8 @@ function customize_pam_time
     # - имя пользователя, для которого данное правило будет действовать,
     # - время, когда правило носит разрешающий характер.
     (
-        echo 'login;*;!admin;!Wd0000-2400'
-        echo 'sshd;*;!admin;!Wd0000-2400'
+        echo 'login;tty* & !ttyp*;!admin;Wd0000-2400'
+        echo 'sshd;tty* & !ttyp*;!admin;Wd0000-2400'
     ) >> /etc/security/time.conf
 
     # Включение модуля PAM
@@ -52,11 +48,11 @@ function customize_pam_time
 
 case $1 in
     -b|--ban-weekend)
-        customize_users $USER_ADMIN_GROUP
+        customize_users
         customize_pam_time
         echo "===================================================="
         echo "=== Access on Saturday and Sunday is prohibited! ==="
-        echo "===    (except for users of the \"$ADMIN_GROUP\"-group)   ==="
+        echo "===    (except for users of the \"$HARD_WORKERS_GROUP\"-group)   ==="
         echo "===================================================="
         ;;
 
@@ -70,13 +66,11 @@ case $1 in
 
     -p|--provision)
         # Провижининг стенда, если сценарий запущен без параметров
-
         cp /vagrant/script.sh /home/vagrant/
         # Разрешаем вход в систему через SSH по паролю
         sed -i '65s/PasswordAuthentication.*/PasswordAuthentication yes/g'\
             /etc/ssh/sshd_config
         systemctl restart sshd.service
-
         yum install -y mc nano
         ;;
 
