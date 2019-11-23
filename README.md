@@ -50,4 +50,4 @@
 **Занятие 12. Мониторинг производительности**  
 
 **Занятие 13. Мониторинг и алертинг**  
-*Задание:* [PAM](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/13)
+*Задание:* [Настройка мониторинга](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/13)
