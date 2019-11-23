@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-ADMIN_GROUP='admin'
-NEW_USERS=('dux' 'fix' 'gex' 'rex')
 PROGNAME=`basename $0`
+HARD_WORKERS_GROUP='admin'  # Группа пользователей с доступом в Сб и Вс
+NEW_USERS=('dux' 'gex' 'rex')   # Обычные пользователи, без доступа в Сб и Вс
+HARD_WORKERS=('vagrant' 'rex')  # Пользователи из группы $ADMIN_GROUP и,
+                                # соответственно, с доступом в Сб и Вс
 
+# Для вывода информации при вызове программы с параметром -h|--help
 function print_usage {
     echo -e "\n$PROGNAME - Working with PAM"
-    echo -e "Usage: $PROGNAME [ OPTION ]\n"
+    echo -e "Usage: $PROGNAME [ OPTION ]"
     echo -e "OPTION:\n\t-b, --ban-weekend\n\t-g, --give-rootrights\n"
     echo -e "\t-h, --help\n\t-p, --provision\n"
 }
@@ -15,15 +18,18 @@ function customize_users
 {
     local ADMIN_USER=$1 # Этот пользователь будет включен в разрешенную группу
 
-    # Добавление новых пользователей с установкой им паролей
+    # Добавление новых пользователей с заданием им паролей
     for NEW_USER in "${NEW_USERS[@]}"; do
         useradd $NEW_USER
         echo "linux" | passwd $NEW_USER --stdin
     done
 
     groupadd $ADMIN_GROUP
-    usermod -G $ADMIN_GROUP vagrant    # Чтобы пользователь vagrant не потерял доступ
-    useradd -G $ADMIN_GROUP $ADMIN_USER
+
+    #
+    for HARD_WORKER in "${HARD_WORKERS[@]}"; do
+        usermod -G $HARD_WORKERS_GROUP $HARD_WORKER
+    done
 }
 
 function customize_pam_time
@@ -34,8 +40,8 @@ function customize_pam_time
     # - имя пользователя, для которого данное правило будет действовать,
     # - время, когда правило носит разрешающий характер.
     (
-        echo 'login;tty* & !ttyp*;!admin;Wd0000-2400'
-        echo 'sshd;tty* & !ttyp*;!admin;Wd0000-2400'
+        echo 'login;*;!admin;!Wd0000-2400'
+        echo 'sshd;*;!admin;!Wd0000-2400'
     ) >> /etc/security/time.conf
 
     # Включение модуля PAM
@@ -46,10 +52,12 @@ function customize_pam_time
 
 case $1 in
     -b|--ban-weekend)
-        customize_users 'rex'   # Добавляем пользователя rex в группу admin
+        customize_users $USER_ADMIN_GROUP
         customize_pam_time
+        echo "===================================================="
         echo "=== Access on Saturday and Sunday is prohibited! ==="
         echo "===    (except for users of the \"$ADMIN_GROUP\"-group)   ==="
+        echo "===================================================="
         ;;
 
     -g|--give-rootrights)
