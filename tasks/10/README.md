@@ -105,7 +105,7 @@ PAM (Pluggable Authentication Modules)
 
 ## 4. Выполнение <a name="exec"></a>  
 Лабораторный стенд разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/Vagrantfile) с автоматическим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/script.sh), запускаемого с параметром `--provision`. Далее этот же сценарий (но с другими параметрами) используется для выполнения основных задач этого домашнего задания.  
-Развертывание лабораторнго стенда полностью не автоматизировано для того, чтобы можно была возможность сравнить состояние системы до и после проводимых в ней изменений.
+Развертывание лабораторнго стенда полностью не автоматизировано для того, чтобы была возможность сравнить состояние системы до и после проводимых в ней изменений.
 
 ### Результаты <a name="result"></a>  
 #### Запрет логина в определенные дни
@@ -130,7 +130,7 @@ passwd: all authentication tokens updated successfully.
 ===    (except for users of the "admin"-group)   ===
 ====================================================
 ```
-Попытка установить `SSH`-соединение в выходной день пользователем `gex`, который не добавлен в группу `admin`, ожидаемо потерпела неудачу. При этом пользователи, добавленный в группу `admin`, наоборот, успешно регистрируются в системе.
+При попытке установить `SSH`-соединение в выходной день пользователь `gex`, который не добавлен в группу `admin`, ожидаемо терпит неудачу. При этом пользователи, добавленные в группу `admin`, наоборот, регистрируются в системе успешно.
 ```bash
 ssh -p 2222 gex@127.0.0.1
 ```
@@ -141,5 +141,42 @@ Connection closed by 127.0.0.1 port 2222
 ```
 
 #### Назначение прав супрепользователя обычному пользователю
+Неудачная попытка обычного пользователя `rex` получить права суперпользователя показана ниже:
+```bash
+sudo -s
+```
+```console
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+[sudo] password for rex: 
+rex is not in the sudoers file.  This incident will be reported.
+```
 
 
+Для назначения обычному пользователю `rex` привилегий суперпользователя необходимо войти в систему под учетной записью `vagrant` и запустить сценарий:
+```bash
+vagrant ssh
+```
+```bash
+sudo ./script.sh --root-privs
+```
+```console
+====================================================
+===    Superuser privileges assigned to rex    ===
+====================================================
+```
+После этого задание можно считать выполненным:
+```bash
+ssh -p 2222 rex@127.0.0.1
+```
+```console
+rex@127.0.0.1's password: 
+Last login: Sat Nov 23 04:08:27 2019 from 10.0.2.2
+[rex@les10 ~]$ sudo -s
+[root@les10 rex]#                                                           
+```
