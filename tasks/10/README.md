@@ -3,7 +3,6 @@
 1. [Описание занятия](#description)  
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
-    - [Ссылки на полезные ресурсы](#links)
 4. [Выполнение](#exec)  
     - [Результаты](#result)   
 
@@ -102,19 +101,45 @@ PAM (Pluggable Authentication Modules)
 #### ACL
 `getfacl file` —
 
-
-
-
 </details>
 
-#### Ссылки на полезные ресурсы <a name="links"></a>
-[]() — ;  
-
 ## 4. Выполнение <a name="exec"></a>  
+Лабораторный стенд разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/Vagrantfile) с автоматическим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/script.sh), запускаемого с параметром `--provision`. Далее этот же сценарий (но с другими параметрами) используется для выполнения основных задач этого домашнего задания.  
+Развертывание лабораторнго стенда полностью не автоматизировано для того, чтобы можно была возможность сравнить состояние системы до и после проводимых в ней изменений.
 
 ### Результаты <a name="result"></a>  
-#### Файловая структура Ansible-роли
+#### Запрет логина в определенные дни
+Запрет логина в субботу и воскресенье пользователям не входящим в группу `admin` реализована с ипользованием модуля `pam_exec`, для работы которого используется сценарий [pam_exec.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/pam_exec.sh). На основании кода завершения этого сценария модуль `pam_exec` принимает решение: 0 — пользователь будет авторизован, 1 — нет.
 
-#### Развертывание nginx
 
-####  Состояние systemd
+В результате выполнения следующей команды создается группа `admin` с включенными в неё новыми пользователями `dux`, `fix`, `gex` и `rex`, а разрешение на вход в систему в субботу и воскресенье (локально и по `SSH`) предоставляется уже существующему пользователю `vagrant` и новому `rex`.
+```bash
+sudo ./script.sh --ban-weekend
+```
+```console
+Changing password for user dux.
+passwd: all authentication tokens updated successfully.
+Changing password for user fix.
+passwd: all authentication tokens updated successfully.
+Changing password for user gex.
+passwd: all authentication tokens updated successfully.
+Changing password for user rex.
+passwd: all authentication tokens updated successfully.
+====================================================
+=== Access on Saturday and Sunday is prohibited! ===
+===    (except for users of the "admin"-group)   ===
+====================================================
+```
+Попытка установить `SSH`-соединение в выходной день пользователем `gex`, который не добавлен в группу `admin`, ожидаемо потерпела неудачу. При этом пользователи, добавленный в группу `admin`, наоборот, успешно регистрируются в системе.
+```bash
+ssh -p 2222 gex@127.0.0.1
+```
+```console
+gex@127.0.0.1's password: 
+/usr/local/bin/pam_exec.sh failed: exit code 1
+Connection closed by 127.0.0.1 port 2222
+```
+
+#### Назначение прав супрепользователя обычному пользователю
+
+
