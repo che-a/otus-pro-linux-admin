@@ -44,3 +44,10 @@
 
 **Занятие 10. Пользователи и группы. Авторизация и аутентификация**  
 *Задание:* [PAM](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/10)
+
+**Занятие 11. SELinux - когда все запрещено**  
+
+**Занятие 12. Мониторинг производительности**  
+
+**Занятие 13. Мониторинг и алертинг**  
+*Задание:* [PAM](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/13)
