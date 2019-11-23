@@ -46,8 +46,10 @@
 *Задание:* [PAM](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/10)
 
 **Занятие 11. SELinux - когда все запрещено**  
+*Задание:*
 
 **Занятие 12. Мониторинг производительности**  
+*Задание:*
 
 **Занятие 13. Мониторинг и алертинг**  
 *Задание:* [Настройка мониторинга](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/13)
