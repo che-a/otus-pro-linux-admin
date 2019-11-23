@@ -22,15 +22,14 @@
 Настроить на одной из систем:  
 - `Zabbix` (использовать screen (комплексный экран)),  
 - `Prometheus` - `Grafana`.  
-
-в качестве результата прислать скриншот экрана - дашборд должен содержать в названии имя приславшего
+В качестве результата прислать скриншот экрана - дашборд должен содержать в названии имя приславшего.  
 
 ### Дополнительно
 Использовать системы, примеры которых не рассматривались на занятии, список возможных систем был приведен в презентации.  
 
 ### Критерии оценки  
-5 - основное задание
-6 - дополнительное задание  
+5 - основное задание,  
+6 - дополнительное задание.  
 
 ## 3. Справочная информация <a name="info"></a>  
 
@@ -40,6 +39,13 @@
 
 
 </details>
+
+### Ссылки
+[Cacti](https://www.cacti.net/) —  
+[Grafana](https://grafana.com/) —  
+[Icinga](https://icinga.com/products/user-experience/) —  
+[Prometheus](https://prometheus.io/) —  
+[Zabbix](https://www.zabbix.com/ru/) —  
 
 ## 4. Выполнение <a name="exec"></a>  
 Лабораторный стенд разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/Vagrantfile) с автоматическим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/script.sh), запускаемого с параметром `--provision`.
