@@ -140,7 +140,7 @@ gex@127.0.0.1's password:
 Connection closed by 127.0.0.1 port 2222
 ```
 
-#### Назначение прав супрепользователя обычному пользователю
+#### Назначение прав суперпользователя обычному пользователю
 Неудачная попытка обычного пользователя `rex` получить права суперпользователя показана ниже:
 ```bash
 sudo -s
@@ -156,7 +156,6 @@ Administrator. It usually boils down to these three things:
 [sudo] password for rex: 
 rex is not in the sudoers file.  This incident will be reported.
 ```
-
 
 Для назначения обычному пользователю `rex` привилегий суперпользователя необходимо войти в систему под учетной записью `vagrant` и запустить сценарий:
 ```bash
