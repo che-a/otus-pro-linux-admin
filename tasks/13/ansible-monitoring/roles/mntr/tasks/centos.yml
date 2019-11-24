@@ -1,0 +1,15 @@
+---
+- name: Install EPEL repository
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install NGINX package using yum
+  yum:
+    name: nginx
+    state: present
+
+- name: Replace standard HTML file
+  template:
+    src: index.html.j2
+    dest: /usr/share/nginx/html/index.html

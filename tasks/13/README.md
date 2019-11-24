@@ -1,4 +1,4 @@
-## Мониторинг и алертинг
+## Занятие 13. Мониторинг и алертинг
 ### Содержание
 1. [Описание занятия](#description)  
 2. [Домашнее задание](#homework)  
@@ -50,6 +50,9 @@
 ## 4. Выполнение <a name="exec"></a>  
 Лабораторный стенд разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/Vagrantfile) с автоматическим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/script.sh), запускаемого с параметром `--provision`.
 
+
+— [Веб-сервер](http://localhost:8080/)
+
 ### Результаты <a name="result"></a>  
 #### Запрет логина в определенные дни
-Запрет логина в субботу и воскресенье пользователям не входящим в группу `admin` реализована с ипользованием модуля `pam_exec`, для работы которого используется сценарий [pam_exec.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/pam_exec.sh). 
+Запрет логина в субботу и воскресенье пользователям не входящим в группу `admin` реализована с ипользованием модуля `pam_exec`, для работы которого используется сценарий [pam_exec.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/pam_exec.sh).

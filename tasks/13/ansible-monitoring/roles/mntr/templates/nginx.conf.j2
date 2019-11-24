@@ -1,0 +1,21 @@
+
+# {{ ansible_managed }}
+events {
+    worker_connections 1024;
+}
+
+http {
+    server {
+        listen       {{ listen_port_http }} default_server;
+        server_name  default_server;
+
+        {% if ansible_os_family == 'RedHat' %}
+        root        /usr/share/nginx/html;
+        {% else %}
+        root        /var/www/html;
+        {% endif %}
+        access_log   {{ access_log }};
+        location / {
+        }
+    }
+}

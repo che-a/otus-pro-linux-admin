@@ -1,0 +1,5 @@
+---
+# vars file for roles/nginx
+
+listen_port_http: 8080
+access_log: /var/log/nginx.log
