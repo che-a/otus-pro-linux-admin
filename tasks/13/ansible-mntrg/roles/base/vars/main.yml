@@ -1,0 +1,12 @@
+---
+# MariaDB
+mysql_root_pwd: suslik
+mysql_cacti_db: cacti_db
+mysql_cacti_user: cacti_user
+mysql_cacti_user_pwd: pass
+
+# Apache2 (httpd)
+example_site_user: vagrant
+example_site_name: example.otus
+example_site_dir: /var/www/{{ example_site_name }}/html
+example_site_dir_log: /var/www/{{ example_site_name }}/log

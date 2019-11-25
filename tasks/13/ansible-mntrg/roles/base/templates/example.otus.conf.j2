@@ -1,0 +1,7 @@
+<VirtualHost *:80>
+    ServerName www.{{ example_site_name }}
+    ServerAlias {{ example_site_name }}
+    DocumentRoot {{ example_site_dir }}
+    ErrorLog {{ example_site_dir_log }}/error.log
+    CustomLog {{ example_site_dir_log }}/requests.log combined
+</VirtualHost>

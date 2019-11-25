@@ -1,0 +1,95 @@
+---
+- name: Install Apache2 Web-server package
+  yum:
+    name: httpd
+    state: latest
+  tags: apache
+
+- name: Create document directory for example.otus
+  file:
+    path: "{{ example_site_dir }}"
+    state: directory
+    owner: "{{ example_site_user }}"
+    group: "{{ example_site_user }}"
+    mode: 0755
+    recurse: yes
+  tags: apache
+
+- name: Create log directory for example.otus
+  file:
+    path: "{{ example_site_dir_log }}"
+    state: directory
+    mode: 0755
+  tags: apache
+
+- name: Copy example.otus index.html file
+  copy:
+    src: index.html
+    dest: "{{ example_site_dir }}"
+    owner: "{{ example_site_user }}"
+    group: "{{ example_site_user }}"
+    mode: 0755
+  tags: apache
+
+- name: Create /etc/httpd/sites-available
+  file:
+    path: /etc/httpd/sites-available
+    state: directory
+    mode: 0755
+  tags: apache
+
+- name: Create /etc/httpd/sites-enabled
+  file:
+    path: /etc/httpd/sites-enabled
+    state: directory
+    mode: 0755
+  tags: apache
+
+- name: Add string to /et/httpd/conf/httpd.conf
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    insertafter: EOF
+    line: 'IncludeOptional sites-enabled/*.conf'
+  tags: apache
+
+- name: Copy example.otus.conf
+  template:
+    src: example.otus.conf.j2
+    dest: /etc/httpd/sites-available/{{ example_site_name }}.conf
+    owner: root
+    group: root
+    mode: 0755
+  tags: apache
+
+- name: Create symlink
+  file:
+    src: /etc/httpd/sites-available/{{ example_site_name }}.conf
+    dest: /etc/httpd/sites-enabled/{{ example_site_name }}.conf
+    owner: root
+    group: root
+    state: link
+  notify: Restart Apache2
+  tags: apache
+
+
+#- name: Start Apache2 (httpd) service
+#  systemd:
+#    name: httpd
+#    state: started
+#    enabled: yes
+#  tags: apache
+
+#####################
+
+
+#- name: Delete default config
+#  file:
+#    path: /etc/nginx/sites-available/default
+#    state: absent
+#  tags: wordpress
+
+#- name: Delete default config
+#  file:
+#    path: /etc/nginx/sites-enabled/default
+#    state: absent
+#  tags: wordpress

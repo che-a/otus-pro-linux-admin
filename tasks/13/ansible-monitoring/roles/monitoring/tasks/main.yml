@@ -1,5 +1,0 @@
----
-- include: common.yml
-- include: mariadb.yml
-- include: apache.yml
-- include: cacti.yml

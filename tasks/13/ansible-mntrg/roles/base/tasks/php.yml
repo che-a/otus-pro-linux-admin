@@ -1,0 +1,15 @@
+- name: Install PHP packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - php-pear
+      - php-common
+      - php-gd
+      - php-devel
+      - php
+      - php-mbstring
+      - php-cli
+      - php-mysql
+  tags: apache

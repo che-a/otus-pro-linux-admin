@@ -3,3 +3,8 @@
   systemd:
     name: mariadb
     state: restarted
+
+- name: Restart Apache2
+  systemd:
+    name: httpd
+    state: restarted
