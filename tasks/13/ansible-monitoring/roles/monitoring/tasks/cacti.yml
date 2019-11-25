@@ -1,0 +1,22 @@
+---
+- name: Install Cacti
+  yum:
+    name: cacti
+    state: latest
+  tags: cacti
+
+- name: Install SNMP and RRDTool packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - php-snmp
+      - net-snmp-utils
+      - net-snmp-libs
+      - rrdtool
+  tags: cacti
+
+- name: Init Cacti DB
+  shell: mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -D "{{ mysql_cacti_db }}" < $(rpm -ql cacti | grep cacti.sql)
+  tags: mariadb

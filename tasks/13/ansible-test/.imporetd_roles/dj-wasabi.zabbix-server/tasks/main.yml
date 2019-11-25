@@ -1,0 +1,63 @@
+---
+# tasks file for wdijkerman.zabbix
+
+- name: "Include OS-specific variables"
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: "Install the correct repository"
+  include_tasks: "RedHat.yml"
+  when:
+    - ansible_os_family == "RedHat"
+
+- name: "Install the correct repository"
+  include_tasks: "Debian.yml"
+  when:
+    - ansible_os_family == "Debian"
+
+- name: "Installing the postgresql database"
+  include_tasks: "postgresql.yml"
+  when:
+    - zabbix_server_database_long == "postgresql"
+
+- name: "Installing the mysql database"
+  include_tasks: "mysql.yml"
+  when:
+    - zabbix_server_database_long == "mysql"
+
+- name: "Configure zabbix-server"
+  template:
+    src: zabbix_server.conf.j2
+    dest: /etc/zabbix/zabbix_server.conf
+    owner: zabbix
+    group: zabbix
+    mode: 0640
+  notify:
+    - zabbix-server restarted
+  tags:
+    - zabbix-server
+    - init
+    - config
+
+- name: "Create include dir zabbix-server"
+  file:
+    path: "{{ zabbix_server_include }}"
+    owner: zabbix
+    group: zabbix
+    state: directory
+    mode: 0755
+  tags:
+    - zabbix-server
+    - init
+    - config
+
+- name: "Add zabbix-server scripts"
+  include: "scripts.yml"
+  when: zabbix_server_alertscripts is defined or zabbix_server_externalscripts is defined
+
+- name: "Zabbix-server started"
+  service:
+    name: zabbix-server
+    state: started
+    enabled: yes
+  tags:
+    - zabbix-server

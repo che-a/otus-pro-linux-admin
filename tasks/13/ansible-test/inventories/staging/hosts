@@ -1,0 +1,15 @@
+[local]
+127.0.0.1
+
+[servers]
+127.0.0.1
+
+[clients]
+web
+
+[centos]
+127.0.0.1
+web
+
+[local:vars]
+ansible_connection=local

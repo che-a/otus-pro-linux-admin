@@ -1,0 +1,33 @@
+---
+- name: Install Apache2 Web-server package
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - httpd
+      - httpd-devel
+  tags: apache
+
+- name: Install PHP packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - php-pear
+      - php-common
+      - php-gd
+      - php-devel
+      - php
+      - php-mbstring
+      - php-cli
+      - php-mysql
+  tags: apache
+
+- name: Start Apache2 (httpd) service
+  systemd:
+    name: httpd
+    state: started
+    enabled: yes
+  tags: apache

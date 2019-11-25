@@ -1,0 +1,7 @@
+---
+# tasks file for mon
+- include: common.yml
+- include: prom.yml
+- include: grafana.yml
+- include: blackbox.yml
+- include: zabbix.yml

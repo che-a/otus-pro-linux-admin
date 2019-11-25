@@ -1,0 +1,8 @@
+.idea
+.molecule
+__pycache__
+.cache
+.env
+.virtualenv
+*.pyc
+.vscode/
