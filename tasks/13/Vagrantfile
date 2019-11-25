@@ -22,6 +22,9 @@ Vagrant.configure("2") do |config|
 
             cp -r /vagrant/ansible-mntrg/ /home/vagrant/
             chown -R vagrant:vagrant /home/vagrant/ansible-mntrg
+
+            sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+            reboot
         SHELL
     end
 

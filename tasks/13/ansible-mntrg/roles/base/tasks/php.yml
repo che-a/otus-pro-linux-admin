@@ -12,4 +12,9 @@
       - php-mbstring
       - php-cli
       - php-mysql
-  tags: apache
+      - php-snmp
+  tags: php
+
+- name: Configure time zone in php.ini
+  shell: sed -i "s/^[; ]*date\.timezone[ ]*=.*$/date.timezone = Europe\/Moscow/gm" /etc/php.ini
+  tags: php

@@ -1,0 +1,24 @@
+---
+#- name: Upgrade all packages
+#  yum:
+#    name: "*"
+#    state: latest
+#  tags: common
+
+#- name: Temporary disable SELinux
+#  shell: setenforce 0
+#  tags: common
+
+- name: Installation of auxiliary packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - ansible-lint
+      - nano
+      - mc
+      - tmux
+      - tree
+      - wget
+  tags: common

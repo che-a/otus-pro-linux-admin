@@ -1,33 +1,8 @@
 ---
-#- name: Upgrade all packages
-#  yum:
-#    name: "*"
-#    state: latest
-#  tags: common
-
-- name: Temporary disable SELinux
-  shell: setenforce 0
-  tags: common
-
-- name: Install the required packages
-  yum:
-    name: "{{ packages }}"
-    state: latest
-  vars:
-    packages:
-      - ansible-lint
-      - nano
-      - mc
-      - tmux
-      - tree
-  tags: common
-
-
-#- include: mariadb.yml
+- include: common.yml
+- include: mariadb.yml
 - include: apache.yml
-#- include: php.yml
+- include: php.yml
 
-
-#- name: Enable SELinux
-#  shell: setenforce 1
-#  tags: common
+#- include: cacti.yml
+- include: zabbix.yml

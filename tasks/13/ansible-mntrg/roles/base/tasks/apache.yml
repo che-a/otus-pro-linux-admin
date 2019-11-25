@@ -31,6 +31,16 @@
     mode: 0755
   tags: apache
 
+- name: Copy example.otus index.php file
+  copy:
+    src: index.php
+    dest: "{{ example_site_dir }}"
+    owner: "{{ example_site_user }}"
+    group: "{{ example_site_user }}"
+    mode: 0755
+  tags: apache
+
+
 - name: Create /etc/httpd/sites-available
   file:
     path: /etc/httpd/sites-available
@@ -78,18 +88,3 @@
 #    state: started
 #    enabled: yes
 #  tags: apache
-
-#####################
-
-
-#- name: Delete default config
-#  file:
-#    path: /etc/nginx/sites-available/default
-#    state: absent
-#  tags: wordpress
-
-#- name: Delete default config
-#  file:
-#    path: /etc/nginx/sites-enabled/default
-#    state: absent
-#  tags: wordpress

@@ -1,0 +1,89 @@
+---
+# Install latest version of Cacti from source code
+
+- name: Install SNMP and RRDTool packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - net-snmp-utils
+      - net-snmp-libs
+      - rrdtool
+  tags: cacti
+
+- name: Create document directory for Cacti
+  file:
+    path: "{{ cacti_dir }}"
+    state: directory
+    owner: "{{ cacti_user }}"
+    group: "{{ cacti_user }}"
+    mode: 0755
+    recurse: yes
+  tags: cacti
+
+- name: Create log directory for Cacti
+  file:
+    path: "{{ cacti_dir_log }}"
+    state: directory
+    mode: 0755
+  tags: cacti
+
+- name: Create temp directory
+  file:
+    path: /root/tmp
+    state: directory
+    mode: 0755
+  tags: cacti
+
+- name: Download Cacti tarball
+  get_url:
+    url: "{{ cacti_url }}"
+    dest: /root/tmp/
+
+- name: Untar Cacti tarball
+  shell: cd /root/tmp && tar -xvzf cacti-latest.tar.gz && cd "{{ cacti_name }}" && mv ./* "{{ cacti_dir }}"
+  tags: cacti
+
+- name: Create Cacti DB
+  shell: mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -e "CREATE DATABASE \`"{{ mysql_cacti_db }}"\` DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci"
+  tags: cacti
+
+- name: Create Cacti DB user
+  shell: |
+    mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -e "CREATE USER '"{{ mysql_cacti_user }}"'@'localhost' IDENTIFIED BY '"{{ mysql_cacti_user_pwd }}"'"
+    mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -e "GRANT ALL PRIVILEGES ON "{{ mysql_cacti_db }}".* TO '"{{ mysql_cacti_user }}"'@'localhost' WITH GRANT OPTION"
+  tags: cacti
+
+- name: Init Cacti DB
+  shell: mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -D "{{ mysql_cacti_db }}" < "{{ cacti_dir }}"/cacti.sql
+  tags: cacti
+
+- name: Customize Cron (copy cron-file to /etc/cron.d/)
+  template:
+    src: cacti.j2
+    dest: /etc/cron.d/cacti
+    owner: root
+    group: root
+    mode: 0755
+  tags: cacti
+
+- name: Copy cacti.conf
+  template:
+    src: cacti.conf.j2
+    dest: /etc/httpd/conf.d/cacti.conf
+    owner: root
+    group: root
+    mode: 0755
+  notify: Restart Apache2
+  tags: cacti
+
+#- name: Create symlink
+#  file:
+#    src: /etc/httpd/sites-available/cacti.otus.conf
+#    dest: /etc/httpd/sites-enabled/cacti.otus.conf
+#    owner: root
+#    group: root
+#    state: link
+
+ # tags: cacti

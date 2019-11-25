@@ -1,0 +1,7 @@
+<VirtualHost *:80>
+    ServerName www.{{ cacti_name }}
+    ServerAlias {{ cacti_name }}
+    DocumentRoot {{ cacti_dir }}
+    ErrorLog {{ cacti_dir_log }}/error.log
+    CustomLog {{ cacti_dir_log }}/requests.log combined
+</VirtualHost>
