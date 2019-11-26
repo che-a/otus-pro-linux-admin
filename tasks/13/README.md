@@ -44,17 +44,10 @@
 Официальный сайт `Zabbix` — [ссылка](https://www.zabbix.com/ru/)  
 Официальная документация — [ссылка](https://www.zabbix.com/documentation/current/ru/manual)  
 
-![alt text](screenshots/ "Настройка пользователей")​
+![Zabbix Dashboard](screenshots/Zabbix-02.png "Zabbix Dashboard")​
 
 
 
-
-<details>
-    <summary></summary>
-
-
-
-</details>
 
 ### Ссылки
 
