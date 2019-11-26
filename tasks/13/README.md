@@ -3,6 +3,9 @@
 1. [Описание занятия](#description)  
 2. [Домашнее задание](#homework)  
 3. [Выполнение](#exec)  
+   - [Cacti](#cacti)
+   - [Grafana -Prometheus](#grafana)
+   - [Zabbix](#zabbix)
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -31,7 +34,7 @@
 
 
 ## 3. Выполнение <a name="exec"></a>  
-### Cacti
+### Cacti <a name="cacti"></a>  
 Официальный сайт `Cacti` — [ссылка](https://www.cacti.net/)  
 Документация на `GitHub` — [ссылка](https://github.com/cacti/documentation)
 
@@ -39,8 +42,10 @@
 ![Графики](screenshots/Cacti-02.png "Графики")​
 ![Графики](screenshots/Cacti-03.png "Графики")​
 
+### Grafana - Prometheus <a name="grafana"></a>  
+`Grafana` — это популярный дашборд и конструктор графиков для визуализации временных рядов и показателей приложений, который можно использовать в различных областях. Grafana – очень производительное средство для создания, изучения и совместного использования панелей и данных.
 
-### Zabbix
+### Zabbix <a name="zabbix"></a>  
 Официальный сайт `Zabbix` — [ссылка](https://www.zabbix.com/ru/)  
 Официальная документация — [ссылка](https://www.zabbix.com/documentation/current/ru/manual)  
 
