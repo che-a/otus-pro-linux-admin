@@ -4,16 +4,16 @@
     update_cache: yes
   tags: common
 
-- name: Upgrade
-  apt:
-    upgrade: dist
-  tags: common
+#- name: Upgrade
+#  apt:
+#    upgrade: dist
+#  tags: common
 
-- name: Upgrade all packages
-  apt: 
-    name: "*"
-    state: latest
-  tags: common
+#- name: Upgrade all packages
+#  apt:
+#    name: "*"
+#    state: latest
+#  tags: common
 
 - name: Create temp directory
   file:

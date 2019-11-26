@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-SRV1='web'
-SRV2='mon'
+SRV1='mon'
+SRV2='web'
 ANSIBLE_SERVER='ansible'
 KEY='/home/vagrant/.ssh/id_rsa'
 KEY_PUB=$KEY'.pub'
