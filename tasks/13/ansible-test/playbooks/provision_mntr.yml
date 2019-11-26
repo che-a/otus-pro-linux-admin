@@ -1,6 +1,0 @@
----
-- name: Provision monitoring server
-  hosts: local
-  become: true
-  roles:
-    - role: mntr

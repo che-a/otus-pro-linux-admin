@@ -1,7 +1,7 @@
 ---
 - name: Download and install Zabbix repo rpm-file
   yum:
-    name: https://repo.zabbix.com/zabbix/4.3/rhel/7/x86_64/zabbix-release-4.3-3.el7.noarch.rpm
+    name: https://repo.zabbix.com/zabbix/4.2/rhel/7/x86_64/zabbix-release-4.2-2.el7.noarch.rpm
     state: present
   tags: zabbix
 
@@ -34,7 +34,23 @@
     mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -e "FLUSH PRIVILEGES;"
   tags: zabbix
 
+- name: Unzip Zabbix DB schema
+  shell: sudo gunzip /usr/share/doc/zabbix-server-mysql*/create.sql.gz
+  tags: zabbix
 
 - name: Init Zabbix DB
-  shell: zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -u 'root' -p"{{ mysql_root_pwd }}"  -D "{{ mysql_zabbix_db }}" -h 'localhost' --port='3306'
+  shell: mysql -u 'root' -p"{{ mysql_root_pwd }}"  -D "{{ mysql_zabbix_db }}" -h 'localhost' --port='3306' < /usr/share/doc/zabbix-server-mysql-4.2.8/create.sql
   tags: zabbix
+
+- name: Start Zabbix Server
+  systemd:
+    name: zabbix-server
+    state: started
+    enabled: yes
+  tags: zabbix
+
+- name: Install Zabbix Agent
+  yum:
+    name: zabbix-agent
+    state: present
+  notify: Start Zabbix Agent

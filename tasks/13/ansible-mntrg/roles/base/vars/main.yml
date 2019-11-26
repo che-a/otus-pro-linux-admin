@@ -21,6 +21,6 @@ cacti_dir_log: /var/log/cacti
 cacti_user: vagrant
 
 # Zabbix
-mysql_zabbix_db: zabbix_db
-mysql_zabbix_user: zab
-mysql_zabbix_user_pwd: zab
+mysql_zabbix_db: zabbix-server
+mysql_zabbix_user: zabbix-server
+mysql_zabbix_user_pwd: zabbix-server

@@ -8,3 +8,9 @@
   systemd:
     name: httpd
     state: restarted
+
+- name: Start Zabbix Agent
+  systemd:
+    name: zabbix-agent
+    state: restarted
+    enabled: yes

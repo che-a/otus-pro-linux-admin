@@ -1,0 +1,8 @@
+- hosts: 127.0.0.1
+  become: yes
+  roles:
+     - { role: base }
+     - { role: geerlingguy.apache }
+     - { role: dj-wasabi.zabbix-server, zabbix_server_database: mysql, zabbix_server_database_long: mysql, zabbix_server_dbport: 3306 }
+     - { role: dj-wasabi.zabbix-web, zabbix_url: zabbix.dj-wasabi.nl, zabbix_server_database: mysql, zabbix_server_database_long: mysql, zabbix_server_dbport: 3306}
+     - { role: dj-wasabi.zabbix-agent }
