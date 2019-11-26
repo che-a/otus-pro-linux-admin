@@ -41,18 +41,23 @@
 </details>
 
 ### Ссылки
-[Cacti](https://www.cacti.net/) —  
+
 [Grafana](https://grafana.com/) —  
 [Icinga](https://icinga.com/products/user-experience/) —  
 [Prometheus](https://prometheus.io/) —  
-[Zabbix](https://www.zabbix.com/ru/) —  
+
 
 ## 4. Выполнение <a name="exec"></a>  
-Лабораторный стенд разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/Vagrantfile) с автоматическим провижинингом из сценария [script.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/10/script.sh), запускаемого с параметром `--provision`.
+### Cacti
+Официальный сайт `Cacti` — [ссылка](https://www.cacti.net/)  
+Документация на `GitHub` — [ссылка](https://github.com/cacti/documentation)
+
+![alt text](screenshots/Cacti-01.png "Настройка пользователей")​
+![alt text](screenshots/Cacti-02.png "Настройка пользователей")​
+![alt text](screenshots/Cacti-03.png "Настройка пользователей")​
 
 
-[http://localhost:8080/](http://localhost:8080/) — Веб-интерфейс Zabbix
-[http://localhost:8082/](http://localhost:8082/) — Веб-сервер
+### Zabbix
+[Zabbix](https://www.zabbix.com/ru/)
 
-### Результаты <a name="result"></a>  
-#### Zabbix
+![alt text](screenshots/ "Настройка пользователей")​
