@@ -35,13 +35,14 @@
 Официальный сайт `Cacti` — [ссылка](https://www.cacti.net/)  
 Документация на `GitHub` — [ссылка](https://github.com/cacti/documentation)
 
-![alt text](screenshots/Cacti-01.png "Настройка пользователей")​
-![alt text](screenshots/Cacti-02.png "Настройка пользователей")​
-![alt text](screenshots/Cacti-03.png "Настройка пользователей")​
+![Настройка пользователей](screenshots/Cacti-01.png "Настройка пользователей")​
+![Графики](screenshots/Cacti-02.png "Графики")​
+![Графики](screenshots/Cacti-03.png "Графики")​
 
 
 ### Zabbix
-[Zabbix](https://www.zabbix.com/ru/)
+Официальный сайт `Zabbix` — [ссылка](https://www.zabbix.com/ru/)  
+Официальная документация — [ссылка](https://www.zabbix.com/documentation/current/ru/manual)  
 
 ![alt text](screenshots/ "Настройка пользователей")​
 
