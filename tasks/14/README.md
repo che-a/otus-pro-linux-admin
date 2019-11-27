@@ -3,7 +3,7 @@
 1. [Описание занятия](#description)  
 2. [Домашнее задание](#homework)  
 3. [Выполнение](#exec)  
-   - [Cacti](#cacti)
+   - [](#)
 
 
 ## 1. Описание занятия <a name="description"></a>
@@ -27,4 +27,6 @@
 Настроить доп. опции - сжатие, шифрование, дедупликация   
 
 ## 3. Выполнение <a name="exec"></a>  
-### Cacti <a name="cacti"></a>  
+### <a name=""></a>  
+
+[Bacula](https://www.bacula.org/)
