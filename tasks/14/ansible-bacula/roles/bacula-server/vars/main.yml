@@ -1,0 +1,6 @@
+---
+# vars file for roles/bacula
+
+# MariaDB
+mysql_root_pwd: mariadbpass
+mysql_bacula_pwd: baculapass

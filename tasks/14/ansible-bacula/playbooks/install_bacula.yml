@@ -1,7 +1,14 @@
 ---
-- name: Install NGINX
-  hosts: srv
+- name: Install Bacula on server
+  hosts: local
   become: yes
 
   roles:
-    - nginx
+    - bacula-server
+
+- name: Install Bacula on client
+  hosts: clients
+  become: yes
+
+  roles:
+    - bacula-client
