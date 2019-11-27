@@ -43,20 +43,20 @@
 ![Графики](screenshots/Cacti-03.png "Графики")​
 
 ### Grafana - Prometheus <a name="grafana"></a>  
+[Grafana](https://grafana.com/)  
+[Prometheus](https://prometheus.io/)  
+
 `Grafana` — это популярный дашборд и конструктор графиков для визуализации временных рядов и показателей приложений, который можно использовать в различных областях. Grafana – очень производительное средство для создания, изучения и совместного использования панелей и данных.
+
+
+
+
+
+
+
 
 ### Zabbix <a name="zabbix"></a>  
 Официальный сайт `Zabbix` — [ссылка](https://www.zabbix.com/ru/)  
 Официальная документация — [ссылка](https://www.zabbix.com/documentation/current/ru/manual)  
 
 ![Zabbix Dashboard](screenshots/Zabbix-02.png "Zabbix Dashboard")​
-
-
-
-
-### Ссылки
-
-[Grafana](https://grafana.com/) —  
-[Icinga](https://icinga.com/products/user-experience/) —  
-[Prometheus](https://prometheus.io/) —  
-
