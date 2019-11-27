@@ -53,3 +53,6 @@
 
 **Занятие 13. Мониторинг и алертинг**  
 *Задание:* [Настройка мониторинга](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/13)
+
+**Занятие 14. Резервное копирование**  
+*Задание:* [Настраиваем бэкапы](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/14)
