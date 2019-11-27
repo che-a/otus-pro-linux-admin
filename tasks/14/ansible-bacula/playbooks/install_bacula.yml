@@ -1,0 +1,7 @@
+---
+- name: Install NGINX
+  hosts: srv
+  become: yes
+
+  roles:
+    - nginx
