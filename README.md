@@ -8,8 +8,6 @@
 
 Выполнение каждого задания подразумевает использование [Vagrant](https://www.vagrantup.com/) для развертывания тестового окружения Linux в среде виртуализации [VirtualBox](https://www.virtualbox.org/). В качестве основоного дистрибутива Linux выбран [CentOS 7](https://wiki.centos.org/Download), эпизодически используется [Debian 10](https://www.debian.org/).
 
-Кроме того, у данного репозитория имеется своя [Wiki](https://github.com/che-a/OTUS_LinuxAdministration/wiki).
-
 ### Модуль 1. Архитектура Linux
 ---
 
