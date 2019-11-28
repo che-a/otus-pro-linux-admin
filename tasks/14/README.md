@@ -83,6 +83,41 @@ cd ansible-bacula/ && ansible-playbook playbooks/install_bacula.yml
 Клиент:  
 - `bacula-fd.conf`, [файл](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/ansible-bacula/roles/bacula/templates/client_bacula-fd.conf.j2)  
 
+Время выполнения операций резрвного копирования определяется в следующем фрагменте кода [файла](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/ansible-bacula/roles/bacula/templates/server_bacula-dir.conf.j2) `bacula-dir.conf`:  
+```console
+Schedule {
+    Name = "ScheduleOTUS"
+    Run = Level=Full daily at 0:00
+
+    Run = Level=Differential hourly at 0:10
+    Run = Level=Differential hourly at 0:40
+
+    Run = Level=Incremental hourly at 0:05
+    Run = Level=Incremental hourly at 0:15
+    Run = Level=Incremental hourly at 0:25
+    Run = Level=Incremental hourly at 0:35
+    Run = Level=Incremental hourly at 0:45
+    Run = Level=Incremental hourly at 0:55
+}
+```
+
+
+```bash
+list jobs
+```
+```console
+
+```
+
+```bash
+list files jobid=<id>
+```
+```console
+
+```
+
+
+
 ### Дополнительное задание <a name="add"></a>  
 
 
