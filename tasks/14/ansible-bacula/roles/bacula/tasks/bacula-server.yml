@@ -13,25 +13,6 @@
     recurse: yes
   tags: bacula
 
-- name: Create dir /bacula/restore
-  file:
-    path: /bacula/restore
-    state: directory
-    owner: bacula
-    group: bacula
-    mode: 0700
-    recurse: yes
-  tags: bacula
-
-- name: Create dir /etc/bacula/conf.d
-  file:
-    path: /etc/bacula/conf.d
-    state: directory
-    owner: root
-    group: bacula
-    mode: 0755
-  tags: bacula
-
 - name: Copy bacula-dir.conf to /etc/bacula/
   template:
     src: server_bacula-dir.conf.j2
@@ -58,35 +39,6 @@
     group: bacula
     mode: 0700
   tags: bacula
-
-
-#- name: Copy clients.conf to /etc/bacula/conf.d
-#  template:
-#    src: clients.conf.j2
-#    dest: /etc/bacula/conf.d/clients.conf
-#    owner: root
-#    group: bacula
-#    mode: 0700
-#  tags: bacula
-
-#- name: Copy filesets.conf to /etc/bacula/conf.d
-#  template:
-#    src: filesets.conf.j2
-#    dest: /etc/bacula/conf.d/filesets.conf
-#    owner: root
-#    group: bacula
-#    mode: 0700
-#  tags: bacula
-
-#- name: Copy pools.conf to /etc/bacula/conf.d
-#  template:
-#    src: pools.conf.j2
-#    dest: /etc/bacula/conf.d/pools.conf
-#    owner: root
-#    group: bacula
-#    mode: 0700
-#  tags: bacula
-
 
 - name: Start Bacula DIR (Director) service
   systemd:
