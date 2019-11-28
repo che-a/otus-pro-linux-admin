@@ -1,18 +1,7 @@
-#
-# Default  Bacula File Daemon Configuration file
-#
-#  For Bacula release 5.2.13 (19 February 2013) -- redhat (Core)
-#
-# There is not much to change here except perhaps the
-# File daemon Name to
-#
 
-#
-# List Directors who are permitted to contact this File daemon
-#
 Director {
-  Name = bacula-dir
-  Password = "{{ client_fd_pwd }}"	# <==|
+  Name = {{ client_ip }}-dir
+  Password = "{{ FD_PASSWORD }}"
 }
 
 #
@@ -29,8 +18,8 @@ Director {
 # "Global" File daemon configuration specifications
 #
 FileDaemon {                          # this is me
-  Name = bacula-fd
-  FDAddress = {{ client_FQDN }}	# <==|
+  Name = OtusClient
+  FDAddress = {{ client_ip }}
   FDport = 9102                  # where we listen for the director
   WorkingDirectory = /var/spool/bacula
   Pid Directory = /var/run
@@ -40,5 +29,5 @@ FileDaemon {                          # this is me
 # Send all messages except skipped files back to Director
 Messages {
   Name = Standard
-  director = {{ server_FQDN }}-dir = all, !skipped, !restored # <==|
+  director = srv-dir = all, !skipped, !restored
 }

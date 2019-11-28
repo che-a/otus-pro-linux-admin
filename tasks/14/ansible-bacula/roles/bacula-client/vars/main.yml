@@ -1,6 +1,7 @@
 ---
-# vars file for roles/bacula
-client_FQDN: client
-server_FQDN: server
+# vars file for roles/bacula-client
 
-client_fd_pwd: N2Q2Nzc4NGU2MGMzNGEzZDk4MmI2ZTQ5M
+client_ip: 192.168.50.20
+server_ip: 192.168.50.10
+
+FD_PASSWORD: NjQ4MTgzMjIxOTdiNGY0YjNiZjA3YTAwN

@@ -1,7 +1,3 @@
-@/etc/bacula/conf.d/clients.conf
-@/etc/bacula/conf.d/filesets.conf
-@/etc/bacula/conf.d/pools.conf
-
 Director {                            # define myself
   Name = bacula-dir
   DIRport = 9101                # where we listen for UA connections
@@ -19,7 +15,7 @@ JobDefs {
   Type = Backup
   Level = Incremental
   Client = bacula-fd
-#  FileSet = "Full Set"
+  FileSet = "Full Set"
   Schedule = "WeeklyCycle"
   Storage = File
   Messages = Standard
@@ -33,10 +29,14 @@ JobDefs {
 Job {
   Name = "OtusClientBackup"
   JobDefs = "DefaultJob"
+  Client = OtusClient
   Schedule = "OtusSchedule"
   FileSet = "OtusEtc"
   Pool = "OtusPoolRemote"
+  Messages = Standard
 }
+
+
 
 #Job {
 #  Name = "OtusClientRestore"
@@ -157,3 +157,7 @@ Console {
   Password = "{{ MON_DIR_PASSWORD }}"
   CommandACL = status, .status
 }
+
+@/etc/bacula/conf.d/clients.conf
+@/etc/bacula/conf.d/filesets.conf
+@/etc/bacula/conf.d/pools.conf

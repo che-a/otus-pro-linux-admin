@@ -1,7 +1,7 @@
 # Client (File Services) to backup
 Client {
-  Name = bacula-fd
-  Address = localhost
+  Name = OtusClient
+  Address = {{ client_ip }}
   FDPort = 9102
   Catalog = MyCatalog
   Password = "{{ FD_PASSWORD }}"          # password for FileDaemon

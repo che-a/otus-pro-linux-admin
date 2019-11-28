@@ -84,6 +84,15 @@
     mode: 0700
   tags: bacula
 
+#- name: Copy bconsole.conf to /etc/bacula/
+#  template:
+#    src: bconsole.conf.j2
+#    dest: /etc/bacula/bconsole.conf
+#    owner: root
+#    group: bacula
+#    mode: 0700
+#  tags: bacula
+
 #- name: Change password for Bacula DIR
 #  shell: |
 #    DIR_PASSWORD=`date +%s | sha256sum | base64 | head -c 33`

@@ -9,7 +9,7 @@ KEY_PUB=$KEY'.pub'
 case $HOSTNAME in
     $SERVER_NAME)
         yum install -y epel-release
-        yum install -y ansible ansible-lint sshpass mc nano tmux tree wget
+        yum install -y ansible ansible-lint sshpass nano tmux
         # Возможность использования имен серверов вместо IP-адресов
         echo "$CLIENT_IP  $CLIENT_NAME" >> /etc/hosts
         # Запретить SSH-клиенту при подключении к хосту осуществлять

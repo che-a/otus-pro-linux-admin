@@ -8,14 +8,13 @@
     packages:
       - bacula-client
       - nano
-      - mc
   tags: common
 
 - name: Copy bacula-fd.conf to /etc/bacula/
   template:
     src: bacula-fd.conf.j2
     dest: /etc/bacula/bacula-fd.conf
-    owner: bacula
+    owner: root
     group: bacula
     mode: 0700
   tags: bacula
