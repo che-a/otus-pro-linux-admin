@@ -1,14 +1,5 @@
 ---
-- name: Install Bacula client and other packages
-  yum:
-    name: "{{ packages }}"
-    update_cache: yes
-    state: present
-  vars:
-    packages:
-      - bacula-client
-      - nano
-  tags: common
+
 
 - name: Copy bacula-fd.conf to /etc/bacula/
   template:

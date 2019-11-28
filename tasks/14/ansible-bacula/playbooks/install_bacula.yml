@@ -1,14 +1,7 @@
 ---
 - name: Install Bacula on server
-  hosts: local
+  hosts: all
   become: yes
 
   roles:
-    - bacula-server
-
-- name: Install Bacula on client
-  hosts: clients
-  become: yes
-
-  roles:
-    - bacula-client
+    - bacula

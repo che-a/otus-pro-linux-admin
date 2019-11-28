@@ -1,6 +1,0 @@
----
-# tasks file for roles/bacula
-
-- include: common.yml
-- include: mariadb.yml
-- include: bacula.yml
