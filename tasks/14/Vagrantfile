@@ -2,13 +2,13 @@
 # vim: set ft=ruby :
 
 hosts = {
-    :"client" => {
+    :"cl" => {
         :box_name => "centos/7",
         :cpu => '1',
         :ram => "512",
-        :ip_addr => '192.168.50.11'
+        :ip_addr => '192.168.50.20'
     },
-    :"server" => {
+    :"srv" => {
         :box_name => "centos/7",
         :cpu => '2',
         :ram => "1024",

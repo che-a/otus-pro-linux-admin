@@ -1,16 +1,6 @@
-#
-# Default Bacula Director Configuration file
-#
-#  The only thing that MUST be changed is to add one or more
-#   file or directory names in the Include directive of the
-#   FileSet resource.
-#
-#  For Bacula release 5.2.13 (19 February 2013) -- redhat (Core)
-#
-#  You might also want to change the default email address
-#   from root to your address.  See the "mail" and "operator"
-#   directives in the Messages resource.
-#
+@/etc/bacula/conf.d/clients.conf
+@/etc/bacula/conf.d/filesets.conf
+@/etc/bacula/conf.d/pools.conf
 
 Director {                            # define myself
   Name = bacula-dir
@@ -19,9 +9,9 @@ Director {                            # define myself
   WorkingDirectory = "/var/spool/bacula"
   PidDirectory = "/var/run"
   Maximum Concurrent Jobs = 1
-  Password = "@@DIR_PASSWORD@@"         # Console password
+  Password = "{{ DIR_PASSWORD }}"         # Console password
   Messages = Daemon
-  DirAddress = 127.0.0.1	# <==|
+  DirAddress = {{ server_ip }}
 }
 
 JobDefs {
@@ -29,7 +19,7 @@ JobDefs {
   Type = Backup
   Level = Incremental
   Client = bacula-fd
-  FileSet = "Full Set"
+#  FileSet = "Full Set"
   Schedule = "WeeklyCycle"
   Storage = File
   Messages = Standard
@@ -38,93 +28,44 @@ JobDefs {
   Write Bootstrap = "/var/spool/bacula/%c.bsr"
 }
 
-
 #
-# Define the main nightly save backup job
-#   By default, this job will back up to disk in /tmp
+# OTUS
 Job {
-  Name = "BackupLocalFiles"	# <==|
+  Name = "OtusClientBackup"
   JobDefs = "DefaultJob"
+  Schedule = "OtusSchedule"
+  FileSet = "OtusEtc"
+  Pool = "OtusPoolRemote"
 }
 
 #Job {
-#  Name = "BackupClient2"
-#  Client = bacula2-fd
-#  JobDefs = "DefaultJob"
+#  Name = "OtusClientRestore"
+#  Type = Restore
+#  Client=bacula-fd
+#  FileSet="Full Set"
+#  Storage = File
+#  Pool = Default
+#  Messages = Standard
+#  Where = /bacula/restore
 #}
 
+
 # Backup the catalog database (after the nightly save)
-Job {
-  Name = "BackupCatalog"
-  JobDefs = "DefaultJob"
-  Level = Full
-  FileSet="Catalog"
-  Schedule = "WeeklyCycleAfterBackup"
+#Job {
+#  Name = "BackupCatalog"
+#  JobDefs = "DefaultJob"
+#  Level = Full
+#  FileSet="Catalog"
+#  Schedule = "WeeklyCycleAfterBackup"
   # This creates an ASCII copy of the catalog
   # Arguments to make_catalog_backup.pl are:
   #  make_catalog_backup.pl <catalog-name>
-  RunBeforeJob = "/usr/libexec/bacula/make_catalog_backup.pl MyCatalog"
+#  RunBeforeJob = "/usr/libexec/bacula/make_catalog_backup.pl MyCatalog"
   # This deletes the copy of the catalog
-  RunAfterJob  = "/usr/libexec/bacula/delete_catalog_backup"
-  Write Bootstrap = "/var/spool/bacula/%n.bsr"
-  Priority = 11                   # run after main backup
-}
-
-#
-# Standard Restore template, to be changed by Console program
-#  Only one such job is needed for all Jobs/Clients/Storage ...
-#
-Job {
-  Name = "RestoreLocalFiles"	# <==|
-  Type = Restore
-  Client=bacula-fd
-  FileSet="Full Set"
-  Storage = File
-  Pool = Default
-  Messages = Standard
-  Where = /bacula/restore	# <==|
-}
-
-
-# List of files to be backed up
-FileSet {
-  Name = "Full Set"
-  Include {
-    Options {
-      signature = MD5
-      compression = GZIP	# <==|
-    }
-#
-#  Put your list of files here, preceded by 'File =', one per line
-#    or include an external list with:
-#
-#    File = <file-name
-#
-#  Note: / backs up everything on the root partition.
-#    if you have other partitions such as /usr or /home
-#    you will probably want to add them too.
-#
-#  By default this is defined to point to the Bacula binary
-#    directory to give a reasonable FileSet to backup to
-#    disk storage during initial testing.
-#
-    File = /usr/sbin
-  }
-
-#
-# If you backup the root directory, the following two excluded
-#   files can be useful
-#
-  Exclude {
-    File = /var/spool/bacula
-    File = /tmp
-    File = /proc
-    File = /tmp
-    File = /.journal
-    File = /.fsck
-    File = /bacula	# <==|
-  }
-}
+#  RunAfterJob  = "/usr/libexec/bacula/delete_catalog_backup"
+#  Write Bootstrap = "/var/spool/bacula/%n.bsr"
+#  Priority = 11                   # run after main backup
+#}
 
 #
 # When to do the backups, full backup on first sunday of the month,
@@ -138,122 +79,51 @@ Schedule {
 }
 
 # This schedule does the catalog. It starts after the WeeklyCycle
-Schedule {
-  Name = "WeeklyCycleAfterBackup"
-  Run = Full sun-sat at 23:10
-}
-
-# This is the backup of the catalog
-FileSet {
-  Name = "Catalog"
-  Include {
-    Options {
-      signature = MD5
-    }
-    File = "/var/spool/bacula/bacula.sql"
-  }
-}
-
-# Client (File Services) to backup
-Client {
-  Name = bacula-fd
-  Address = localhost
-  FDPort = 9102
-  Catalog = MyCatalog
-  Password = "@@FD_PASSWORD@@"          # password for FileDaemon
-  File Retention = 30 days            # 30 days
-  Job Retention = 6 months            # six months
-  AutoPrune = yes                     # Prune expired Jobs/Files
-}
-
-#
-# Second Client (File Services) to backup
-#  You should change Name, Address, and Password before using
-#
-#Client {
-#  Name = bacula2-fd
-#  Address = localhost2
-#  FDPort = 9102
-#  Catalog = MyCatalog
-#  Password = "@@FD_PASSWORD@@2"         # password for FileDaemon 2
-#  File Retention = 30 days            # 30 days
-#  Job Retention = 6 months            # six months
-#  AutoPrune = yes                     # Prune expired Jobs/Files
+#Schedule {
+#  Name = "WeeklyCycleAfterBackup"
+#  Run = Full sun-sat at 23:10
 #}
 
+Schedule {
+    Name = "OtusSchedule"
+    Run  = Level=Full           daily  at 0:01
 
-# Definition of file storage device
+    Run  = Level=Differential   hourly at 0:10
+    Run  = Level=Differential   hourly at 0:40
+
+    Run  = Level=Incremental    hourly at 0:05
+    Run  = Level=Incremental    hourly at 0:15
+    Run  = Level=Incremental    hourly at 0:25
+    Run  = Level=Incremental    hourly at 0:35
+    Run  = Level=Incremental    hourly at 0:45
+    Run  = Level=Incremental    hourly at 0:55
+}
+
+#
+# OTUS
 Storage {
   Name = File
 # Do not use "localhost" here
-  Address = 127.0.0.1	# <==|                # N.B. Use a fully qualified name here
+  Address = {{ server_ip }}                # N.B. Use a fully qualified name here
   SDPort = 9103
-  Password = "@@SD_PASSWORD@@"
+  Password = "{{ SD_PASSWORD }}"
   Device = FileStorage
   Media Type = File
 }
-
-
-
-# Definition of DDS tape storage device
-#Storage {
-#  Name = DDS-4
-#  Do not use "localhost" here
-#  Address = localhost                # N.B. Use a fully qualified name here
-#  SDPort = 9103
-#  Password = "@@SD_PASSWORD@@"          # password for Storage daemon
-#  Device = DDS-4                      # must be same as Device in Storage daemon
-#  Media Type = DDS-4                  # must be same as MediaType in Storage daemon
-#  Autochanger = yes                   # enable for autochanger device
-#}
-
-# Definition of 8mm tape storage device
-#Storage {
-#  Name = "8mmDrive"
-#  Do not use "localhost" here
-#  Address = localhost                # N.B. Use a fully qualified name here
-#  SDPort = 9103
-#  Password = "@@SD_PASSWORD@@"
-#  Device = "Exabyte 8mm"
-#  MediaType = "8mm"
-#}
-
-# Definition of DVD storage device
-#Storage {
-#  Name = "DVD"
-#  Do not use "localhost" here
-#  Address = localhost                # N.B. Use a fully qualified name here
-#  SDPort = 9103
-#  Password = "@@SD_PASSWORD@@"
-#  Device = "DVD Writer"
-#  MediaType = "DVD"
-#}
-
 
 # Generic catalog service
 Catalog {
   Name = MyCatalog
 # Uncomment the following line if you want the dbi driver
 # dbdriver = "dbi:postgresql"; dbaddress = 127.0.0.1; dbport =
-  dbname = "bacula"; dbuser = "bacula"; dbpassword = "{{ mysql_bacula_pwd }}"		# <==|
+  dbname = "bacula"; dbuser = "bacula"; dbpassword = "{{ mysql_bacula_pwd }}"
 }
 
 # Reasonable message delivery -- send most everything to email address
 #  and to the console
 Messages {
   Name = Standard
-#
-# NOTE! If you send to two email or more email addresses, you will need
-#  to replace the %r in the from field (-f part) with a single valid
-#  email address in both the mailcommand and the operatorcommand.
-#  What this does is, it sets the email address that emails would display
-#  in the FROM field, which is by default the same email as they're being
-#  sent to.  However, if you send email to more than one address, then
-#  you'll have to set the FROM address manually, to a single address.
-#  for example, a 'no-reply@mydomain.com', is better since that tends to
-#  tell (most) people that its coming from an automated source.
 
-#
   mailcommand = "/usr/sbin/bsmtp -h localhost -f \"\(Bacula\) \<%r\>\" -s \"Bacula: %t %e of %c %l\" %r"
   operatorcommand = "/usr/sbin/bsmtp -h localhost -f \"\(Bacula\) \<%r\>\" -s \"Bacula: Intervention needed for %j\" %r"
   mail = root@localhost = all, !skipped
@@ -279,39 +149,11 @@ Messages {
   append = "/var/log/bacula/bacula.log" = all, !skipped
 }
 
-# Default pool definition
-Pool {
-  Name = Default
-  Pool Type = Backup
-  Recycle = yes                       # Bacula can automatically recycle Volumes
-  AutoPrune = yes                     # Prune expired volumes
-  Volume Retention = 365 days         # one year
-}
-
-# File Pool definition
-Pool {
-  Name = File
-  Pool Type = Backup
-  Label Format = Local-		# <==|
-  Recycle = yes                       # Bacula can automatically recycle Volumes
-  AutoPrune = yes                     # Prune expired volumes
-  Volume Retention = 365 days         # one year
-  Maximum Volume Bytes = 50G          # Limit Volume size to something reasonable
-  Maximum Volumes = 100               # Limit number of Volumes in Pool
-}
-
-
-# Scratch pool definition
-Pool {
-  Name = Scratch
-  Pool Type = Backup
-}
-
 #
 # Restricted console used by tray-monitor to get the status of the director
 #
 Console {
   Name = bacula-mon
-  Password = "@@MON_DIR_PASSWORD@@"
+  Password = "{{ MON_DIR_PASSWORD }}"
   CommandACL = status, .status
 }

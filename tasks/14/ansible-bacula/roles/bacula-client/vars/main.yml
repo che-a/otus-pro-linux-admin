@@ -1,2 +1,6 @@
 ---
 # vars file for roles/bacula
+client_FQDN: client
+server_FQDN: server
+
+client_fd_pwd: N2Q2Nzc4NGU2MGMzNGEzZDk4MmI2ZTQ5M

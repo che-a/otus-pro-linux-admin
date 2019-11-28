@@ -1,0 +1,23 @@
+#
+# OTUS
+FileSet {
+    Name = "OtusEtc"
+    Include {
+        Options {
+            signature = MD5
+            compression = GZIP
+        }
+        File = /etc
+    }
+}
+
+# This is the backup of the catalog
+FileSet {
+  Name = "Catalog"
+  Include {
+    Options {
+      signature = MD5
+    }
+    File = "/var/spool/bacula/bacula.sql"
+  }
+}

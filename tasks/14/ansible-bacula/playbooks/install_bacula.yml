@@ -6,9 +6,9 @@
   roles:
     - bacula-server
 
-- name: Install Bacula on client
-  hosts: clients
-  become: yes
+#- name: Install Bacula on client
+#  hosts: clients
+#  become: yes
 
-  roles:
-    - bacula-client
+#  roles:
+#    - bacula-client

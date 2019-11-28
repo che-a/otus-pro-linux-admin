@@ -1,6 +1,16 @@
 ---
-# vars file for roles/bacula
+# vars file for roles/bacula-server
 
 # MariaDB
 mysql_root_pwd: mariadbpass
 mysql_bacula_pwd: baculapass
+
+client_ip: 192.168.50.20
+server_ip: 192.168.50.10
+
+# Bacula-conf passwords
+DIR_PASSWORD: YTMwOTJmMjM3NDgwM2RlOTViZTQyNDhhY
+FD_PASSWORD: NjQ4MTgzMjIxOTdiNGY0YjNiZjA3YTAwN
+MON_DIR_PASSWORD: ZjdhOWMyZmE3ZjYyMWNkYjEwNTFiYmRjM
+MON_SD_PASSWORD: OTkwZjBjZTM2OGE3YWMwNTUxNmYzN2Y3N
+SD_PASSWORD: MTgyNjRlNjE5NzAxNzYwMTE1OWQ5M2RiY
