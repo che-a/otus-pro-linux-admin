@@ -4,7 +4,8 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-   - [](#)
+   - [Основное задание](#main)  
+   - [Дополнительное задание](#add)
 
 
 ## 1. Описание занятия <a name="description"></a>
@@ -32,8 +33,8 @@
 <details>
    <summary></summary>
    
-[Bacula](https://www.bacula.org/)
-[Официальная документация](https://www.bacula.org/documentation/documentation/)
+[Bacula](https://www.bacula.org/)  
+[Официальная документация](https://www.bacula.org/documentation/documentation/)  
 
 `Bacula` состоит из нескольких программных компонентов и основывается на модели «сервер-клиент». Компоненты сервера Bacula не обязательно запускать на одном сервере.  
 
@@ -66,8 +67,12 @@
 </details>
 
 ## 4. Выполнение <a name="exec"></a>  
-### <a name=""></a>  
 
+
+
+### Основное задание <a name="main"></a>  
+
+### Дополнительное задание <a name="add"></a>  
 
 
 
