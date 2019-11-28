@@ -68,12 +68,20 @@
 
 ## 4. Выполнение <a name="exec"></a>  
 
-Лабораторный стенд, состоящий из двух объединенных в одну сеть машин, разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/Vagrantfile) с последующим минимальным провижинингом из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/provision.sh), суть которого заключается в настройке беспарольного `SSH`-доступа с машины `server` на машину `client1`.  Дальнейшая настройка на этих машинах сервера и клиента системы `Bacula` проводится средствами `Ansible`, для чего необходимо выполнить следующую команду:
+Лабораторный стенд, состоящий из двух объединенных в одну сеть машин, разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/Vagrantfile) с последующим минимальным провижинингом из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/provision.sh), суть которого заключается в настройке беспарольного `SSH`-доступа с машины `server` на машину `client1`.  Дальнейшая настройка на этих машинах сервера и клиента системы `Bacula` проводится средствами `Ansible`, для чего необходимо выполнить команду:
 ```bash
 cd ansible-bacula/ && ansible-playbook playbooks/install_bacula.yml
 ```
 
 ### Основное задание <a name="main"></a>  
+Конфигурационные файлы `Bacula` представлены в виде `Jinja`-шаблонов и составлены из оригинальных [файлов](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/14/orig_conf_files), доступных сразу после установки `Bacula`.  
+
+Сервер:  
+- `bacula-dir.conf`, [файл](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/ansible-bacula/roles/bacula/templates/server_bacula-dir.conf.j2)  
+- `bacula-sd.conf`, [файл](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/ansible-bacula/roles/bacula/templates/server_bacula-sd.conf.j2)  
+
+Клиент:  
+- `bacula-fd.conf`, [файл](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/ansible-bacula/roles/bacula/templates/client_bacula-fd.conf.j2)  
 
 ### Дополнительное задание <a name="add"></a>  
 
