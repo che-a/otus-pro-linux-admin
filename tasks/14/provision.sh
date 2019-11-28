@@ -35,3 +35,6 @@ case $HOSTNAME in
         systemctl restart sshd.service
         ;;
 esac
+
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+reboot

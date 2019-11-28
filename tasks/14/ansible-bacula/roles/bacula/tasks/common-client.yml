@@ -15,4 +15,5 @@
       - bacula-client
       - bacula-console
       - nano
+      - tmux
   tags: common

@@ -16,6 +16,7 @@ Storage {                             # definition of myself
   WorkingDirectory = "/var/spool/bacula"
   Pid Directory = "/var/run"
   Maximum Concurrent Jobs = 20
+  SDAddress = {{ server_ip }}
 }
 
 #
@@ -52,7 +53,7 @@ Director {
 Device {
   Name = FileStorage
   Media Type = File
-  Archive Device = /tmp
+  Archive Device = /bacula/backup
   LabelMedia = yes;                   # lets Bacula label unlabeled media
   Random Access = Yes;
   AutomaticMount = yes;               # when device opened, read it

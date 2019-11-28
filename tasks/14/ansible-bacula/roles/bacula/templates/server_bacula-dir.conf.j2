@@ -15,24 +15,28 @@ JobDefs {
   Name = "DefaultJob"
   Type = Backup
   Level = Incremental
-  Client = OtusClient1-fd
-  FileSet = "Full Set"
-  #Schedule = "WeeklyCycle"
-  Schedule = "ScheduleOTUS"
-  Storage = File
+
+
   Messages = Standard
-  Pool = File
+  #Pool = File
   Priority = 10
   Write Bootstrap = "/var/spool/bacula/%c.bsr"
 }
-
-
 #
 # Define the main nightly save backup job
 #   By default, this job will back up to disk in /tmp
 Job {
   Name = "BackupClient1"
   JobDefs = "DefaultJob"
+  Pool = RemoteFile
+
+  Storage = File
+  Client = OtusClient1-fd
+  #FileSet = "Full Set"
+  FileSet = "OtusEtcSet"
+  #Schedule = "WeeklyCycle"
+  Schedule = "ScheduleOTUS"
+
 }
 
 #Job {
@@ -42,45 +46,45 @@ Job {
 #}
 
 # Backup the catalog database (after the nightly save)
-Job {
-  Name = "BackupCatalog"
-  JobDefs = "DefaultJob"
-  Level = Full
-  FileSet="Catalog"
-  Schedule = "WeeklyCycleAfterBackup"
+#Job {
+#  Name = "BackupCatalog"
+#  JobDefs = "DefaultJob"
+#  Level = Full
+#  FileSet="Catalog"
+#  Schedule = "WeeklyCycleAfterBackup"
   # This creates an ASCII copy of the catalog
   # Arguments to make_catalog_backup.pl are:
   #  make_catalog_backup.pl <catalog-name>
-  RunBeforeJob = "/usr/libexec/bacula/make_catalog_backup.pl MyCatalog"
+#  RunBeforeJob = "/usr/libexec/bacula/make_catalog_backup.pl MyCatalog"
   # This deletes the copy of the catalog
-  RunAfterJob  = "/usr/libexec/bacula/delete_catalog_backup"
-  Write Bootstrap = "/var/spool/bacula/%n.bsr"
-  Priority = 11                   # run after main backup
-}
+#  RunAfterJob  = "/usr/libexec/bacula/delete_catalog_backup"
+#  Write Bootstrap = "/var/spool/bacula/%n.bsr"
+#  Priority = 11                   # run after main backup
+#}
 
 #
 # Standard Restore template, to be changed by Console program
 #  Only one such job is needed for all Jobs/Clients/Storage ...
 #
-Job {
-  Name = "RestoreFiles"
-  Type = Restore
-  Client=OtusClient1-fd
-  FileSet="Full Set"
-  Storage = File
-  Pool = Default
-  Messages = Standard
-  Where = /tmp/bacula-restores
-}
+#Job {
+#  Name = "RestoreFiles"
+#  Type = Restore
+#  Client=OtusClient1-fd
+#  FileSet="Full Set"
+#  Storage = File
+#  Pool = Default
+#  Messages = Standard
+#  Where = /tmp/bacula-restores
+#}
 
 
 # List of files to be backed up
-FileSet {
-  Name = "Full Set"
-  Include {
-    Options {
-      signature = MD5
-    }
+#FileSet {
+#  Name = "Full Set"
+#  Include {
+#    Options {
+#      signature = MD5
+#    }
 #
 #  Put your list of files here, preceded by 'File =', one per line
 #    or include an external list with:
@@ -95,39 +99,39 @@ FileSet {
 #    directory to give a reasonable FileSet to backup to
 #    disk storage during initial testing.
 #
-    File = /usr/sbin
-  }
+#    File = /usr/sbin
+#  }
 
 #
 # If you backup the root directory, the following two excluded
 #   files can be useful
 #
-  Exclude {
-    File = /var/spool/bacula
-    File = /tmp
-    File = /proc
-    File = /tmp
-    File = /.journal
-    File = /.fsck
-  }
-}
+#  Exclude {
+#    File = /var/spool/bacula
+#    File = /tmp
+#    File = /proc
+#    File = /tmp
+#    File = /.journal
+#    File = /.fsck
+#  }
+#}
 
 #
 # When to do the backups, full backup on first sunday of the month,
 #  differential (i.e. incremental since full) every other sunday,
 #  and incremental backups other days
-Schedule {
-  Name = "WeeklyCycle"
-  Run = Full 1st sun at 23:05
-  Run = Differential 2nd-5th sun at 23:05
-  Run = Incremental mon-sat at 23:05
-}
+#Schedule {
+#  Name = "WeeklyCycle"
+#  Run = Full 1st sun at 23:05
+#  Run = Differential 2nd-5th sun at 23:05
+#  Run = Incremental mon-sat at 23:05
+#}
 
 # This schedule does the catalog. It starts after the WeeklyCycle
-Schedule {
-  Name = "WeeklyCycleAfterBackup"
-  Run = Full sun-sat at 23:10
-}
+#Schedule {
+#  Name = "WeeklyCycleAfterBackup"
+#  Run = Full sun-sat at 23:10
+#}
 
 Schedule {
     Name = "ScheduleOTUS"
@@ -143,6 +147,18 @@ Schedule {
     Run = Level=Incremental hourly at 0:45
     Run = Level=Incremental hourly at 0:55
 }
+
+FileSet {
+    Name = "OtusEtcSet"
+        Include {
+            Options {
+            signature = MD5
+            compression = GZIP
+        }
+        File = /etc
+    }
+}
+
 
 # This is the backup of the catalog
 FileSet {
@@ -293,6 +309,7 @@ Pool {
 Pool {
   Name = File
   Pool Type = Backup
+  Label Format = Local-
   Recycle = yes                       # Bacula can automatically recycle Volumes
   AutoPrune = yes                     # Prune expired volumes
   Volume Retention = 365 days         # one year
@@ -300,6 +317,16 @@ Pool {
   Maximum Volumes = 100               # Limit number of Volumes in Pool
 }
 
+Pool {
+    Name = RemoteFile
+    Pool Type = Backup
+    Label Format = OTUS-Linux-
+    Recycle = yes                       # Bacula can automatically recycle Volumes
+    AutoPrune = yes                     # Prune expired volumes
+    Volume Retention = 365 days         # one year
+    Maximum Volume Bytes = 50G          # Limit Volume size to something reasonable
+    Maximum Volumes = 100               # Limit number of Volumes in Pool
+}
 
 # Scratch pool definition
 Pool {
