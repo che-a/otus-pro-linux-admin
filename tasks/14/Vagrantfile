@@ -2,7 +2,7 @@
 # vim: set ft=ruby :
 
 hosts = {
-    :"cl" => {
+    :"client1" => {
         :box_name => "centos/7",
         :cpu => '1',
         :ram => "512",

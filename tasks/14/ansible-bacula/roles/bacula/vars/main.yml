@@ -5,7 +5,7 @@
 mysql_root_pwd: mariadbpass
 mysql_bacula_pwd: baculapass
 
-client_name: cl
+client_name: client1
 server_name: srv
 client_ip: 192.168.50.20
 server_ip: 192.168.50.10

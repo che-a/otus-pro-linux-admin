@@ -1,6 +1,6 @@
 ---
 - name: Change DB provider for Bacula
-  shell: echo "1" | sudo alternatives --config libbaccats.so
+  shell: echo "1" | alternatives --config libbaccats.so
   tags: bacula
 
 - name: Create dir /bacula/backup
@@ -23,13 +23,6 @@
     recurse: yes
   tags: bacula
 
-- name: Change privileges for /bacula/ dir
-  file:
-    path: /bacula
-    state: directory
-    mode: 0700
-  tags: bacula
-
 - name: Create dir /etc/bacula/conf.d
   file:
     path: /etc/bacula/conf.d
@@ -39,36 +32,9 @@
     mode: 0755
   tags: bacula
 
-- name: Copy clients.conf to /etc/bacula/conf.d
-  template:
-    src: clients.conf.j2
-    dest: /etc/bacula/conf.d/clients.conf
-    owner: root
-    group: bacula
-    mode: 0700
-  tags: bacula
-
-- name: Copy filesets.conf to /etc/bacula/conf.d
-  template:
-    src: filesets.conf.j2
-    dest: /etc/bacula/conf.d/filesets.conf
-    owner: root
-    group: bacula
-    mode: 0700
-  tags: bacula
-
-- name: Copy pools.conf to /etc/bacula/conf.d
-  template:
-    src: pools.conf.j2
-    dest: /etc/bacula/conf.d/pools.conf
-    owner: root
-    group: bacula
-    mode: 0700
-  tags: bacula
-
 - name: Copy bacula-dir.conf to /etc/bacula/
   template:
-    src: bacula-dir.conf.j2
+    src: server_bacula-dir.conf.j2
     dest: /etc/bacula/bacula-dir.conf
     owner: root
     group: bacula
@@ -77,39 +43,50 @@
 
 - name: Copy bacula-sd.conf to /etc/bacula/
   template:
-    src: bacula-sd.conf.j2
+    src: server_bacula-sd.conf.j2
     dest: /etc/bacula/bacula-sd.conf
     owner: root
     group: bacula
     mode: 0700
   tags: bacula
 
-#- name: Copy bconsole.conf to /etc/bacula/
+- name: Copy bconsole.conf to /etc/bacula/
+  template:
+    src: bconsole.conf.j2
+    dest: /etc/bacula/bconsole.conf
+    owner: root
+    group: bacula
+    mode: 0700
+  tags: bacula
+
+
+#- name: Copy clients.conf to /etc/bacula/conf.d
 #  template:
-#    src: bconsole.conf.j2
-#    dest: /etc/bacula/bconsole.conf
+#    src: clients.conf.j2
+#    dest: /etc/bacula/conf.d/clients.conf
 #    owner: root
 #    group: bacula
 #    mode: 0700
 #  tags: bacula
 
-#- name: Change password for Bacula DIR
-#  shell: |
-#    DIR_PASSWORD=`date +%s | sha256sum | base64 | head -c 33`
-#    sed -i "s/@@DIR_PASSWORD@@/${DIR_PASSWORD}/" /etc/bacula/bacula-dir.conf
-#    sed -i "s/@@DIR_PASSWORD@@/${DIR_PASSWORD}/" /etc/bacula/bconsole.conf
+#- name: Copy filesets.conf to /etc/bacula/conf.d
+#  template:
+#    src: filesets.conf.j2
+#    dest: /etc/bacula/conf.d/filesets.conf
+#    owner: root
+#    group: bacula
+#    mode: 0700
+#  tags: bacula
 
-#- name: Change password for Bacula DIR
-#  shell: |
-#    SD_PASSWORD=`date +%s | sha256sum | base64 | head -c 33`
-#    sed -i "s/@@SD_PASSWORD@@/${SD_PASSWORD}/" /etc/bacula/bacula-sd.conf
-#    sed -i "s/@@SD_PASSWORD@@/${SD_PASSWORD}/" /etc/bacula/bacula-dir.conf
+#- name: Copy pools.conf to /etc/bacula/conf.d
+#  template:
+#    src: pools.conf.j2
+#    dest: /etc/bacula/conf.d/pools.conf
+#    owner: root
+#    group: bacula
+#    mode: 0700
+#  tags: bacula
 
-#- name: Change password for Bacula DIR
-#  shell: |
-#    FD_PASSWORD=`date +%s | sha256sum | base64 | head -c 33`
-#    sed -i "s/@@FD_PASSWORD@@/${FD_PASSWORD}/" /etc/bacula/bacula-dir.conf
-#    sed -i "s/@@FD_PASSWORD@@/${FD_PASSWORD}/" /etc/bacula/bacula-fd.conf
 
 - name: Start Bacula DIR (Director) service
   systemd:

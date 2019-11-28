@@ -1,4 +1,5 @@
 ---
+
 - name: Install Bacula server and other packages
   yum:
     name: "{{ packages }}"
@@ -8,9 +9,9 @@
     packages:
       - ansible-lint
       - bacula-director
-      - bacula-storage
-      - bacula-console
       - bacula-client
+      - bacula-console
+      - bacula-storage
       - nano
       - tmux
   tags: common

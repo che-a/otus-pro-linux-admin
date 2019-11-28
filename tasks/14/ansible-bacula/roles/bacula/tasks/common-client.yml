@@ -1,4 +1,10 @@
 ---
+- name: Install EPEL repository
+  yum:
+    name: epel-release
+    state: latest
+  tags: common
+
 - name: Install Bacula client and other packages
   yum:
     name: "{{ packages }}"
@@ -7,5 +13,6 @@
   vars:
     packages:
       - bacula-client
+      - bacula-console
       - nano
   tags: common
