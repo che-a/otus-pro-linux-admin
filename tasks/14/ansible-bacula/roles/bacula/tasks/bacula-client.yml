@@ -9,16 +9,6 @@
     recurse: yes
   tags: bacula
 
-#- name: Create dir /bacula/restore
-#  file:
-#    path: /bacula/restore
-#    state: directory
-#    owner: bacula
-#    group: bacula
-#    mode: 0700
-#    recurse: yes
-#  tags: bacula
-
 - name: Copy bacula-fd.conf to /etc/bacula/
   template:
     src: client_bacula-fd.conf.j2
