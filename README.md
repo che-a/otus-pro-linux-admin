@@ -54,3 +54,6 @@
 
 **Занятие 14. Резервное копирование**  
 *Задание:* [Настройка Bacula](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/14)
+
+**Занятие 15. Docker**  
+*Задание:* [Работа с Docker](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/15)
