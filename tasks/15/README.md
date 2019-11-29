@@ -31,6 +31,7 @@
 [www.docker.com](https://www.docker.com/)  
 [Введение в Docker](https://docs.docker.com/get-started/)  
 [Документация](https://docs.docker.com/engine/docker-overview/)  
+[Dockerfile reference](https://docs.docker.com/engine/reference/builder/)
 
 `Контейнер` - это не что иное, как работающий процесс, к которому применены некоторые дополнительные функции инкапсуляции, чтобы сохранить его изолированным от хоста и других контейнеров. Одним из наиболее важных аспектов изоляции контейнера является то, что каждый контейнер взаимодействует со своей собственной частной файловой системой; эта файловая система предоставлена образом Docker.  
 `Образ` включает в себя все необходимое для запуска приложения - код или двоичный файл, среды выполнения, зависимости и любые другие требуемые объекты файловой системы.
@@ -39,7 +40,7 @@
 `docker pull image` - скачать образ image  
 `docker ps`  
 `docker ps -a` - список контейнеров    
-`docker run -d -p port:port container_name`  
+`docker run -d -p port:port container_name` — запуск контейнера;  
 `docker stop container_name`  
 `docker logs container_name` - вывод логов контейнеров  
 `docker inspect container_name` - информация по запущенному контейнеру  
@@ -47,6 +48,9 @@
 `docker push/pull`  
 `docker exec -it container_name bash`  
 `` -
+
+`Docker-файл` — инструкции для `Docker` по настройке и запуску приложений. В `Docker-файле` находится описание базового образа, на котором построен контейнер. Одни из самых популярных образов — Python, Ubuntu и Alpine.
+С помощью дополнительных слоёв в Docker-файле можно добавить необходимое ПО. Например, можно указать, что Docker’у нужно добавить библиотеки NumPy, Pandas и Scikit-learn.
 
 </details>
 
