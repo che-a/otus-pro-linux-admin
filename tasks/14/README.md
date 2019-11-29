@@ -4,9 +4,6 @@
 2. [Домашнее задание](#homework)  
 3. [Справочная информация](#info)  
 4. [Выполнение](#exec)  
-   - [Основное задание](#main)  
-   - [Дополнительное задание](#add)
-
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -73,7 +70,6 @@
 cd ansible-bacula/ && ansible-playbook playbooks/install_bacula.yml
 ```
 
-### Основное задание <a name="main"></a>  
 Конфигурационные файлы `Bacula` представлены в виде `Jinja`-шаблонов и составлены из оригинальных [файлов](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/14/orig_conf_files), доступных сразу после установки `Bacula`.  
 
 Сервер:  
@@ -115,10 +111,3 @@ list files jobid=<id>
 ```console
 
 ```
-
-
-
-### Дополнительное задание <a name="add"></a>  
-
-
-
