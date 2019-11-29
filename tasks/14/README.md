@@ -127,7 +127,7 @@ list jobs
 ```
 
 ```bash
-list files jobid=<id>
+list files jobid=12
 ```
 <details>
    <summary>Содержимое здесь:</summary>
