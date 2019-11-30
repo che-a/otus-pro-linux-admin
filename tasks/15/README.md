@@ -79,19 +79,16 @@ docker login --username 19111942
 ```
 - создание образа  
 ```bash
-docker build -t 19111942/otus-linuxadmin-les15:latest -f nginx/Dockerfile .
-docker build -t 19111942/otus-linuxadmin-les15-php7:latest -f nginx-php7/Dockerfile .
+docker build -t 19111942/otus-linuxadmin-les15:latest -f Dockerfile .
 ```
 - отправка образа на репозиторий в `Docker Hub`
 ```bash
 docker push 19111942/otus-linuxadmin-les15:latest
-docker push 19111942/otus-linuxadmin-les15-php7:latest
 ```
 #### Использование образа  
 - загрузка образа из репозитория с целью его дальнейшего запуска:
 ```bash
 docker pull 19111942/otus-linuxadmin-les15:latest
-docker pull 19111942/otus-linuxadmin-les15-php7:latest
 ```
 - проверка списка установленных в системе образов
 ```bash
@@ -105,11 +102,9 @@ alpine                                latest              965ea09ff2eb        5 
 ```
 - запуск контейнера из образа
 ```bash
-docker run --name otus-linuxadmin-les15 -d -p 80:80 19111942/otus-linuxadmin-les15:latest
-docker run --name otus-linuxadmin-les15-php7 -d -p 8080:80 19111942/otus-linuxadmin-les15-php7:latest
+docker run --name otus-linuxadmin-les15 -d -p 8080:80 19111942/otus-linuxadmin-les15:latest
 ```
 - останов контейнера
 ```bash
 docker stop otus-linuxadmin-les15
-docker stop otus-linuxadmin-les15-php7
 ```
