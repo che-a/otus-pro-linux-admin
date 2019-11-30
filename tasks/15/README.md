@@ -47,7 +47,6 @@
 `docker build -t dockerhub_login/reponame:ver`  
 `docker push/pull`  
 `docker exec -it container_name bash` 
-`` -
 
 `Docker-файл` — инструкции для `Docker` по настройке и запуску приложений. В `Docker-файле` находится описание базового образа, на котором построен контейнер. Одни из самых популярных образов — Python, Ubuntu и Alpine.
 С помощью дополнительных слоёв в Docker-файле можно добавить необходимое ПО. Например, можно указать, что Dockerу нужно добавить библиотеки NumPy, Pandas и Scikit-learn.
@@ -71,20 +70,36 @@
 </details>
 
 ## 4. Выполнение <a name="exec"></a>  
-
-1) Создание образа из [Dockerfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/15/Dockerfile):  
+### Создание образа <a name="create"></a>  
+Создание образа:  
+- регистрация аккаунта на `Docker Hub`;  
+- авторизация  
 ```bash
-docker build -t che-a/otus-linuxadmin-les15:latest -f Dockerfile .
+docker login --username 19111942
 ```
-2) Отправка образа на репозиторий в `Docker Hub`:
+- создание образа  
 ```bash
-docker push che-a/otus-linuxadmin-les15:latest
+docker build -t 19111942/otus-linuxadmin-les15:latest -f nginx/Dockerfile .
 ```
-3) Загрузка образа из репозитория с целью его дальнейшего запуска:
+- отправка образа на репозиторий в `Docker Hub`
 ```bash
-docker pull che-a/otus-linuxadmin-les15:latest
+docker push 19111942/otus-linuxadmin-les15:latest
 ```
-4) Запуск:
+Использование образа:
+- загрузка образа из репозитория с целью его дальнейшего запуска:
 ```bash
-docker run —name otus-linuxadmin-les15 -d -p 80:80 che-a/otus-linuxadmin-les15:latest
+docker pull 19111942/otus-linuxadmin-les15:latest
+```
+- проверка списка установленных в системе образов
+```bash
+docker images
+```
+```console
+REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
+19111942/otus-linuxadmin-les15   latest              42098ae0f0c3        10 minutes ago      7MB
+alpine                           latest              965ea09ff2eb        5 weeks ago         5.55MB
+```
+- запуск контейнера из образа
+```bash
+docker run —name otus-linuxadmin-les15 -d -p 80:80 19111942/otus-linuxadmin-les15:latest
 ```
