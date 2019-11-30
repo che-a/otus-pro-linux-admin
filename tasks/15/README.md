@@ -106,7 +106,7 @@ alpine                                latest              965ea09ff2eb        5 
 - запуск контейнера из образа
 ```bash
 docker run --name otus-linuxadmin-les15 -d -p 80:80 19111942/otus-linuxadmin-les15:latest
-docker run --name otus-linuxadmin-les15-php7 -d -p 80:8080 19111942/otus-linuxadmin-les15-php7:latest
+docker run --name otus-linuxadmin-les15-php7 -d -p 8080:80 19111942/otus-linuxadmin-les15-php7:latest
 ```
 - останов контейнера
 ```bash
