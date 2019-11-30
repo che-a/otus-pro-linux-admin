@@ -29,7 +29,9 @@ php7-ctype \
 && sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php7/php.ini \
 && adduser -D -g 'www' www \
 && mkdir /www \
-&& mkdir -p /run/nginx
+&& mkdir -p /run/nginx \
+&& rc-update add nginx default \
+&& rc-update add php-fpm7 default
 ADD https://raw.githubusercontent.com/che-a/OTUS_LinuxAdministrator/master/tasks/15/nginx-php7/nginx.conf /etc/nginx/
 ADD https://raw.githubusercontent.com/che-a/OTUS_LinuxAdministrator/master/tasks/15/nginx-php7/phpinfo.php /www/
 RUN chown -R www:www /var/lib/nginx && chown -R www:www /www
