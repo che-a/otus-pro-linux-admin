@@ -57,3 +57,8 @@
 
 **Занятие 15. Docker**  
 *Задание:* [Docker, docker-compose, dockerfile](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/15)
+
+**Занятие 16. Сбор и анализ логов**  
+*Задание:* [Настраиваем центральный сервер для сбора логов](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/16)
+
+
