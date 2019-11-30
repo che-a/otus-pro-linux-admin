@@ -87,6 +87,9 @@ docker build -t 19111942/otus-linuxadmin-les15:latest -f Dockerfile .
 ```bash
 docker push 19111942/otus-linuxadmin-les15:latest
 ```
+- ссылка на репозиторий
+[https://hub.docker.com/r/19111942/otus-linuxadmin-les15](https://hub.docker.com/r/19111942/otus-linuxadmin-les15)
+
 #### Использование образа  
 - загрузка образа из репозитория с целью его дальнейшего запуска:
 ```bash
