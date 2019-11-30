@@ -98,9 +98,10 @@ docker pull 19111942/otus-linuxadmin-les15-php7:latest
 docker images
 ```
 ```console
-REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
-19111942/otus-linuxadmin-les15   latest              42098ae0f0c3        10 minutes ago      7MB
-alpine                           latest              965ea09ff2eb        5 weeks ago         5.55MB
+19111942/otus-linuxadmin-les15-php7   latest              df07a114a90c        About a minute ago   36.8MB
+19111942/otus-linuxadmin-les15        latest              42098ae0f0c3        2 hours ago          7MB
+alpine                                3.10                965ea09ff2eb        5 weeks ago          5.55MB
+alpine                                latest              965ea09ff2eb        5 weeks ago          5.55MB
 ```
 - запуск контейнера из образа
 ```bash
