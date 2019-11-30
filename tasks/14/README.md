@@ -65,7 +65,10 @@
 
 ## 4. Выполнение <a name="exec"></a>  
 
-Лабораторный стенд, состоящий из двух объединенных в одну сеть машин, разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/Vagrantfile) с последующим минимальным провижинингом из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/provision.sh), суть которого заключается в настройке беспарольного `SSH`-доступа с машины `server` на машину `client1`.  Дальнейшая настройка на этих машинах сервера и клиента системы `Bacula` проводится средствами `Ansible`, для чего необходимо выполнить команду:
+Лабораторный стенд, состоящий из двух объединенных в одну сеть машин, разворачивается из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/Vagrantfile) с последующим минимальным провижинингом из сценария [provision.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/14/provision.sh), суть которого заключается в настройке беспарольного `SSH`-доступа с машины `server` на машину `client1`.  
+`srv` — сервер `Ansible`, сервер `Bacula`;  
+`client1` — клиент `Bacula`;  
+Дальнейшая настройка на этих машинах сервера и клиента системы `Bacula` проводится средствами `Ansible`, для чего на `srv` необходимо выполнить команду:
 ```bash
 cd ansible-bacula/ && ansible-playbook playbooks/install_bacula.yml
 ```
