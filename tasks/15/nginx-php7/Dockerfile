@@ -31,7 +31,7 @@ php7-ctype \
 && mkdir /www \
 && mkdir -p /run/nginx
 ADD https://raw.githubusercontent.com/che-a/OTUS_LinuxAdministrator/master/tasks/15/nginx-php7/nginx.conf /etc/nginx/
-ADD https://raw.githubusercontent.com/che-a/OTUS_LinuxAdministrator/master/tasks/15/nginx-php7/index.php /www/
+ADD https://raw.githubusercontent.com/che-a/OTUS_LinuxAdministrator/master/tasks/15/nginx-php7/phpinfo.php /www/
 RUN chown -R www:www /var/lib/nginx && chown -R www:www /www
 EXPOSE 80
 STOPSIGNAL SIGTERM
