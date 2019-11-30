@@ -1,5 +1,5 @@
 FROM alpine:3.10
-LABEL version="1.1" \
+LABEL version="1.2" \
       description="OTUS Linux Admin. Lesson 15. Custom image NGINX+PHP7 on Alpine." \
       author="Chernyshenko Aleksey"
 RUN apk add --update --no-cache nginx \
