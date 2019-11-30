@@ -1,6 +1,6 @@
 FROM alpine:3.10
-LABEL version="1.0" \
-      description="OTUS Linux Admin. Lesson 15. Custom image NGINX+PHP5 on Alpine." \
+LABEL version="1.1" \
+      description="OTUS Linux Admin. Lesson 15. Custom image NGINX+PHP7 on Alpine." \
       author="Chernyshenko Aleksey"
 RUN apk add --update --no-cache nginx \
 && apk add tzdata \
@@ -23,6 +23,10 @@ php7-ctype \
 && sed -i "s|;*max_file_uploads =.*|max_file_uploads = ${PHP_MAX_FILE_UPLOAD}|i" /etc/php7/php.ini \
 && sed -i "s|;*post_max_size =.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php7/php.ini \
 && sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo= ${PHP_CGI_FIX_PATHINFO}|i" /etc/php7/php.ini \
+&& TIMEZONE="Europe/Moscow" \
+&& cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
+&& echo "${TIMEZONE}" > /etc/timezone \
+&& sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php7/php.ini \
 && adduser -D -g 'www' www \
 && mkdir /www \
 && mkdir -p /run/nginx
