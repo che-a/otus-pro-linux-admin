@@ -71,7 +71,7 @@
 
 ## 4. Выполнение <a name="exec"></a>  
 ### Создание образа <a name="create"></a>  
-Создание образа:  
+#### Создание образа  
 - регистрация аккаунта на `Docker Hub`;  
 - авторизация  
 ```bash
@@ -85,7 +85,7 @@ docker build -t 19111942/otus-linuxadmin-les15:latest -f nginx/Dockerfile .
 ```bash
 docker push 19111942/otus-linuxadmin-les15:latest
 ```
-Использование образа:
+#### Использование образа  
 - загрузка образа из репозитория с целью его дальнейшего запуска:
 ```bash
 docker pull 19111942/otus-linuxadmin-les15:latest
@@ -101,5 +101,9 @@ alpine                           latest              965ea09ff2eb        5 weeks
 ```
 - запуск контейнера из образа
 ```bash
-docker run —name otus-linuxadmin-les15 -d -p 80:80 19111942/otus-linuxadmin-les15:latest
+docker run --name otus-linuxadmin-les15 -d -p 80:80 19111942/otus-linuxadmin-les15:latest
+```
+- останов контейнера
+```bash
+docker stop otus-linuxadmin-les15
 ```
