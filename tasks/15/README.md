@@ -104,6 +104,7 @@ alpine                                latest              965ea09ff2eb        5 
 ```bash
 docker run --name otus-linuxadmin-les15 -d -p 8080:80 19111942/otus-linuxadmin-les15:latest
 ```
+Проверка работоспособности `nginx`:  [http://localhost:8080/](http://localhost:8080/)  
 - останов контейнера
 ```bash
 docker stop otus-linuxadmin-les15
