@@ -1,0 +1,41 @@
+---
+# tasks file for web
+
+#- name: Upgrade all packages
+#  yum:
+#    name: "*"
+#    state: latest
+#  tags: common
+
+- name: Install EPEL repository
+  yum:
+    name: epel-release
+    state: latest
+  tags: common
+
+- name: Installation of auxiliary packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - ansible-lint
+      - nano
+      - mc
+      - tmux
+      - tree
+      - wget
+  tags: common
+
+- name: Install nginx
+  yum:
+    name: nginx
+    state: latest
+  tags: web
+
+- name: Start nginx
+  systemd:
+    name: nginx
+    status: started
+    enabled: yes
+  tags: web

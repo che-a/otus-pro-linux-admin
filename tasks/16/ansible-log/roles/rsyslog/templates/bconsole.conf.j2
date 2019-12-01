@@ -1,0 +1,10 @@
+#
+# Bacula User Agent (or Console) Configuration File
+#
+
+Director {
+  Name = bacula-dir
+  DIRport = 9101
+  address = {{ server_ip }}
+  Password = "{{ DIR_PASSWORD }}"
+}

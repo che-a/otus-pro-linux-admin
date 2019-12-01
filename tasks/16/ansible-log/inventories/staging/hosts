@@ -1,0 +1,8 @@
+[rsyslog_servers]
+127.0.0.1 ansible_connection=local
+
+[elk_stack_servers]
+elk ansible_host=192.168.50.20
+
+[web_servers]
+web ansible_host=192.168.50.30

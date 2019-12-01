@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+hosts = {
+    :"web" => {
+        :box_name => "centos/7",
+        :cpu => '1',
+        :ram => "512",
+        :ip_addr => '192.168.50.30',
+        :port => '8082'
+    },
+    :"elk" => {
+        :box_name => "centos/7",
+        :cpu => '2',
+        :ram => "2048",
+        :ip_addr => '192.168.50.20',
+        :port => '8081'
+    },
+    :"log" => {
+        :box_name => "centos/7",
+        :cpu => '1',
+        :ram => "768",
+        :ip_addr => '192.168.50.10',
+        :port => '8080'
+    }
+}
+
+Vagrant.configure("2") do |config|
+
+    hosts.each do |boxname, boxconfig|
+
+        config.vm.define boxname do |box|
+            box.vm.box = boxconfig[:box_name]
+            box.vm.host_name = boxname.to_s
+            box.vm.network "private_network", ip: boxconfig[:ip_addr]
+            box.vm.network "forwarded_port", guest: 80, host: boxconfig[:port]
+
+            box.vm.provider :virtualbox do |vb|
+                vb.cpus = boxconfig[:cpu]
+                vb.memory = boxconfig[:ram]
+                vb.name = "che-les16-" + "%s" % boxname
+            end
+
+            box.vm.provision "shell", path: "provision.sh"
+        end
+    end
+end

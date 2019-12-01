@@ -1,0 +1,152 @@
+
+Director {                            # define myself
+  Name = bacula-dir
+  DIRport = 9101                # where we listen for UA connections
+  QueryFile = "/etc/bacula/query.sql"
+  WorkingDirectory = "/var/spool/bacula"
+  PidDirectory = "/var/run"
+  Maximum Concurrent Jobs = 1
+  Password = "{{ DIR_PASSWORD }}"         # Console password
+  Messages = Daemon
+  DirAddress = {{ server_ip }}
+}
+
+JobDefs {
+  Name = "DefaultJob"
+  Type = Backup
+  Level = Incremental
+  Messages = Standard
+  Priority = 10
+  Write Bootstrap = "/var/spool/bacula/%c.bsr"
+}
+#
+# Define the main nightly save backup job
+#   By default, this job will back up to disk in /tmp
+Job {
+    Name = "BackupClient1"
+    JobDefs = "DefaultJob"
+    Pool = File
+    Storage = File
+    Client = OtusClient1-fd
+    FileSet = "OtusEtcSet"
+    Schedule = "ScheduleOTUS"
+}
+
+Schedule {
+    Name = "ScheduleOTUS"
+    Run = Level=Full daily at 0:00
+
+    Run = Level=Differential hourly at 0:10
+    Run = Level=Differential hourly at 0:40
+
+    Run = Level=Incremental hourly at 0:05
+    Run = Level=Incremental hourly at 0:15
+    Run = Level=Incremental hourly at 0:25
+    Run = Level=Incremental hourly at 0:35
+    Run = Level=Incremental hourly at 0:45
+    Run = Level=Incremental hourly at 0:55
+}
+
+FileSet {
+    Name = "OtusEtcSet"
+        Include {
+            Options {
+            signature = MD5
+            compression = GZIP
+        }
+        File = /etc
+    }
+}
+
+# This is the backup of the catalog
+FileSet {
+  Name = "Catalog"
+  Include {
+    Options {
+      signature = MD5
+    }
+    File = "/var/spool/bacula/bacula.sql"
+  }
+}
+
+# Client (File Services) to backup
+Client {
+  Name = OtusClient1-fd
+  Address = {{ client_ip }}
+  FDPort = 9102
+  Catalog = MyCatalog
+  Password = "{{ FD_PASSWORD }}"          # password for FileDaemon
+  File Retention = 30 days            # 30 days
+  Job Retention = 6 months            # six months
+  AutoPrune = yes                     # Prune expired Jobs/Files
+}
+
+
+# Definition of file storage device
+Storage {
+  Name = File
+# Do not use "localhost" here
+  Address = {{ server_ip }}                # N.B. Use a fully qualified name here
+  SDPort = 9103
+  Password = "{{ SD_PASSWORD }}"
+  Device = FileStorage
+  Media Type = File
+}
+
+# Generic catalog service
+Catalog {
+  Name = MyCatalog
+# Uncomment the following line if you want the dbi driver
+# dbdriver = "dbi:postgresql"; dbaddress = 127.0.0.1; dbport =
+  dbname = "bacula"; dbuser = "bacula"; dbpassword = "{{ mysql_bacula_pwd }}"
+}
+
+# Reasonable message delivery -- send most everything to email address
+#  and to the console
+Messages {
+  Name = Standard
+
+  mailcommand = "/usr/sbin/bsmtp -h localhost -f \"\(Bacula\) \<%r\>\" -s \"Bacula: %t %e of %c %l\" %r"
+  operatorcommand = "/usr/sbin/bsmtp -h localhost -f \"\(Bacula\) \<%r\>\" -s \"Bacula: Intervention needed for %j\" %r"
+  mail = root@localhost = all, !skipped
+  operator = root@localhost = mount
+  console = all, !skipped, !saved
+#
+# WARNING! the following will create a file that you must cycle from
+#          time to time as it will grow indefinitely. However, it will
+#          also keep all your messages if they scroll off the console.
+#
+  append = "/var/log/bacula/bacula.log" = all, !skipped
+  catalog = all
+}
+
+#
+# Message delivery for daemon messages (no job).
+Messages {
+  Name = Daemon
+  mailcommand = "/usr/sbin/bsmtp -h localhost -f \"\(Bacula\) \<%r\>\" -s \"Bacula daemon message\" %r"
+  mail = root@localhost = all, !skipped
+  console = all, !skipped, !saved
+  append = "/var/log/bacula/bacula.log" = all, !skipped
+}
+
+# File Pool definition
+Pool {
+  Name = File
+  Pool Type = Backup
+  Label Format = Local-
+  Recycle = yes                       # Bacula can automatically recycle Volumes
+  AutoPrune = yes                     # Prune expired volumes
+  Volume Retention = 365 days         # one year
+  Maximum Volume Bytes = 50G          # Limit Volume size to something reasonable
+  Maximum Volumes = 100               # Limit number of Volumes in Pool
+}
+
+#
+# Restricted console used by tray-monitor to get the status of the director
+#
+Console {
+  Name = bacula-mon
+  Password = "@@MON_DIR_PASSWORD@@"
+  CommandACL = status, .status
+}

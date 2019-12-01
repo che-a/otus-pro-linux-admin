@@ -1,0 +1,62 @@
+---
+- name: Change DB provider for Bacula
+  shell: echo "1" | alternatives --config libbaccats.so
+  tags: bacula
+
+- name: Create dir /bacula/backup
+  file:
+    path: /bacula/backup
+    state: directory
+    owner: bacula
+    group: bacula
+    mode: 0700
+    recurse: yes
+  tags: bacula
+
+- name: Copy bacula-dir.conf to /etc/bacula/
+  template:
+    src: server_bacula-dir.conf.j2
+    dest: /etc/bacula/bacula-dir.conf
+    owner: root
+    group: bacula
+    mode: 0700
+  tags: bacula
+
+- name: Copy bacula-sd.conf to /etc/bacula/
+  template:
+    src: server_bacula-sd.conf.j2
+    dest: /etc/bacula/bacula-sd.conf
+    owner: root
+    group: bacula
+    mode: 0700
+  tags: bacula
+
+- name: Copy bconsole.conf to /etc/bacula/
+  template:
+    src: bconsole.conf.j2
+    dest: /etc/bacula/bconsole.conf
+    owner: root
+    group: bacula
+    mode: 0700
+  tags: bacula
+
+- name: Start Bacula DIR (Director) service
+  systemd:
+    name: bacula-dir
+    state: started
+    enabled: yes
+  tags: bacula
+
+- name: Start Bacula SD (Storage Daemon) service
+  systemd:
+    name: bacula-sd
+    state: started
+    enabled: yes
+  tags: bacula
+
+- name: Start Bacula FD (File Daemon) service
+  systemd:
+    name: bacula-fd
+    state: started
+    enabled: yes
+  tags: bacula
