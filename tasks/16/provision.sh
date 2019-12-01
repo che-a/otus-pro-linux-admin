@@ -11,7 +11,7 @@ KEY_PUB=$KEY'.pub'
 case $HOSTNAME in
     $ANSIBLE_SERVER)
         yum install -y epel-release
-        yum install -y ansible ansible-lint sshpass
+        yum install -y ansible ansible-lint nano sshpass tmux
         # Возможность использования имен серверов вместо IP-адресов
         echo "$SRV2_IP  $SRV2" >> /etc/hosts
         echo "$SRV1_IP  $SRV1" >> /etc/hosts
@@ -35,3 +35,5 @@ case $HOSTNAME in
         systemctl restart sshd.service
         ;;
 esac
+
+yes | cp -rf /usr/share/zoneinfo/Europe/Moscow /etc/localtime

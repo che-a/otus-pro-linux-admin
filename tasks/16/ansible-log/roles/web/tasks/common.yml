@@ -5,15 +5,16 @@
     state: latest
   tags: common
 
-- name: Install Bacula client and other packages
+- name: Installation of auxiliary packages
   yum:
     name: "{{ packages }}"
-    update_cache: yes
-    state: present
+    state: latest
   vars:
     packages:
-      - bacula-client
-      - bacula-console
+      - ansible-lint
       - nano
+      - mc
       - tmux
+      - tree
+      - wget
   tags: common

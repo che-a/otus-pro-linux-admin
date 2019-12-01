@@ -12,18 +12,6 @@
     enabled: yes
   tags: mariadb
 
-- name: Customize bacula-user privileges on MariaDB
-  shell: /usr/libexec/bacula/grant_mysql_privileges
-  tags: mariadb
-
-- name: Create DB for Bacula on MariaDB
-  shell: /usr/libexec/bacula/create_mysql_database -u root
-  tags: mariadb
-
-- name: Create tables in DB for Bacula on MariaDB
-  shell: /usr/libexec/bacula/make_mysql_tables -u bacula
-  tags: mariadb
-
 - name: Set MariaDB root password
   shell: mysqladmin -u root password "{{ mysql_root_pwd }}"
   tags: mariadb
@@ -46,10 +34,4 @@
   shell: |
     mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -e "CREATE USER 'root'@'localhost' IDENTIFIED BY '"{{ mysql_root_pwd }}"'"
     mysql -u 'root' -p"{{ mysql_root_pwd }}"  -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION"
-  tags: mariadb
-
-- name: Set bacula-user password on MariaDB
-  shell: |
-    mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -e "UPDATE mysql.user SET Password=PASSWORD('"{{ mysql_bacula_pwd }}"') WHERE User='bacula'"
-    mysql -u 'root' -p"{{ mysql_root_pwd }}" -h 'localhost' --port='3306' -e "FLUSH PRIVILEGES"
   tags: mariadb
