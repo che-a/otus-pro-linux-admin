@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-SRV2='web-srv'
+SRV2='web'
 SRV1='elk'
-ANSIBLE_SERVER='log-srv'
+ANSIBLE_SERVER='log'
 SRV2_IP='192.168.50.30'
 SRV1_IP='192.168.50.20'
 KEY='/home/vagrant/.ssh/id_rsa'

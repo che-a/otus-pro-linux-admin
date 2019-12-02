@@ -3,3 +3,4 @@
 
 - include: rsyslog.yml
 - include: audit.yml
+- include: filebeat.yml

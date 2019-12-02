@@ -2,7 +2,7 @@
 # vim: set ft=ruby :
 
 hosts = {
-    :"web-srv" => {
+    :"web" => {
         :box_name => "centos/7",
         :cpu => '1',
         :ram => "512",
@@ -16,7 +16,7 @@ hosts = {
         :ip_addr => '192.168.50.20',
         :port => '8081'
     },
-    :"log-srv" => {
+    :"log" => {
         :box_name => "centos/7",
         :cpu => '1',
         :ram => "768",
