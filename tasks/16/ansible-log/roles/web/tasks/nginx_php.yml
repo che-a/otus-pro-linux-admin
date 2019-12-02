@@ -20,7 +20,6 @@
       - php-gd
       - php-mbstring
       - php-mysql
-      - php-mysql
       - php-pear
       - php-zip
       - php-fpm
@@ -37,6 +36,15 @@
 
 - name: Configure time zone in php.ini
   shell: sed -i "s/^[; ]*date\.timezone[ ]*=.*$/date.timezone = Europe\/Moscow/gm" /etc/php.ini
+  tags: web
+
+- name: Copy nginx.conf
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/
+    owner: root
+    group: root
+    mode: 0755
   tags: web
 
 - name: nginx

@@ -7,11 +7,11 @@
   roles:
     - web
 
-#- name: Install RSYSLOG server
-#  hosts: rsyslog_servers
-#  become: yes
-#  roles:
-#    - rsyslog
+- name: Install rsyslog server
+  hosts: rsyslog_servers
+  become: yes
+  roles:
+    - rsyslog
 
 #- name: Install ELK stack server
 #  hosts: elk_stack_servers

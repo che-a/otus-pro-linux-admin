@@ -1,0 +1,17 @@
+---
+
+- name: Install audit
+  yum:
+    name: audit
+    state: latest
+  tags: audit
+
+- name: Install audispd-plugins
+  yum:
+    name: audispd-plugins
+    state: latest
+  tags: audit
+
+- name: Customize auditd
+  shell: sed -i 's/##tcp_listen_port = .*/tcp_listen_port = 60/' /etc/audit/auditd.conf
+  tags: audit
