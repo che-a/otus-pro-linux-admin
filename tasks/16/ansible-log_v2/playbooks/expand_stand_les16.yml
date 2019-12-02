@@ -1,0 +1,20 @@
+---
+# Expand the stand for Lesson 16: Log collection and analysis
+
+- name: Install NGINX server with web apps
+  hosts: web_servers
+  become: yes
+  roles:
+    - web-srv
+
+#- name: Install rsyslog server
+#  hosts: rsyslog_servers
+#  become: yes
+#  roles:
+#    - rsyslog
+
+#- name: Install ELK stack server
+#  hosts: elk_stack_servers
+#  become: yes
+#  roles:
+#    - elk

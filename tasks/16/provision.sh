@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-SRV2='web'
+SRV2='web-srv'
 SRV1='elk'
-ANSIBLE_SERVER='log'
+ANSIBLE_SERVER='log-srv'
 SRV2_IP='192.168.50.30'
 SRV1_IP='192.168.50.20'
 KEY='/home/vagrant/.ssh/id_rsa'
@@ -23,10 +23,10 @@ case $HOSTNAME in
         # Чтобы не вводить пароль при добавлении публичного ключа
         runuser -l vagrant -c "ssh-keygen -t rsa -N '' -b 2048 -f $KEY"
         runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV2"
-        runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV1"
+#        runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV1"
 
-        cp -r /vagrant/ansible-log/ /home/vagrant/
-        chown -R vagrant:vagrant /home/vagrant/ansible-log
+        cp -r /vagrant/ansible-log_v2/ /home/vagrant/
+        chown -R vagrant:vagrant /home/vagrant/ansible-log_v2
         ;;
 
     $SRV2|$SRV1)

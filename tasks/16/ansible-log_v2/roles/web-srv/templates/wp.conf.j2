@@ -1,0 +1,15 @@
+server {
+        server_name {{ wp_domain }} www.{{ wp_domain }};
+        root {{ document_root }}{{ wp_dir }};
+
+    location / {
+        index index.php;
+    }
+
+     location ~ \.php$ {
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME {{ document_root }}{{ wp_dir }}$fastcgi_script_name;
+   }
+}

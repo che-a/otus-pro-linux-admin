@@ -1,0 +1,15 @@
+---
+# Role web-srv
+
+# MariaDB
+mysql_root_pwd: suslik
+
+# NGINX
+document_root: /var/www/html
+wp_dir: /wordpress
+wp_domain: wp.otus
+
+# Wordpress
+wp_db: wordpress
+wp_user: wpuser
+wp_pwd: wppassword

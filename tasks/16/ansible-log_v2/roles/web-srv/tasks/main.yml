@@ -1,0 +1,8 @@
+---
+# Role web-srv
+
+- include: common.yml
+- include: mariadb.yml
+- include: nginx.yml
+- include: php.yml
+- include: wordpress.yml

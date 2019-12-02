@@ -1,0 +1,24 @@
+---
+# Role web-srv
+
+- name: Install REMI repository
+  yum:
+    name: https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    state: latest
+  tags: php
+
+- name: Install PHP 7.3
+  shell: yum install -y --enablerepo=remi-php73 php php-fpm php-mysqlnd php-cli
+  tags: php
+
+
+- name: Configure time zone in php.ini
+  shell: sed -i "s/^[; ]*date\.timezone[ ]*=.*$/date.timezone = Europe\/Moscow/gm" /etc/php.ini
+  tags: php
+
+- name: Enable php-fpm
+  systemd:
+    name: php-fpm
+    state: started
+    enabled: yes
+  tags: php

@@ -1,0 +1,28 @@
+---
+# Role web-srv
+
+#- name: Upgrade all packages
+#  yum:
+#    name: '*'
+#    state: latest
+
+- name: Install EPEL repository
+  yum:
+    name: epel-release
+    state: latest
+    update_cache: yes
+  tags: common
+
+- name: Installation of auxiliary packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - ansible-lint
+      - nano
+      - mc
+      - tmux
+      - tree
+      - wget
+  tags: common
