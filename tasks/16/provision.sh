@@ -23,7 +23,7 @@ case $HOSTNAME in
         # Чтобы не вводить пароль при добавлении публичного ключа
         runuser -l vagrant -c "ssh-keygen -t rsa -N '' -b 2048 -f $KEY"
         runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV2"
-#        runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV1"
+        runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $SRV1"
 
         cp -r /vagrant/ansible-log_v2/ /home/vagrant/
         chown -R vagrant:vagrant /home/vagrant/ansible-log_v2

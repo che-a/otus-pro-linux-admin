@@ -1,0 +1,18 @@
+---
+# Role rsyslog-client
+
+- name: Copy rsyslog conf to client
+  template:
+    src: rsyslog.conf.j2
+    dest: /etc/rsyslog.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags: rsyslog
+
+- name: Restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
+    enabled: yes
+  tags: rsyslog

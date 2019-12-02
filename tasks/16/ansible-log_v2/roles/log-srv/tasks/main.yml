@@ -1,0 +1,5 @@
+---
+# Role log-srv
+
+- include: rsyslog.yml
+- include: audit.yml

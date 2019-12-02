@@ -9,13 +9,13 @@ hosts = {
         :ip_addr => '192.168.50.30',
         :port => '8082'
     },
-#    :"elk" => {
-#        :box_name => "centos/7",
-#        :cpu => '2',
-#        :ram => "2048",
-#        :ip_addr => '192.168.50.20',
-#        :port => '8081'
-#    },
+    :"elk" => {
+        :box_name => "centos/7",
+        :cpu => '2',
+        :ram => "2048",
+        :ip_addr => '192.168.50.20',
+        :port => '8081'
+    },
     :"log-srv" => {
         :box_name => "centos/7",
         :cpu => '1',

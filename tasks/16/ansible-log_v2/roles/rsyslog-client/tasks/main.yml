@@ -1,0 +1,5 @@
+---
+# Role rsyslog-client
+
+- include: rsyslog.yml
+- include: audit.yml
