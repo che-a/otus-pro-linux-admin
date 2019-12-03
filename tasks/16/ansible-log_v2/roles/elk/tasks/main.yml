@@ -2,7 +2,6 @@
 # Role elk
 
 - include: common.yml
-- include: java.yml
 - include: elasticsearch.yml
-- include: logstash.yml
 - include: kibana.yml
+- include: logstash.yml

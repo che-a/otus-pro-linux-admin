@@ -1,2 +1,57 @@
 ---
 # Role elk
+
+- name: Copy kibana.repo
+  copy:
+    src: kibana.repo
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 0755
+  tags: kibana
+
+- name: Install Kibana
+  yum:
+    name: kibana
+    state: latest
+  tags: kibana
+
+- name: Copy kibana.yml
+  copy:
+    src: kibana.yml
+    dest: /opt/kibana/config/
+    owner: root
+    group: root
+    mode: 0755
+  tags: kibana
+
+- name: Starting kibana
+  systemd:
+    name: kibana
+    state: started
+    enabled: yes
+  tags: kibana
+
+- name: Add Kibana admin user
+  shell: echo '"{{ kibana_admin_pwd }}"' | htpasswd -i -c /etc/nginx/htpasswd.users {{ kibana_admin }}
+  tags: kibana
+
+- name: Copy kibana.conf
+  copy:
+    src: kibana.conf
+    dest: /etc/nginx/conf.d/
+    owner: root
+    group: root
+    mode: 0755
+  tags: kibana
+
+- name: Fix SELinux
+  shell: setsebool -P httpd_can_network_connect 1
+  tags: kibana
+
+- name: Restart Nginx
+  systemd:
+    name: nginx
+    state: restarted
+    enabled: yes
+  tags: kibana

@@ -1,2 +1,37 @@
 ---
 # Role elk
+
+- name: Import GPG-key Elasticsearch
+  shell: rpm --import http://packages.elastic.co/GPG-KEY-elasticsearch
+  tags: elasticsearch
+
+- name: Copy elasticsearch.repo
+  copy:
+    src: elasticsearch.repo
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 0755
+  tags: elasticsearch
+
+- name: Install Elasticsearch
+  yum:
+    name: elasticsearch
+    state: latest
+  tags: elasticsearch
+
+- name: Copy elasticsearch.yml
+  copy:
+    src: elasticsearch.yml
+    dest: /etc/elasticsearch/
+    owner: root
+    group: root
+    mode: 0644
+  tags: elasticsearch
+
+- name: Starting Elasticsearch
+  systemd:
+    name: elasticsearch
+    state: started
+    enabled: yes
+  tags: elasticsearch
