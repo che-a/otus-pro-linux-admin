@@ -7,17 +7,17 @@
   roles:
     - web-srv
 
-#- name: Install rsyslog server
-#  hosts: log_servers
-#  become: yes
-#  roles:
-#    - log-srv
+- name: Install rsyslog server
+  hosts: log_servers
+  become: yes
+  roles:
+    - log-srv
 
-#- name: Install rsyslog client
-#  hosts: client_servers
-#  become: yes
-#  roles:
-#    - log-client
+- name: Install rsyslog client
+  hosts: client_servers
+  become: yes
+  roles:
+    - log-client
 
 - name: Install ELK stack server
   hosts: elk_stack_servers
