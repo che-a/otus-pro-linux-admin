@@ -45,10 +45,6 @@
     mode: 0755
   tags: kibana
 
-#- name: Fix SELinux
-#  shell: setsebool -P httpd_can_network_connect 1
-#  tags: kibana
-
 - name: Restart Nginx
   systemd:
     name: nginx
