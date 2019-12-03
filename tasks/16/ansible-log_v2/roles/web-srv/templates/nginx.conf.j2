@@ -5,9 +5,12 @@
 user nginx;
 worker_processes auto;
 
-error_log syslog:server={{ log_server_ip }}:514 warn;
-error_log syslog:server={{ elk_server_ip }}:514 warn;
-error_log /var/log/nginx/error.log warn;
+
+error_log syslog:server={{ log_server_ip }}:514,facility=local7,tag=nginx,severity=error;
+error_log syslog:server={{ elk_server_ip }}:514,facility=local7,tag=nginx,severity=error;
+
+# Критические логи сохраняем локально
+error_log /var/log/nginx/error.log crit;
 
 pid /run/nginx.pid;
 
@@ -24,8 +27,8 @@ http {
                       '"$http_user_agent" "$http_x_forwarded_for"';
 
     access_log  /var/log/nginx/access.log  main;
-    access_log syslog:server={{ log_server_ip }}:514 main;
-    access_log syslog:server={{ elk_server_ip }}:514 main;
+    access_log syslog:server={{ log_server_ip }},facility=local7,tag=nginx,severity=info main;
+    access_log syslog:server={{ elk_server_ip }},facility=local7,tag=nginx,severity=info main;
 
     sendfile            on;
     tcp_nopush          on;

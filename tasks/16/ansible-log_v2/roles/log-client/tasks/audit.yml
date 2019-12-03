@@ -13,14 +13,14 @@
     state: latest
   tags: audit
 
-- name: Audit nginx-config files
-  shell: auditctl -a exit,always -F path=/etc/nginx -F perm=aw
-  tags: audit
-
 - name: Activation of sending logs
   shell: sed -i 's/active = no/active = yes/' /etc/audisp/plugins.d/au-remote.conf
   tags: audit
 
 - name: Customize Log-server
   shell: sed -i 's/remote_server = /remote_server = {{ log_server_ip }}/' /etc/audisp/audisp-remote.conf
+  tags: audit
+
+- name: Audit nginx-config files
+  shell: auditctl -a exit,always -F path=/etc/nginx -F perm=aw
   tags: audit
