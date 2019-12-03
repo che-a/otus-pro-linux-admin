@@ -1,7 +1,0 @@
----
-- include: common.yml
-- include: mariadb.yml
-- include: nginx_php.yml
-- include: wordpress.yml
-- include: rsyslog-client.yml
-- include: audit-client.yml

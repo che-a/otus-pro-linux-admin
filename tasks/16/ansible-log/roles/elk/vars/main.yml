@@ -1,16 +1,11 @@
 ---
-# vars file for roles/bacula-server
+# Role elk
 
-# MariaDB
-mysql_root_pwd: mariadbpass
-mysql_bacula_pwd: baculapass
+# Log servers
+log_server_ip: 192.168.50.10
+elk_server_ip: 192.168.50.20
+client_ip: 192.168.50.30
 
-client_name: client1
-server_name: srv
-client_ip: 192.168.50.20
-server_ip: 192.168.50.10
-
-# Bacula-conf passwords
-DIR_PASSWORD: YTMwOTJmMjM3NDgwM2RlOTViZTQyNDhhY
-FD_PASSWORD: NjQ4MTgzMjIxOTdiNGY0YjNiZjA3YTAwN
-SD_PASSWORD: MTgyNjRlNjE5NzAxNzYwMTE1OWQ5M2RiY
+# Kibana
+kibana_admin: admin
+kibana_admin_pwd: kibana

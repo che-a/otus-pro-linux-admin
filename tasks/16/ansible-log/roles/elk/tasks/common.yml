@@ -1,7 +1,17 @@
 ---
+# Role elk
 
-- name: Upgrade all packages
+- name: Install OpenJDK
   yum:
-    name: '*'
-    state: latest
+    name: java-openjdk-headless
+  tags: common
+
+- name: Install httpd-tools
+  yum:
+    name: httpd-tools
+  tags: common
+
+- name: Install unzip
+  yum:
+    name: unzip
   tags: common
