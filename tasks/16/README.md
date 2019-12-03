@@ -45,3 +45,7 @@ vagrant ssh log
 ```bash
 cd ansible-log && ansible-playbook playbooks/expand_stand_les16.yml
 ```
+
+
+![alt text](screenshots/kibana-01.png "Листинг каталога репозитория")​
+![alt text](screenshots/kibana-02.png "Листинг каталога репозитория")​
