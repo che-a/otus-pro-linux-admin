@@ -34,6 +34,14 @@
 #### 
 
 Лабораторный стенд состоит из 3-х виртуальных машин:
-- `elk` - 
+- `elk` - сервер `ELK Stack`, веб-сервер `nginx` с предустановленным wordpress.  ;  
 - `log` - `rsyslog`-сервер, `ansible`-сервер;  
-- `web` - веб-сервер `nginx` с уставноленным wordpress.  
+- `web` - веб-сервер `nginx` с предустановленным wordpress.  
+
+После развертывания стенда из [Vagrantfile](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/16/Vagrantfile) необходимо из сервера `log` запустить `ansible`-сценарий:
+```bash
+vagrant ssh log
+```
+```bash
+cd ansible-log && ansible-playbook playbooks/expand_stand_les16.yml
+```
