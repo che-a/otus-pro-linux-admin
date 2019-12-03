@@ -27,11 +27,11 @@
       - wget
   tags: common
 
-- name: Copy OpenSSL-cert
-  copy:
-    src: logstash-forvarder.crt
-    dest: /etc/pki/tls/certs/
-    owner: root
-    group: root
-    mode: 0755
-  tags: common
+#- name: Copy OpenSSL-cert
+#  copy:
+#    src: logstash-forvarder.crt
+#    dest: /etc/pki/tls/certs/logstash-forvarder.crt
+#    owner: root
+#    group: root
+#    mode: 0755
+#  tags: common

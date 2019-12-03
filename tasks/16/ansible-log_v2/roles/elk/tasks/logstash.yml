@@ -16,37 +16,47 @@
     state: latest
   tags: logstash
 
-- name: Create dir for OpenSSL cert
-  file:
-    path: /etc/pki/tls/certs
-    state: directory
-    mode: 0755
-  tags: logstash
+#- name: Create dir for OpenSSL cert
+#  file:
+#    path: /etc/pki/tls/certs
+#    state: directory
+#    mode: 0755
+#  tags: logstash
 
-- name: Create dir for OpenSSL key
-  file:
-    path: /etc/pki/tls/private
-    state: directory
-    mode: 0755
-  tags: logstash
+#- name: Create dir for OpenSSL key
+#  file:
+#    path: /etc/pki/tls/private
+#    state: directory
+#    mode: 0755
+#  tags: logstash
 
-- name: Copy openssl.cnf
-  template:
-    src: openssl.cnf.j2
-    dest: /etc/pki/tls/openssl.cnf
-    owner: root
-    group: root
-    mode: 0755
-  tags: logstash
+#- name: Copy openssl.cnf
+#  template:
+#    src: openssl.cnf.j2
+#    dest: /etc/pki/tls/openssl.cnf
+#    owner: root
+#    group: root
+#    mode: 0755
+#  tags: logstash
 
-- name: Copy OpenSSL-key
-  copy:
-    src: logstash-forvarder.key
-    dest: /etc/pki/tls/private/
-    owner: root
-    group: root
-    mode: 0755
-  tags: logstash
+#- name: Copy OpenSSL-key
+#  copy:
+#    src: logstash-forvarder.key
+#    dest: /etc/pki/tls/private/logstash-forvarder.key
+#    owner: root
+#    group: root
+#    mode: 0755
+#  tags: logstash
+
+#- name: Copy OpenSSL-cert
+#  copy:
+#    src: logstash-forvarder.crt
+#    dest: /etc/pki/tls/certs/logstash-forvarder.crt
+#    owner: root
+#    group: root
+#    mode: 0755
+#  tags: logstash
+
 
 - name: Copy 02-beats-input.conf
   copy:
@@ -73,4 +83,11 @@
     owner: root
     group: root
     mode: 0755
+  tags: logstash
+
+- name: Restart Logstash
+  systemd:
+    name: logstash
+    state: restarted
+    enabled: yes
   tags: logstash

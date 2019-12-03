@@ -2,7 +2,7 @@
 # server.port: 5601
 
 # This setting specifies the IP address of the back end server.
-  server.host: "0.0.0.0"
+  server.host: "localhost"
 
 # Enables you to specify a path to mount Kibana at if you are running behind a proxy. This setting
 # cannot end in a slash.

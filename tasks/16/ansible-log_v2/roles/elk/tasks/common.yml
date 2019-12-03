@@ -10,3 +10,8 @@
   yum:
     name: httpd-tools
   tags: common
+
+- name: Install unzip
+  yum:
+    name: unzip
+  tags: common

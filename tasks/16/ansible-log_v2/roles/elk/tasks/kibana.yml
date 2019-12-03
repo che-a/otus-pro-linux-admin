@@ -45,9 +45,9 @@
     mode: 0755
   tags: kibana
 
-- name: Fix SELinux
-  shell: setsebool -P httpd_can_network_connect 1
-  tags: kibana
+#- name: Fix SELinux
+#  shell: setsebool -P httpd_can_network_connect 1
+#  tags: kibana
 
 - name: Restart Nginx
   systemd:
@@ -55,3 +55,14 @@
     state: restarted
     enabled: yes
   tags: kibana
+
+- name: Download and install dashboard
+  shell: |
+    cd ~ &&  curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
+    unzip beats-dashboards-*.zip
+    cd beats-dashboards-* && ./load.sh
+
+- name: Customize Filebeat on Elasticsearch
+  shell: |
+    cd ~ &&  curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
+    curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json

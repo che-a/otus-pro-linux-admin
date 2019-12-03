@@ -1,0 +1,37 @@
+---
+# Role web-srv
+
+- name: Install Filebeat-repo GPG-key
+  shell: rpm --import http://packages.elastic.co/GPG-KEY-elasticsearch
+  tags: filebeat
+
+- name: Copy elastic-beats.repo
+  copy:
+    src: elastic-beats.repo
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 0755
+  tags: filebeat
+
+- name: Install filebeat
+  yum:
+    name: filebeat
+    state: latest
+  tags: filebeat
+
+- name: Copy filebeat.yml
+  copy:
+    src: filebeat.yml
+    dest: /etc/filebeat/
+    owner: root
+    group: root
+    mode: 0755
+  tags: filebeat
+
+- name: Restart Filebeat
+  systemd:
+    name: filebeat
+    state: restarted
+    enabled: yes
+  tags: filebeat
