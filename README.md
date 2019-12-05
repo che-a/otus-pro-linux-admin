@@ -61,4 +61,10 @@
 **Занятие 16. Сбор и анализ логов**  
 *Задание:* [Настраиваем центральный сервер для сбора логов](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/16)
 
+**Занятие 17. Механизмы изоляции и аккаунтинга Linux (namespaces и cgroups)**  
+*Задание:*
 
+### Модуль 3. Linux и сеть
+***
+**Занятие 18. Архитектура сетей**  
+*Задание:* [Разворачиваем сетевую лабораторию](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/18)
