@@ -27,3 +27,6 @@
 
 ## 4. Выполнение <a name="exec"></a>  
 
+Развернутый из [Vagrantfile]() командой `vagrant up` стенд состоит из следующих машин:  
+- `ipa-srv.linux.otus` -- машина с установленным сервером `FreeIPA`; [веб-интерфейс](http://localhost:8080)
+- `client.linux.otus` -- машина, готовая для установки на нее с помощью `Ansible` клиента `FreeIPA`.  
