@@ -531,6 +531,68 @@ Office2----/
 
 Данный лабораторный стенд согласно условия задания разработан на основе [готового стенда](https://github.com/erlong15/otus-linux/tree/network) с добавлением дополнительных узлов.  
 
-
-
 ![](schemes/scheme.png "Сетевой стенд")
+
+#### Проверка доступности маршрутов
+Доступ в Интернет с `office2Server`:
+```bash
+tracepath -b 8.8.8.8
+```
+```console
+1?: [LOCALHOST]                                         pmtu 1500
+1:  gateway (192.168.1.1)                                 0.629ms
+1:  gateway (192.168.1.1)                                 0.357ms
+2:  192.168.0.33 (192.168.0.33)                           0.763ms
+3:  192.168.255.1 (192.168.255.1)                         1.027ms
+4:  no reply
+5:  no reply
+6:  no reply
+7:  no reply
+8:  212.1.252.80 (212.1.252.80)                          11.988ms asymm 64
+9:  no reply
+10:  no reply
+...
+```
+Доступ в Интернет с `office1Server`:
+```bash
+tracepath -b 8.8.8.8
+```
+```console
+1?: [LOCALHOST]                                         pmtu 1500
+1:  gateway (192.168.2.1)                                 0.643ms
+1:  gateway (192.168.2.1)                                 0.586ms
+2:  192.168.0.33 (192.168.0.33)                           0.725ms
+3:  192.168.255.1 (192.168.255.1)                         1.178ms
+4:  no reply
+5:  no reply
+6:  no reply
+7:  no reply
+8:  212.1.252.80 (212.1.252.80)                          12.137ms asymm 64
+9:  no reply
+...
+```
+Доступ с `centralServer` на `office2Server`:
+```bash
+tracepath -b 192.168.1.2
+```
+```console
+1?: [LOCALHOST]                                         pmtu 1500
+1:  gateway (192.168.0.1)                                 0.697ms
+1:  gateway (192.168.0.1)                                 0.618ms
+2:  192.168.0.35 (192.168.0.35)                           0.817ms
+3:  192.168.1.2 (192.168.1.2)                             1.028ms reached
+    Resume: pmtu 1500 hops 3 back 3
+```
+
+Доступ с `office1Server` на `centralServer`:
+```bash
+tracepath -b 192.168.0.2
+```
+```console
+1?: [LOCALHOST]                                         pmtu 1500
+1:  gateway (192.168.2.1)                                 0.667ms
+1:  gateway (192.168.2.1)                                 0.497ms
+2:  192.168.0.33 (192.168.0.33)                           1.872ms
+3:  192.168.0.2 (192.168.0.2)                             1.609ms reached
+    Resume: pmtu 1500 hops 3 back 3 
+```
