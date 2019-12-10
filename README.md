@@ -68,3 +68,6 @@
 ***
 **Занятие 18. Архитектура сетей**  
 *Задание:* [Развертывание сетевой лаборатории](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/18)
+
+**Занятие 19. LDAP. Централизованная авторизация и аутентификация**  
+*Задание:* [FreeIPA](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/19)
