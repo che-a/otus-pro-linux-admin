@@ -22,21 +22,7 @@
 
 ## 3. Справочные сведения <a name="info"></a>  
 
-<details>
-    <summary>Деление сети 192.168.0.0/24 на подсети</summary>
-
-```console
-```
-
-</details>
-
-<details>
-    <summary>Маски подсетей сети 192.168.0.0/24</summary>
-
-```console
-```
-
-</details>
+[FreeIPA](https://www.freeipa.org/page/Main_Page)
 
 
 ## 4. Выполнение <a name="exec"></a>  
