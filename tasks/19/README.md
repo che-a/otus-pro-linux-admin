@@ -45,5 +45,14 @@ ipa-server-install  --hostname=ipa.linux.otus \
                     --unattended
 ```
 ```bash
-ipa-server-install -a password1234 --hostname=ipa.linux.otus -r LINUX.OTUS -p password1234 -n linux.otus -U
+ipa-server-install  --hostname=ipa.linux.otus \
+                    --domain=ipa.linux.otus \
+                    --realm=IPA.LINUX.OTUS \
+                    --ds-password=password1234 \
+                    --admin-password=password1234 \
+                    --mkhomedir \
+                    --setup-dns \
+                    --forwarder=77.88.8.8 \
+                    --auto-reverse \
+                    --unattended
 ```
