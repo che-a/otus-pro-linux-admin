@@ -30,3 +30,17 @@
 Развернутый из [Vagrantfile]() командой `vagrant up` стенд состоит из следующих машин:  
 - `ipa-srv.linux.otus` -- машина с установленным сервером `FreeIPA`; [веб-интерфейс](http://localhost:8080)
 - `client.linux.otus` -- машина, готовая для установки на нее с помощью `Ansible` клиента `FreeIPA`.  
+
+
+```bash
+ipa-server-install  --hostname=ipa.linux.otus \
+                    --domain=linux.otus \
+                    --realm=LINUX.OTUS \
+                    --ds-password=password1234 \
+                    --admin-password=password1234 \
+                    --mkhomedir \
+                    --setup-dns \
+                    --forwarder=77.88.8.8 \
+                    --auto-reverse \
+                    --unattended
+```
