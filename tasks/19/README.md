@@ -44,3 +44,6 @@ ipa-server-install  --hostname=ipa.linux.otus \
                     --auto-reverse \
                     --unattended
 ```
+```bash
+ipa-server-install -a password1234 --hostname=ipa.linux.otus -r LINUX.OTUS -p password1234 -n linux.otus -U
+```
