@@ -54,8 +54,7 @@ ipa: INFO: The ipactl command was successful
 ```
 
 ```bash
-kinit admin
-klist
+echo '12345678' | kinit admin && klist
 ```
 ```console
 Ticket cache: KEYRING:persistent:0:0
