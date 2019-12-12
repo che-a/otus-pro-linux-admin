@@ -21,20 +21,75 @@
 
 
 ## 3. Выполнение <a name="exec"></a>  
-### Лабораторный стенд
+#### Лабораторный стенд
 
 Развернутый из [Vagrantfile]() стенд состоит из следующих машин:  
-- `ipa.linux.otus` -- `FreeIPA`-сервер и `Ansible`-сервер.   
-- `client.linux.otus` -- `FreeIPA`-клиент.  
+- `ipa.linux.otus` — `FreeIPA`-сервер и `Ansible`-сервер.   
+- `client.linux.otus` — `FreeIPA`-клиент.  
 
 #### Порядок развертывания стенда
 ```bash
 vagrant up
 ```
+С помощью сценария [install.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/19/install.sh) производится установка и настройка `FreeIPA`-сервера и `FreeIPA`-клиента. 
 ```bash
 sudo ./install.sh
 ```
+#### Проверка работоспособности сервера
+```bash
+ipactl status
+```
+```console
+Directory Service: RUNNING
+krb5kdc Service: RUNNING
+kadmin Service: RUNNING
+named Service: RUNNING
+httpd Service: RUNNING
+ipa-custodia Service: RUNNING
+ntpd Service: RUNNING
+pki-tomcatd Service: RUNNING
+ipa-otpd Service: RUNNING
+ipa-dnskeysyncd Service: RUNNING
+ipa: INFO: The ipactl command was successful
+```
 
+```bash
+kinit admin
+klist
+```
+```console
+Ticket cache: KEYRING:persistent:0:0
+Default principal: admin@LINUX.OTUS
+
+Valid starting       Expires              Service principal
+12.12.2019 11:19:53  13.12.2019 11:19:49  krbtgt/LINUX.OTUS@LINUX.OTUS
+```
+
+```bash
+ipa user-find admin
+```
+```console
+---------------------
+Найден 1 пользователь
+---------------------
+  Логин пользователя: admin
+  Фамилия: Administrator
+  Домашний каталог: /home/admin
+  Оболочка входа: /bin/bash
+  Principal alias: admin@LINUX.OTUS
+  UID: 218200000
+  ID группы: 218200000
+  Учетная запись отключена: False
+------------------------------
+Количество вернутых значений 1
+------------------------------
+```
+
+```bash
+```
+```console
+
+```
 
 
 [FreeIPA](https://www.freeipa.org/page/Main_Page)
