@@ -2,8 +2,7 @@
 ### Содержание
 1. [Описание занятия](#description)  
 2. [Домашнее задание](#homework)  
-3. [Справочные сведения](#info)
-4. [Выполнение](#exec)  
+3. [Выполнение](#exec)  
 
 ## 1. Описание занятия <a name="description"></a>
 ### Цели
@@ -20,13 +19,9 @@
 
 В `git` - результирующий playbook.  
 
-## 3. Справочные сведения <a name="info"></a>  
 
-[FreeIPA](https://www.freeipa.org/page/Main_Page)
-
-
-## 4. Выполнение <a name="exec"></a>  
-
+## 3. Выполнение <a name="exec"></a>  
+### Лабораторный стенд
 Развернутый из [Vagrantfile]() командой `vagrant up` стенд состоит из следующих машин:  
 - `ipa-srv.linux.otus` -- машина с установленным сервером `FreeIPA`; [веб-интерфейс](http://localhost:8080)
 - `client.linux.otus` -- машина, готовая для установки на нее с помощью `Ansible` клиента `FreeIPA`.  
@@ -56,3 +51,4 @@ ipa-server-install  --hostname=ipa.linux.otus \
                     --auto-reverse \
                     --unattended
 ```
+[FreeIPA](https://www.freeipa.org/page/Main_Page)
