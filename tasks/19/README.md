@@ -22,33 +22,19 @@
 
 ## 3. Выполнение <a name="exec"></a>  
 ### Лабораторный стенд
-Развернутый из [Vagrantfile]() командой `vagrant up` стенд состоит из следующих машин:  
-- `ipa-srv.linux.otus` -- машина с установленным сервером `FreeIPA`; [веб-интерфейс](http://localhost:8080)
-- `client.linux.otus` -- машина, готовая для установки на нее с помощью `Ansible` клиента `FreeIPA`.  
 
+Развернутый из [Vagrantfile]() стенд состоит из следующих машин:  
+- `ipa.linux.otus` -- `FreeIPA`-сервер и `Ansible`-сервер.   
+- `client.linux.otus` -- `FreeIPA`-клиент.  
 
+#### Порядок развертывания стенда
 ```bash
-ipa-server-install  --hostname=ipa.linux.otus \
-                    --domain=linux.otus \
-                    --realm=LINUX.OTUS \
-                    --ds-password=password1234 \
-                    --admin-password=password1234 \
-                    --mkhomedir \
-                    --setup-dns \
-                    --forwarder=77.88.8.8 \
-                    --auto-reverse \
-                    --unattended
+vagrant up
 ```
 ```bash
-ipa-server-install  --hostname=ipa.linux.otus \
-                    --domain=ipa.linux.otus \
-                    --realm=IPA.LINUX.OTUS \
-                    --ds-password=password1234 \
-                    --admin-password=password1234 \
-                    --mkhomedir \
-                    --setup-dns \
-                    --forwarder=77.88.8.8 \
-                    --auto-reverse \
-                    --unattended
+sudo ./install.sh
 ```
+
+
+
 [FreeIPA](https://www.freeipa.org/page/Main_Page)
