@@ -5,7 +5,7 @@ hosts = {
     :"client" => {
         :box_name => "centos/7",
         :cpu => '1',
-        :ram => "768",
+        :ram => "512",
         :ip_addr => '192.168.50.20'
     },
     :"server" => {
@@ -13,8 +13,8 @@ hosts = {
         :cpu => '2',
         :ram => "2048",
         :ip_addr => '192.168.50.10',
-        :http_port => '8080',
-        :https_port => '8081'
+        :port80 => '8080',
+        :port443 => '8443'
     }
 }
 
@@ -29,8 +29,8 @@ Vagrant.configure("2") do |config|
 
             case boxname.to_s
             when "server"
-                box.vm.network "forwarded_port", guest: 80, host: boxconfig[:http_port]
-                box.vm.network "forwarded_port", guest: 443, host: boxconfig[:https_port]
+                box.vm.network "forwarded_port", guest: 80, host: boxconfig[:port80]
+                box.vm.network "forwarded_port", guest: 443, host: boxconfig[:port443]
             end
 
             box.vm.provider :virtualbox do |vb|

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 DOMAIN='linux.otus'
-REALM_NAME='LINUX.OTUS'
 NET='192.168.50'
 
 CLIENT='client'
@@ -19,13 +18,12 @@ case $HOSTNAME in
     'server')
         yum update -y
         yum install -y epel-release
-        yum install -y ansible ansible-lint nano sshpass tmux
-        yum install -y ipa-server ipa-server-dns
+        yum install -y ansible ansible-lint bind-utils nano sshpass
 
         # Возможность использования имен серверов вместо IP-адресов
-        echo "$SERVER_IP  $SERVER_FULL $SERVER" > /etc/hosts
+        echo $SERVER_FULL > /etc/hostname
+        echo "$SERVER_IP  $SERVER_FULL $SERVER" >> /etc/hosts
         echo "$CLIENT_IP  $CLIENT_FULL $CLIENT" >> /etc/hosts
-
         # Запретить SSH-клиенту при подключении к хосту осуществлять
         # проверку подлинности его ключа.
         sed -i '35s/#   StrictHostKeyChecking ask/StrictHostKeyChecking no/g' \
@@ -37,23 +35,18 @@ case $HOSTNAME in
 
         # cp -r /vagrant/ansible-log/ /home/vagrant/
         # chown -R vagrant:vagrant /home/vagrant/ansible-log
-
-#        ipa-server-install  --hostname=$SERVER_FULL \
-#                            --domain=$DOMAIN \
-#                            --realm=$REALM_NAME \
-#                            --ds-password=password1234 \
-#                            --admin-password=password1234 \
-#                            --mkhomedir \
-#                            --setup-dns \
-#                            --forwarder=77.88.8.8 \
-#                            --auto-reverse \
-#                            --unattended
+        cp /vagrant/install.sh /home/vagrant
         ;;
 
     'client')
+        echo "$CLIENT_FULL" > /etc/hostname
+        echo "$SERVER_IP  $SERVER_FULL $SERVER" >> /etc/hosts
+        echo "$CLIENT_IP  $CLIENT_FULL $CLIENT" >> /etc/hosts
         sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' \
             /etc/ssh/sshd_config
         systemctl restart sshd.service
+        # yum update -y
+        # yum install -y ipa-client nano
         ;;
 esac
 
