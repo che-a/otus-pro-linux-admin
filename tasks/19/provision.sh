@@ -40,13 +40,14 @@ case $HOSTNAME in
 
     'client')
         echo "$CLIENT_FULL" > /etc/hostname
-        echo "$SERVER_IP  $SERVER_FULL $SERVER" >> /etc/hosts
-        echo "$CLIENT_IP  $CLIENT_FULL $CLIENT" >> /etc/hosts
+#        echo "$SERVER_IP  $SERVER_FULL $SERVER" >> /etc/hosts
+#        echo "$CLIENT_IP  $CLIENT_FULL $CLIENT" >> /etc/hosts
+        echo "DNS1=$SERVER_IP" >> /etc/sysconfig/network-scripts/ifcfg-eth1
         sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' \
             /etc/ssh/sshd_config
         systemctl restart sshd.service
-        # yum update -y
-        # yum install -y ipa-client nano
+        yum update -y
+        yum install -y bind-utils ipa-client nano
         ;;
 esac
 

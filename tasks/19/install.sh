@@ -7,8 +7,8 @@ SERVER_FULL=$SERVER'.'$DOMAIN
 PASSWORD='12345678'
 
 
-systemctl enable chronyd
-systemctl start chronyd
+systemctl stop ntpd
+systemctl disable ntpd
 
 yum install -y ipa-server ipa-server-dns rng-tools
 
