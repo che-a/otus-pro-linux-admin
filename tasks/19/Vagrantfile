@@ -1,36 +1,57 @@
 # -*- mode: ruby -*-
 # vim: set ft=ruby :
 
-hosts = {
-    :"client" => {
+# Последний хост в словаре HOSTS -- это Ansible-сервер,
+# все остальные -- это Ansible-клиенты.
+HOSTS = {
+=begin
+    :"gw" => {
         :box_name => "centos/7",
         :cpu => '1',
-        :ram => "512",
-        :ip_addr => '192.168.50.20'
+        :ram => "1024",
+        :net => [
+            {adapter: 2, virtualbox__intnet: "local-net"},
+        ],
+        :port => []
     },
-    :"server" => {
+=end
+    :"ipa" => {
         :box_name => "centos/7",
         :cpu => '2',
         :ram => "2048",
-        :ip_addr => '192.168.50.10',
-        :port80 => '8080',
-        :port443 => '8443'
+        :net => [
+            {adapter: 2, ip: '192.168.50.10', netmask: "255.255.255.0", virtualbox__intnet: "local-net"},
+        ],
+        :port => [
+            {guest: 80, host: 8080},
+            {guest: 443, host: 8443}
+        ]
+    },
+
+    :"ns1" => {
+        :box_name => "centos/7",
+        :cpu => '1',
+        :ram => "512",
+        :net => [
+            {adapter: 2, ip: '192.168.50.20', netmask: "255.255.255.0", virtualbox__intnet: "local-net"},
+        ],
+        :port => []
     }
 }
 
 Vagrant.configure("2") do |config|
 
-    hosts.each do |boxname, boxconfig|
+    HOSTS.each do |boxname, boxconfig|
 
         config.vm.define boxname do |box|
             box.vm.box = boxconfig[:box_name]
             box.vm.host_name = boxname.to_s
-            box.vm.network "private_network", ip: boxconfig[:ip_addr]
 
-            case boxname.to_s
-            when "server"
-                box.vm.network "forwarded_port", guest: 80, host: boxconfig[:port80]
-                box.vm.network "forwarded_port", guest: 443, host: boxconfig[:port443]
+            boxconfig[:net].each do |ipconf|
+                box.vm.network "private_network", ipconf
+            end
+            boxconfig[:port].each do |portconf|
+                 box.vm.network "forwarded_port", portconf
             end
 
             box.vm.provider :virtualbox do |vb|
@@ -39,7 +60,12 @@ Vagrant.configure("2") do |config|
                 vb.name = "che-les19-" + "%s" % boxname
             end
 
-            box.vm.provision "shell", path: "provision.sh"
+            box.vm.provision "shell", run: "always", inline: <<-SHELL
+                /bin/cp -rf /vagrant/files/* /
+                systemctl daemon-reload
+                systemctl enable provision.service
+                reboot  #
+            SHELL
         end
     end
 end

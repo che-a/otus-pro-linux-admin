@@ -1,0 +1,12 @@
+[Unit]
+Description=Provision VMs
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+EnvironmentFile=/etc/sysconfig/provision
+ExecStart=/opt/provision.sh $STAGE
+
+[Install]
+WantedBy=multi-user.target

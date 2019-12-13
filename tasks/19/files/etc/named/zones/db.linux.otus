@@ -1,0 +1,18 @@
+$TTL    604800
+linux.otus.            IN      SOA     ns1.linux.otus. admin.linux.otus. (
+        3          ; Serial
+        604800     ; Refresh
+        86400      ; Retry
+        2419200    ; Expire
+        604800     ; Negative Cache TTL
+)
+
+; name servers - NS records
+                      IN      NS     ns1.linux.otus.
+
+; name servers - A records
+ns1.linux.otus.       IN      A      192.168.50.20
+
+; 192.168.50.0/24 - A records
+gw.linux.otus.        IN      A      192.168.50.1
+ipa.linux.otus.       IN      A      192.168.50.10
