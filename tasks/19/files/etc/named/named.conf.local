@@ -1,6 +1,6 @@
 zone "linux.otus" {
 type master;
-file "/etc/named/zones/db.linux.otus"; # zone file path
+file "/etc/named/zones/db.linux.otus";
 };
 
 zone "50.168.192.in-addr.arpa" {

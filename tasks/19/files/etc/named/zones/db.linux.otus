@@ -11,7 +11,7 @@ linux.otus.            IN      SOA     ns1.linux.otus. admin.linux.otus. (
                       IN      NS     ns1.linux.otus.
 
 ; name servers - A records
-ns1.linux.otus.       IN      A      192.168.50.20
+ns1.linux.otus.       IN      A      192.168.50.50
 
 ; 192.168.50.0/24 - A records
 gw.linux.otus.        IN      A      192.168.50.1

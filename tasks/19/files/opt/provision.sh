@@ -1,29 +1,26 @@
 #!/usr/bin/env bash
 
-# Description:
-# ...
-#
+# Сценарий для автоматизированной подготовки машин стенда с целью их дальнейшей
+# оркестрации при помощи Ansible:
+# - на Ansible-сервере устанавливается сервер имен;
+# - с Ansible-сервера есть беспарольный доступ по SSH-ключам на каждую машину.
 
 DOMAIN='linux.otus'
-NET='192.168.50'
+HOST_02='gw'    ; HOST_02_FULL=$HOST_02'.'$DOMAIN   # Ansible-клиент
+HOST_01='ipa'   ; HOST_01_FULL=$HOST_01'.'$DOMAIN   # Ansible-клиент
+HOST_00='ns1'   ; HOST_00_FULL=$HOST_00'.'$DOMAIN   # Ansible-сервер
 
-HOST_02='gw'
-HOST_01='ipa'
-SERVER='ns1'
-HOST_02_IP=$NET'.1'
-HOST_01_IP=$NET'.10'
-SERVER_IP=$NET'.20'
+# Машины, на которые будут добавлены публичные SSH-ключи
+HOSTS_FULL=( $HOST_02_FULL $HOST_01_FULL )
+HOST_00_IP='192.168.50.50'
 
-HOST_02_FULL=$HOST_02'.'$DOMAIN
-HOST_01_FULL=$HOST_01'.'$DOMAIN
-SERVER_FULL=$SERVER'.'$DOMAIN
+KEY1='/root/.ssh/id_rsa'            ; KEY1_PUB=$KEY1'.pub'
+KEY2='/home/vagrant/.ssh/id_rsa'    ; KEY2_PUB=$KEY2'.pub'
 
-KEY='/home/vagrant/.ssh/id_rsa'
-KEY_PUB=$KEY'.pub'
-
+# Из-за необходимости промежуточной перезагрузки процесс настройки каждой ВМ
+# делится на этапы ($STAGE), чтобы после перезагрузки продолжать настройку не
+# с начала.
 STAGE=$1
-
-
 function stage_up
 {
     local NEW_STAGE=$(( $STAGE + 1 ))
@@ -31,7 +28,30 @@ function stage_up
 }
 
 case $HOSTNAME in
-    $SERVER)
+    $HOST_02 | $HOST_01)
+        case $STAGE in
+            0)
+                yum install -y epel-release
+                yum install -y bind-utils nano
+                yum update -y
+                # Чтобы не вводить пароль при добавлении публичного ключа
+                sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' \
+                    /etc/ssh/sshd_config
+
+                echo $HOSTNAME'.'$DOMAIN > /etc/hostname
+                echo 'PEERDNS="no"' >> /etc/sysconfig/network-scripts/ifcfg-eth0
+                echo "DNS1=$HOST_00_IP" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+
+                stage_up
+                reboot
+                ;;
+            1)
+                systemctl disable provision.service
+                systemctl stop provision.service
+                ;;
+        esac
+        ;;
+    $HOST_00)
         case $STAGE in
             0)
                 yum install -y epel-release
@@ -46,57 +66,34 @@ case $HOSTNAME in
             1)
                 yum install -y bind bind-utils
                 chmod 755 /etc/named
-
-                # named-checkzone linux.otus /etc/named/zones/db.linux.otus
-                # named-checkzone 50.168.192.in-addr.arpa /etc/named/zones/db.192.168.50
-                #systemctl start named
                 systemctl enable named
+
                 # Запретить SSH-клиенту при подключении к хосту осуществлять
                 # проверку подлинности его ключа.
                 sed -i '35s/#   StrictHostKeyChecking ask/StrictHostKeyChecking no/g' \
                     /etc/ssh/ssh_config
 
-                echo "$SERVER_FULL" > /etc/hostname
+                echo "$HOST_00_FULL" > /etc/hostname
                 echo 'PEERDNS="no"' >> /etc/sysconfig/network-scripts/ifcfg-eth0
-                echo "DNS1=$SERVER_IP" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+                echo "DNS1=$HOST_00_IP" >> /etc/sysconfig/network-scripts/ifcfg-eth1
                 stage_up
                 reboot
                 ;;
             2)
+                ssh-keygen -t rsa -N '' -b 2048 -f $KEY1
+                runuser -l vagrant -c "ssh-keygen -t rsa -N '' -b 2048 -f $KEY2"
+                for HOST_FULL in ${HOSTS_FULL[@]}; do
+                    sshpass -p vagrant ssh-copy-id -i $KEY1_PUB $HOST_FULL
+                    runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY2_PUB $HOST_FULL"
+                done
+                stage_up
                 systemctl disable provision.service
                 systemctl stop provision.service
                 ;;
+            3)
+                ;;
         esac
-
-
-        # Чтобы не вводить пароль при добавлении публичного ключа
-#        runuser -l vagrant -c "ssh-keygen -t rsa -N '' -b 2048 -f $KEY"
-#        runuser -l vagrant -c "sshpass -p vagrant ssh-copy-id -i $KEY_PUB $CLIENT"
-
+        ;;
         # cp -r /vagrant/ansible-log/ /home/vagrant/
         # chown -R vagrant:vagrant /home/vagrant/ansible-log
-        ;;
-
-    $HOST_02)
-        yum install -y bind-utils nano
-        echo "$HOST_02_FULL" > /etc/hostname
-        echo 'PEERDNS="no"' >> /etc/sysconfig/network-scripts/ifcfg-eth0
-        echo "DNS1=$SERVER_IP" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-#        sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' \
-#            /etc/ssh/sshd_config
-#        systemctl restart sshd.service
-        reboot
-        ;;
-
-    $HOST_01)
-        yum install -y bind-utils nano
-        echo "$HOST_01_FULL" > /etc/hostname
-        echo 'PEERDNS="no"' >> /etc/sysconfig/network-scripts/ifcfg-eth0
-        echo "DNS1=$SERVER_IP" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-#        sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' \
-#            /etc/ssh/sshd_config
-#        systemctl restart sshd.service
-        reboot
-        ;;
-
 esac

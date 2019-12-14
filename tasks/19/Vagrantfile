@@ -4,23 +4,21 @@
 # Последний хост в словаре HOSTS -- это Ansible-сервер,
 # все остальные -- это Ansible-клиенты.
 HOSTS = {
-=begin
     :"gw" => {
         :box_name => "centos/7",
         :cpu => '1',
-        :ram => "1024",
+        :ram => "512",
         :net => [
-            {adapter: 2, virtualbox__intnet: "local-net"},
+            {adapter: 2, ip: '192.168.50.1', netmask: '255.255.255.0' , virtualbox__intnet: "local-net"},
         ],
         :port => []
     },
-=end
     :"ipa" => {
         :box_name => "centos/7",
         :cpu => '2',
         :ram => "2048",
         :net => [
-            {adapter: 2, ip: '192.168.50.10', netmask: "255.255.255.0", virtualbox__intnet: "local-net"},
+            {adapter: 2, ip: '192.168.50.10', netmask: '255.255.255.0', virtualbox__intnet: "local-net"},
         ],
         :port => [
             {guest: 80, host: 8080},
@@ -31,12 +29,13 @@ HOSTS = {
     :"ns1" => {
         :box_name => "centos/7",
         :cpu => '1',
-        :ram => "512",
+        :ram => "1024",
         :net => [
-            {adapter: 2, ip: '192.168.50.20', netmask: "255.255.255.0", virtualbox__intnet: "local-net"},
+            {adapter: 2, ip: '192.168.50.50', netmask: '255.255.255.0', virtualbox__intnet: "local-net"},
         ],
         :port => []
     }
+
 }
 
 Vagrant.configure("2") do |config|
