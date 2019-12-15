@@ -24,14 +24,15 @@
 #### Лабораторный стенд
 
 Развернутый из [Vagrantfile]() стенд состоит из следующих машин:  
-- `gw.linux.otus` — шлюз, `Ansible`-сервер.  
-- `ns1.linux.otus` — сервер имен, `FreeIPA`-клиент.  
-- `ipa.linux.otus` — `FreeIPA`-сервер.  
-
+- `ns1.linux.otus` — локальный сервер имен, `Ansible`-сервер;  
+- `ipa.linux.otus` — `FreeIPA`-сервер;  
+- `gw.linux.otus` — `FreeIPA`-клиент.  
+ 
+  
 #### Порядок развертывания стенда
-```bash
-vagrant up
-```
+Лабораторный стенд создается следующими командами:
+- `vagrant up` -- в результате получается готовый к применению
+
 С помощью сценария [install.sh](https://github.com/che-a/OTUS_LinuxAdministrator/blob/master/tasks/19/install.sh) производится установка и настройка `FreeIPA`-сервера и `FreeIPA`-клиента.
 ```bash
 sudo ./install.sh
