@@ -4,6 +4,7 @@
 # Последний хост в словаре HOSTS -- это Ansible-сервер,
 # все остальные -- это Ansible-клиенты.
 HOSTS = {
+
     :"gw" => {
         :box_name => "centos/7",
         :cpu => '1',
@@ -13,6 +14,7 @@ HOSTS = {
         ],
         :port => []
     },
+
     :"ipa" => {
         :box_name => "centos/7",
         :cpu => '2',
@@ -29,7 +31,7 @@ HOSTS = {
     :"ns1" => {
         :box_name => "centos/7",
         :cpu => '1',
-        :ram => "1024",
+        :ram => "512",
         :net => [
             {adapter: 2, ip: '192.168.50.50', netmask: '255.255.255.0', virtualbox__intnet: "local-net"},
         ],
@@ -63,6 +65,7 @@ Vagrant.configure("2") do |config|
                 /bin/cp -rf /vagrant/files/* /
                 systemctl daemon-reload
                 systemctl enable provision.service
+                sed -i 's/NAME=.*/NAME="'$HOSTNAME'"/' /etc/sysconfig/provision.env
                 reboot  #
             SHELL
         end
