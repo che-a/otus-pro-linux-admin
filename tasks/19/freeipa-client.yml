@@ -1,0 +1,50 @@
+---
+#
+
+- name: Configure FreeIPA-client
+  hosts:
+    - client
+  gather_facts: no
+  remote_user: vagrant
+  become: yes
+
+  vars:
+    domain: "ipa2.linux.otus"
+    ipa_realm: "ipa2.linux.otus"
+    ipa_server_name: "ipa2"
+    ipa_server_ip: "192.168.152.189"
+    ipa_admin: "admin"
+    ipa_pass: "12345678"
+
+  tasks:
+  - name: Install FreeIPA-client
+    yum:
+      name: "ipa-client"
+      state: present
+
+  - name: Customize hostaname
+    hostname:
+      name: "{{ inventory_hostname }}.{{ domain }}" 
+
+
+  - name: hosts file configuring
+    blockinfile:
+      path: /etc/hosts
+      marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+      block: |
+        {{ item.ip }} {{ item.name }}
+    with_items:
+    - { name: "{{ ipa_server_name }}.{{ domain }}", ip: "{{ ipa_server_ip }}" }
+
+  - name: Run ipa-client-install
+    shell: >
+      ipa-client-install
+      --force-join
+      --force-ntpd
+      --domain {{ domain }}
+      --principal {{ ipa_admin }}@{{ ipa_realm }}
+      --password {{ ipa_pass }}
+      --server {{ ipa_server_name }}.{{ domain }}
+      --mkhomedir
+      --realm {{ ipa_realm }}
+      -U

@@ -15,5 +15,6 @@ ns1.linux.otus.       IN      A      192.168.50.50
 
 ; 192.168.50.0/24 - A records
 gw.linux.otus.        IN      A      192.168.50.1
-ipa.linux.otus.       IN      A      192.168.50.10
-ipa2.linux.otus.      IN      A      192.168.50.20
+dhcp.linux.otus.      IN      A      192.168.50.10
+ipa.linux.otus.       IN      A      192.168.50.20
+mgmt.linux.otus.      IN      A      192.168.50.30

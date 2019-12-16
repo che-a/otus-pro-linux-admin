@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=root
 EnvironmentFile=/etc/sysconfig/provision.env
-ExecStart=/opt/provision.sh $NAME $STAGE
+ExecStart=/opt/provision.sh $DOMAIN $NAME $NS1_IP $STAGE
 
 [Install]
 WantedBy=multi-user.target

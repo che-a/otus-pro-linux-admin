@@ -1,39 +1,63 @@
 # -*- mode: ruby -*-
 # vim: set ft=ruby :
 
-# Последний хост в словаре HOSTS -- это Ansible-сервер,
-# все остальные -- это Ansible-клиенты.
+NET = "192.168.50"
+MASK = "255.255.255.0"
+VB_NET = "les19-int-net"
+
+# Ansible-клиенты:  gw, ipa
+# Ansible-сервер:   ns1
 HOSTS = {
-
-    :"gw" => {
-        :box_name => "centos/7",
-        :cpu => '1',
-        :ram => "512",
-        :net => [
-            {adapter: 2, ip: '192.168.50.1', netmask: '255.255.255.0' , virtualbox__intnet: "local-net"},
-        ],
-        :port => []
-    },
-
-    :"ipa" => {
-        :box_name => "centos/7",
-        :cpu => '2',
-        :ram => "2048",
-        :net => [
-            {adapter: 2, ip: '192.168.50.10', netmask: '255.255.255.0', virtualbox__intnet: "local-net"},
-        ],
-        :port => [
-            {guest: 80, host: 8080},
-            {guest: 443, host: 8443}
-        ]
-    },
 
     :"ns1" => {
         :box_name => "centos/7",
         :cpu => '1',
         :ram => "512",
         :net => [
-            {adapter: 2, ip: '192.168.50.50', netmask: '255.255.255.0', virtualbox__intnet: "local-net"},
+            {adapter: 2, ip: "#{NET}.50", netmask: MASK, virtualbox__intnet: VB_NET},
+        ],
+        :port => []
+    }
+
+    :"gw" => {
+        :box_name => "centos/7",
+        :cpu => '1',
+        :ram => "512",
+        :net => [
+            {adapter: 2, ip: "#{NET}.1", netmask: MASK , virtualbox__intnet: VB_NET},
+        ],
+        :port => []
+    },
+
+    :"dhcp" => {
+        :box_name => "centos/7",
+        :cpu => '1',
+        :ram => "512",
+        :net => [
+            {adapter: 2, ip: "#{NET}.10", netmask: MASK, virtualbox__intnet: VB_NET},
+        ],
+        :port => []
+    }
+
+    :"ipa" => {
+        :box_name => "centos/7",
+        :cpu => '2',
+        :ram => "2048",
+        :net => [
+            {adapter: 2, ip: "#{NET}.20", netmask: MASK, virtualbox__intnet: VB_NET},
+        ],
+        :port => [
+            {guest: 80, host: 8080},
+            {guest: 443, host: 8081}
+        ]
+    },
+
+    :"mgmt" => {
+        :box_name => "centos/7",
+        :cpu => '1',
+        :ram => "512",
+        :net => [
+            {adapter: 2, ip: "#{NET}.30", netmask: MASK, virtualbox__intnet: VB_NET},
         ],
         :port => []
     }
@@ -62,12 +86,13 @@ Vagrant.configure("2") do |config|
             end
 
             box.vm.provision "shell", run: "always", inline: <<-SHELL
-                /bin/cp -rf /vagrant/files/* /
+                cp -rf /vagrant/files/* /
+                sed -i 's/NAME=.*/NAME="'$HOSTNAME'"/' /etc/sysconfig/provision.env
                 systemctl daemon-reload
                 systemctl enable provision.service
-                sed -i 's/NAME=.*/NAME="'$HOSTNAME'"/' /etc/sysconfig/provision.env
-                reboot  #
+                systemctl start provision.service &
             SHELL
+
         end
     end
 end
