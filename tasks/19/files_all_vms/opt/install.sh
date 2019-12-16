@@ -25,3 +25,11 @@ ipa-server-install  --hostname=$SERVER_FULL \
                     --forwarder=77.88.8.8 \
                     --auto-reverse \
                     --unattended
+
+                    ipa-server-install  --hostname=ipa.linux.otus \
+                                        --domain=ipa.linux.otus \
+                                        --realm=IPA.LINUX.OTUS \
+                                        --ds-password=12345678 \
+                                        --admin-password=12345678 \
+                                        --mkhomedir \
+                                        --unattended

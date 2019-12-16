@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vim: set ft=ruby :
 
-NET = "192.168.50"; MASK = "255.255.255.0"; VB_NET = "les19-int-net"
+MASK = "255.255.255.0"; VB_NET = "les19-int-net"
 
 # Ansible-клиенты:  gw, ipa
 # Ansible-сервер:   ns1
@@ -12,7 +12,7 @@ HOSTS = {
         :cpu => '1',
         :ram => "512",
         :net => [
-            {adapter: 2, ip: "#{NET}.50", netmask: MASK, virtualbox__intnet: VB_NET},
+            {adapter: 2, ip: "192.168.50.50", netmask: MASK, virtualbox__intnet: VB_NET},
         ],
         :port => []
     },
@@ -22,7 +22,7 @@ HOSTS = {
         :cpu => '2',
         :ram => "2048",
         :net => [
-            {adapter: 2, ip: "#{NET}.20", netmask: MASK, virtualbox__intnet: VB_NET},
+            {adapter: 2, ip: "192.168.50.10", netmask: MASK, virtualbox__intnet: VB_NET},
         ],
         :port => [
             {guest: 80, host: 8080},
@@ -35,7 +35,7 @@ HOSTS = {
         :cpu => '1',
         :ram => "512",
         :net => [
-            {adapter: 2, ip: "#{NET}.1", netmask: MASK , virtualbox__intnet: VB_NET},
+            {adapter: 2, ip: "192.168.50.1", netmask: MASK , virtualbox__intnet: VB_NET},
         ],
         :port => []
     },
@@ -45,7 +45,7 @@ HOSTS = {
         :cpu => '1',
         :ram => "512",
         :net => [
-            {adapter: 2, ip: "#{NET}.30", netmask: MASK, virtualbox__intnet: VB_NET},
+            {adapter: 2, ip: "192.168.50.254", netmask: MASK, virtualbox__intnet: VB_NET},
         ],
         :port => []
     }
