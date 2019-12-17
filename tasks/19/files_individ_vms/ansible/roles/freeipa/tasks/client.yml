@@ -1,0 +1,18 @@
+---
+# tasks file for roles/freeipa
+
+- name: Install FreeIPA-client
+  yum:
+    name: "ipa-client"
+    state: present
+
+- name: Configure FreeIPA-client
+  shell: >
+    ipa-client-install
+    --server={{ ipa_hostname }}
+    --domain={{ ipa_domain }}
+    --realm={{ ipa_realm }}
+    --principal={{ ipa_admin }}@{{ ipa_realm }}
+    --password={{ admin_pass }}
+    --mkhomedir
+    --unattended

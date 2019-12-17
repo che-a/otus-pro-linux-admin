@@ -30,16 +30,6 @@ HOSTS = {
         ]
     },
 
-    :"gw" => {
-        :box_name => "centos/7",
-        :cpu => '1',
-        :ram => "512",
-        :net => [
-            {adapter: 2, ip: "192.168.50.1", netmask: MASK , virtualbox__intnet: VB_NET},
-        ],
-        :port => []
-    },
-
     :"mgmt" => {
         :box_name => "centos/7",
         :cpu => '1',

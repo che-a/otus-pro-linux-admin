@@ -1,0 +1,6 @@
+[ipaserver]
+ipa.linux.otus
+
+[ipaclient]
+ns1.linux.otus
+mgmt.linux.otus ansible_connection=local

@@ -11,7 +11,7 @@ HOST2='gw'      ; HOST2_FULL=$HOST2'.'$DOMAIN       # Клиент Ansible
 HOST1='ipa'     ; HOST1_FULL=$HOST1'.'$DOMAIN       # Клиент Ansible
 ANSIBLE='mgmt'  ; ANSIBLE_FULL=$ANSIBLE'.'$DOMAIN   # Ansible-сервер
 # Машины, на которые будут добавлены публичные SSH-ключи
-HOSTS_FULL=( $NS1_FULL $HOST2_FULL $HOST1_FULL )
+HOSTS_FULL=( $NS1_FULL $HOST1_FULL )
 #HOSTS_FULL=( $NS1_FULL )
 
 NS1_IP="192.168.50.50"
@@ -87,7 +87,7 @@ case $NAME in
             0)  chown -R vagrant:vagrant /home/vagrant/ansible
                 yum install -y epel-release
                 yum install -y ansible ansible-lint bind-utils nano sshpass
-                yum update -y
+                #yum update -y
                 # Запретить SSH-клиенту этой машины при подключении к хосту
                 # осуществлять проверку подлинности его ключа.
                 sed -i '35s/#   StrictHostKeyChecking ask/StrictHostKeyChecking no/g' \

@@ -1,0 +1,28 @@
+---
+# tasks file for roles/freeipa
+
+- name: Install FreeIPA-server
+  yum:
+    name: "ipa-server"
+    state: present
+
+- name: Configure FreeIPA-server
+  shell: >
+    ipa-server-install
+    --hostname={{ ipa_hostname }}
+    --domain={{ ipa_domain }}
+    --realm={{ ipa_realm }}
+    --ds-password={{ ds_pass }}
+    --admin-password={{ admin_pass }}
+    --mkhomedir
+    --unattended
+
+- name: Configure /etc/hosts on FreeIPA-server
+  shell: sed -i 's/127.*ipa.*/192.168.152.189  ipa.linux.otus/' /etc/hosts
+
+- name: Add new user
+  shell: >
+    ipa user-add che-a
+    --first={{ first_name }}
+    --last={{ last_name }}
+    --password={{ user_pass }}

@@ -1,0 +1,10 @@
+---
+# tasks file for roles/freeipa
+
+- block:
+  - include: server.yml
+  when: ansible_hostname == 'ipa'
+
+- block:
+  - include: client.yml
+  when: ansible_hostname != 'ipa'

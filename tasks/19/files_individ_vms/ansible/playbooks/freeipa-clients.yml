@@ -1,0 +1,7 @@
+---
+- name: Install and configure FreeIPA-client
+  hosts:
+    - ipaclient
+  become: yes
+  roles:
+    - freeipa
