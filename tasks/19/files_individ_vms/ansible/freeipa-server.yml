@@ -1,8 +1,7 @@
 ---
-- name: Install and configure FreeIPA-client
+- name: Install and configure FreeIPA-server
   hosts:
-    - gw.linux.otus
-    - ns1.linux.otus
+    - ipa.linux.otus
   gather_facts: yes
   remote_user: vagrant
   become: yes
@@ -15,14 +14,14 @@
     admin_pass: "12345678"
 
   tasks:
-  - name: Install FreeIPA-client
+  - name: Install FreeIPA-server
     yum:
-      name: "ipa-client"
+      name: "ipa-server"
       state: present
 
   - name: Configure FreeIPA-client
     shell: |
-      ipa-client-install
+      ipa-server-install
       --hostname=ipa.linux.otus
       --domain=ipa.linux.otus
       --realm=IPA.LINUX.OTUS
