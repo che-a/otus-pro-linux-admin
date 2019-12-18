@@ -17,12 +17,9 @@
     --mkhomedir
     --unattended
 
-- name: Configure /etc/hosts on FreeIPA-server
-  shell: sed -i 's/127.*ipa.*/192.168.152.189  ipa.linux.otus/' /etc/hosts
+- name: Init token for admin-user
+  shell: echo {{ admin_pass }} | kinit admin
+
 
 - name: Add new user
-  shell: >
-    ipa user-add che-a
-    --first={{ first_name }}
-    --last={{ last_name }}
-    --password={{ user_pass }}
+  shell: echo {{ user_pass }} | ipa user-add {{ user_login }} --first={{ first_name }} --last={{ last_name }} --password

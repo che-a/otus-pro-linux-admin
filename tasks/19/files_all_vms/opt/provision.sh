@@ -7,11 +7,10 @@
 
 DOMAIN="linux.otus"
 NS1='ns1'       ; NS1_FULL=$NS1'.'$DOMAIN           # Клиент Ansible
-HOST2='gw'      ; HOST2_FULL=$HOST2'.'$DOMAIN       # Клиент Ansible
-HOST1='ipa'     ; HOST1_FULL=$HOST1'.'$DOMAIN       # Клиент Ansible
+IPA='ipa'       ; IPA_FULL=$IPA'.'$DOMAIN           # Клиент Ansible
 ANSIBLE='mgmt'  ; ANSIBLE_FULL=$ANSIBLE'.'$DOMAIN   # Ansible-сервер
 # Машины, на которые будут добавлены публичные SSH-ключи
-HOSTS_FULL=( $NS1_FULL $HOST1_FULL )
+HOSTS_FULL=( $NS1_FULL $IPA_FULL )
 #HOSTS_FULL=( $NS1_FULL )
 
 NS1_IP="192.168.50.50"
@@ -38,7 +37,7 @@ case $NAME in
             0)  cp -rf /home/vagrant/bind/* /
                 yum install -y epel-release
                 yum install -y bind bind-utils nano
-                yum update -y
+                #yum update -y
 
                 # Чтобы не вводить пароль на сервере при добавлении публичного
                 # ключа с него на этот хост
@@ -58,7 +57,7 @@ case $NAME in
                 ;;
         esac
         ;;
-    $HOST2|$HOST1)
+    $IPA)
         case $STAGE in
             0)  yum install -y epel-release
                 yum install -y bind-utils nano
@@ -74,7 +73,6 @@ case $NAME in
                 echo 'PEERDNS="no"' >> /etc/sysconfig/network-scripts/ifcfg-eth0
                 echo "DNS1=$NS1_IP" >> /etc/sysconfig/network-scripts/ifcfg-eth1
 
-                systemctl disable provision.service
                 stage_up
                 reboot
                 ;;

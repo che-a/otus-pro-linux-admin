@@ -5,8 +5,9 @@ ipa_hostname: ipa.linux.otus
 ipa_domain: ipa.linux.otus
 ipa_realm: IPA.LINUX.OTUS
 ipa_admin: admin
-ds_pass: 12345678
+ds_pass: 87654321
 admin_pass: 12345678
-first_name: Алексей
-last_name: Чернышенко
-user_pass: 12345678
+user_login: che
+first_name: Aleksey
+last_name: Chernyshenko
+user_pass: qwerty123
