@@ -71,3 +71,6 @@
 
 **Занятие 19. LDAP. Централизованная авторизация и аутентификация**  
 *Задание:* [FreeIPA](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/19)
+
+**Занятие 20. Фильтрация трафика**  
+*Задание:* [Сценарии iptables](https://github.com/che-a/OTUS_LinuxAdministrator/tree/master/tasks/20)
