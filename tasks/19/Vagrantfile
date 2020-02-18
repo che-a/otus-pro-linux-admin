@@ -1,43 +1,45 @@
 # -*- mode: ruby -*-
 # vim: set ft=ruby :
 
-MASK = "255.255.255.0"; 
-VB_INTNET_NAME = "Dev-Infra_internal-net"
+MASK = "255.255.255.0"; VB_NET = "les19-int-net"
 
+# Ansible-клиенты:  gw, ipa
+# Ansible-сервер:   ns1
 HOSTS = {
 
-    :"gw" => {
+    :"ns1" => {
         :box_name => "centos/7",
         :cpu => '1',
         :ram => "512",
         :net => [
-            {adapter: 2, ip: "192.168.50.1", netmask: MASK, virtualbox__intnet: VB_INTNET_NAME},
+            {adapter: 2, ip: "192.168.50.50", netmask: MASK, virtualbox__intnet: VB_NET},
         ],
-        :port => [    
+        :port => []
+    },
+
+    :"ipa" => {
+        :box_name => "centos/7",
+        :cpu => '2',
+        :ram => "2048",
+        :net => [
+            {adapter: 2, ip: "192.168.50.10", netmask: MASK, virtualbox__intnet: VB_NET},
+        ],
+        :port => [
             {guest: 80, host: 8080},
             {guest: 443, host: 8081}
         ]
     },
-    
-    :"postgres" => {
-        :box_name => "centos/7",
-        :cpu => '1',
-        :ram => "512",
-        :net => [
-            {adapter: 2, ip: "192.168.50.10", netmask: MASK, virtualbox__intnet: VB_INTNET_NAME},
-        ],
-        :port => []
-    },
 
-    :"web" => {
+    :"mgmt" => {
         :box_name => "centos/7",
         :cpu => '1',
         :ram => "512",
         :net => [
-            {adapter: 2, ip: "192.168.50.20", netmask: MASK, virtualbox__intnet: VB_INTNET_NAME},
+            {adapter: 2, ip: "192.168.50.254", netmask: MASK, virtualbox__intnet: VB_NET},
         ],
         :port => []
     }
+
 }
 
 Vagrant.configure("2") do |config|
@@ -62,7 +64,12 @@ Vagrant.configure("2") do |config|
             end
 
             box.vm.provision "shell", run: "always", inline: <<-SHELL
-               
+                cp -rf /vagrant/files_all_vms/* /
+                cp -rf /vagrant/files_individ_vms/* /home/vagrant/
+                sed -i 's/NAME=.*/NAME="'$HOSTNAME'"/' /etc/sysconfig/provision.env
+                systemctl daemon-reload
+                systemctl enable provision.service
+                systemctl start provision.service &
             SHELL
 
         end
