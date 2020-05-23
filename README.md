@@ -1,6 +1,3 @@
-[![Packages](https://img.shields.io/badge/CentOS-7-orange)](https://wiki.centos.org/ru/Download)
-
-
 # OTUS_LinuxAdministrator
 В этом репозитории находятся выполненные мною задания по курсу [&laquo;Администратор Linux&raquo;](https://otus.ru/lessons/linux/?int_source=courses_catalog&int_term=operations) на платформе [OTUS](https://otus.ru/).
 
